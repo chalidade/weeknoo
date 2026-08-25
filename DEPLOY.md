@@ -58,21 +58,23 @@ cd sites/<site-name>
 npx wrangler pages deploy dist
 ```
 
-## Opsi 4 — GitHub Pages (tidak disarankan untuk workspace ini)
+## Opsi 4 — GitHub Pages (otomatis via CI ✔)
 
-Bisa, tapi ada satu jebakan: site disajikan dari sub-path
-(`username.github.io/<repo>/`), jadi kamu **harus** set `base` di
-`vite.config.ts` sebelum build:
+**Sudah aktif dan otomatis.** Job `pages` di `.github/workflows/build.yml`
+mem-publish semua site pada setiap push ke `master`:
 
-```ts
-export default defineConfig({
-  base: '/<repo>/',
-  // ...
-})
-```
+| Link | Isi |
+| --- | --- |
+| https://chalidade.github.io/weeknoo/ | halaman indeks berisi daftar semua site |
+| https://chalidade.github.io/weeknoo/\<site\>/ | site-nya masing-masing |
 
-Tanpa itu semua asset 404. Untuk multi-site dalam satu repo, pengaturan ini
-jadi ribet — pakai Vercel/Netlify/Cloudflare saja.
+Jebakan sub-path Vite (asset 404 tanpa `base` yang benar) sudah ditangani:
+CI mem-build ulang tiap site dengan `--base=/weeknoo/<site>/`, jadi
+`vite.config.ts` tidak perlu diubah, dan build lokal / APK tetap memakai base
+default. Site baru otomatis ikut ter-publish.
+
+Untuk custom domain atau kontrol lebih (preview deploy, analytics), pakai
+Vercel/Netlify/Cloudflare di atas — Pages cocok sebagai link publik cepat.
 
 ## Opsi 5 — Hosting sendiri (VPS / shared hosting)
 
