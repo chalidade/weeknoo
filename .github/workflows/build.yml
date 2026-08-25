@@ -1,0 +1,64 @@
+name: Build sites
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  # Enumerate sites/* so new sites are picked up automatically.
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      sites: ${{ steps.list.outputs.sites }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: list
+        run: echo "sites=$(ls sites | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        site: ${{ fromJson(needs.discover.outputs.sites) }}
+    name: ${{ matrix.site }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: sites/${{ matrix.site }}/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Install dependencies
+        working-directory: sites/${{ matrix.site }}
+        run: npm ci
+
+      # Runs the same flow as locally: web build → Capacitor sync → Gradle APK.
+      # The runner ships with the Android SDK preinstalled (ANDROID_HOME is set).
+      - name: Build web + APK
+        run: bash scripts/build-apk.sh ${{ matrix.site }}
+
+      - name: Upload web build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.site }}-web
+          path: sites/${{ matrix.site }}/dist
+          retention-days: 30
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.site }}-apk
+          path: sites/${{ matrix.site }}/${{ matrix.site }}-debug.apk
+          retention-days: 30

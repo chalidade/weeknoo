@@ -1,0 +1,193 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## What this repo is
+
+A **website workspace**: one git repo, one flow. Every website is an independent
+app under `sites/<name>/`, generated from `template/`. There is no shared
+`node_modules` and no workspace/monorepo tooling — each site installs its own
+dependencies. Keep it that way unless the user explicitly asks for workspaces.
+
+## Creating a new website
+
+Always scaffold via the generator — never hand-roll a new site or run
+`npm create vite` directly, so every site stays on the same stack:
+
+```bash
+npm run new -- <site-name>          # wrapper for scripts/new-site.sh
+# or: bash scripts/new-site.sh <site-name> [--no-install]
+```
+
+The generator copies `template/` to `sites/<name>/`, replaces the
+`__SITE_NAME__` placeholder, and runs `npm install`. Site names must match
+`^[a-z0-9][a-z0-9-]*$`. It refuses to overwrite an existing site.
+
+## Component library: 21st.dev
+
+[21st.dev](https://21st.dev/) is this workspace's component library — 10,000+
+shadcn/ui-based React + Tailwind components. It is wired into `template/` as a
+shadcn **namespaced registry**, so components install like any other shadcn
+component. Reach for it before hand-writing a hero, pricing table, nav, or any
+other marketing block.
+
+```bash
+npm run add -- <site-name> @21st/<author>/<slug>   # wrapper for scripts/add-component.sh
+npm run add -- <site-name> card dialog             # stock shadcn/ui still works
+npm run add -- <site-name> https://21st.dev/@ln-dev7/components/pricing-interaction
+```
+
+### Turning a 21st.dev link into an install
+
+A component's URL already contains everything the registry needs — there is
+nothing to look up. `scripts/add-component.sh` normalises all of these to
+`@21st/<author>/<slug>`, so a link pasted from the browser works verbatim:
+
+| Pasted | Installs |
+| --- | --- |
+| `21st.dev/@ln-dev7/components/pricing-interaction` | `@21st/ln-dev7/pricing-interaction` |
+| `21st.dev/@ln-dev7/components/pricing-interaction/default` | same — the trailing demo/variant is dropped |
+| `21st.dev/community/components/easemize/pixel-perfect-hero/default` | `@21st/easemize/pixel-perfect-hero` |
+| `21st.dev/mikolajdobrucki/hero-section` | `@21st/mikolajdobrucki/hero-section` |
+| `21st.dev/r/<author>/<slug>` | passed through unchanged |
+
+Category pages (`/community/components/s/hero`) and profile pages
+(`/community/<author>`) are rejected with a message — they are not installable.
+
+**Do not try to read a component page to find its install command.** 21st.dev is
+client-rendered: fetching a component page returns no install command, and
+fetching a large category page (e.g. `/s/hero`, 1000+ items) returns navigation
+chrome with no component list at all. Smaller category pages do list components
+with authors and slugs, but this is unreliable — ask for the component's own link,
+or use the MCP below, which searches the catalog server-side.
+
+**Setup (once):** the registry requires an API key.
+
+```bash
+cp .env.example .env    # then paste a key from https://21st.dev/settings/api-keys
+```
+
+`scripts/add-component.sh` sources the root `.env`, so one key serves every site.
+Without it the registry returns `403 Authentication required`. Free tier is
+search-free with 2 installs/day.
+
+**Optional — the 21st MCP server** lets Claude Code *search* the catalog and
+generate components without leaving the session, instead of you finding slugs by
+hand:
+
+```bash
+npx @21st-dev/cli@latest init --client claude
+```
+
+It talks to `https://21st.dev/api/mcp` with an `x-api-key` header — the same key.
+
+## Data APIs (bundled library)
+
+Every site carries typed API clients in `src/lib/api/` (import from
+`@/lib/api`) for Indonesian Islamic + regional data. All sources are free,
+keyless, CORS-enabled, and verified working — do not hand-roll fetches for
+this data, use the library:
+
+```ts
+import { getSurah, getTafsir, getAsbabunNuzulBySurah,
+         getHadithPage, getArbain, getProvinces, getRegencies } from "@/lib/api"
+```
+
+- **`quran.ts`** — equran.id v2: `getSurahList()`, `getSurah(1–114)` (Arabic,
+  Latin, terjemahan, murottal audio per ayah), `getTafsir(nomor)` (Kemenag).
+- **`asbabun-nuzul.ts`** — `getAsbabunNuzul()`, `getAsbabunNuzulBySurah(surah)`,
+  `getAsbabunNuzulByAyah(surah, ayah)`. The upstream API has no CORS, so the
+  full 286-entry dataset (Kemenag) is bundled at `src/lib/api/data/` and
+  lazy-loaded (~450 kB stays out of the main bundle). 54 of 114 surahs have
+  entries — empty results are normal.
+- **`hadith.ts`** — hadis-api-id: `getHadithBooks()` (9 narrators + totals),
+  `getHadithPage(slug, page, limit)`, `getHadith(slug, number)`; plus
+  `getArbain(1–42)` from api.myquran.com.
+- **`wilayah.ts`** — emsifa api-wilayah-indonesia, cascading:
+  `getProvinces()` → `getRegencies(provinceId)` → `getDistricts(regencyId)` →
+  `getVillages(districtId)`. Names come back ALL CAPS — title-case them for UI.
+
+The library needs `"resolveJsonModule": true` in `tsconfig.app.json` (already
+set in the template and both existing sites).
+
+## Building an Android APK
+
+Any site can be wrapped into an Android APK via Capacitor. Always go through
+the script — it bootstraps Capacitor into the site on first run and resolves
+the Android SDK / JDK automatically (Android Studio's bundled JDK is used when
+`java` is not on PATH):
+
+```bash
+npm run apk -- <site-name>              # wrapper for scripts/build-apk.sh
+npm run apk -- <site-name> --release    # unsigned release APK
+```
+
+Output lands at `sites/<name>/<name>-debug.apk`. The generated
+`sites/*/android/` project and `*.apk` files are git-ignored (regenerated on
+demand). See DEPLOY.md for details and signing notes.
+
+## Per-site commands (run inside `sites/<name>/`)
+
+```bash
+npm run dev       # Vite dev server
+npm run build     # tsc -b && vite build  (this is the type-check + build gate)
+npm run preview   # preview the production build
+npm run lint      # oxlint
+npx shadcn@latest add <component>   # add shadcn/ui or @21st/<author>/<slug> components
+```
+
+There is no separate test runner configured. `npm run build` is the correctness
+gate — it type-checks the whole app before bundling.
+
+## Stack & conventions (baked into `template/`)
+
+- **Vite + React 19 + TypeScript**, **Tailwind CSS v4** via `@tailwindcss/vite`
+  (no `tailwind.config.js` — theme lives in `src/index.css` under `@theme inline`).
+- **shadcn/ui** is pre-wired: `components.json` (new-york, neutral, lucide),
+  the `@/*` path alias (in both `tsconfig` and `vite.config.ts`), the `cn()`
+  helper in `src/lib/utils.ts`, a starter `Button` in `src/components/ui/`, and
+  the `@21st` registry namespace. Install components rather than writing them by
+  hand — see **Component library: 21st.dev** above.
+- **Motion** for animation — import from `motion/react` (NOT `framer-motion`).
+  The `Hero` component shows the house pattern: a `container` variant with
+  `staggerChildren` driving `fadeUp` children.
+- Design tokens are semantic shadcn CSS variables (`bg-background`,
+  `text-muted-foreground`, `border-border`, …) with light/dark via the `.dark`
+  class. Style with these tokens, not hard-coded colors.
+
+## Design direction
+
+- **Reference:** match [21st.dev community heroes](https://21st.dev/community/components/s/hero)
+  (React + Tailwind + shadcn). When the user picks a specific component, install
+  it via the `@21st` registry rather than reproducing it by hand. Only rebuild
+  from a screenshot when the component isn't installable.
+- **Build a full page as one file per section.** `App.tsx` only composes; it
+  holds no markup of its own. Each section is a self-contained `<section>` in
+  `src/components/<Section>.tsx` that owns its own copy, data and animation and
+  reads nothing from its siblings — see `Hero.tsx` for the shape.
+
+  ```tsx
+  <main className="min-h-screen">
+    <Hero /><Features /><Pricing /><FAQ /><CTA /><Footer />
+  </main>
+  ```
+
+  This is what makes "regenerate the whole page, then revise one section later"
+  safe: a later edit rewrites a single file, and the rest of the page cannot
+  regress. Shared values (palette, radius, fonts) belong in `src/index.css` as
+  tokens, never duplicated per section — one token edit restyles every section
+  at once. Sections should be reorderable by moving a line in `App.tsx`.
+- **UI/UX Pro Max** skill is installed globally at `~/.claude/skills/`. Use its
+  `search.py` (e.g. `python3 ~/.claude/skills/ui-ux-pro-max/scripts/search.py "<query>" --domain color`)
+  for palettes, typography pairings, styles, and chart choices. It needs Python 3.
+
+## Editing the template
+
+Changing files in `template/` affects **future** generated sites only — it does
+not touch existing `sites/*`. To roll a template change into an existing site,
+apply the same edit there (or regenerate).
+
+## Housekeeping
+
+- `ui-ux-pro-max-skill/` (if present) is a clone of the globally-installed skill
+  and is git-ignored — it is not part of this repo's product.

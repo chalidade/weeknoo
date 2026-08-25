@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Chalid Ade Rahman — Software Developer</title>
+    <meta
+      name="description"
+      content="Senior front-end developer with 5+ years of remote experience building scalable React, Next.js and TypeScript applications for clients in EdTech, logistics and non-profit."
+    />
+    <meta name="author" content="Chalid Ade Rahman" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Chalid Ade Rahman — Software Developer" />
+    <meta
+      property="og:description"
+      content="API & scalable web app specialist. 5+ years of remote experience across EdTech, logistics and non-profit."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Set the theme before first paint so a dark-mode visitor never sees a white flash. -->
+    <script>
+      ;(function () {
+        var stored = localStorage.getItem('theme')
+        var dark =
+          stored === 'dark' ||
+          (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        if (dark) document.documentElement.classList.add('dark')
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
