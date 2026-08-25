@@ -81,6 +81,26 @@ npx @21st-dev/cli@latest init --client claude
 
 It talks to `https://21st.dev/api/mcp` with an `x-api-key` header — the same key.
 
+## The homepage (`sites/home`) and the prompt pipeline
+
+`sites/home` is the workspace's landing page. CI deploys it at the Pages
+**root** (https://chalidade.github.io/weeknoo/) while every other site lives
+under `/weeknoo/<site>/` — this split is handled in the `pages` job of
+`.github/workflows/build.yml`.
+
+- Its prompt box turns the visitor's text into a **prefilled GitHub issue**
+  labeled `prompt` on chalidade/weeknoo. A cloud routine
+  (`weeknoo-prompt-runner`, see https://claude.ai/code/routines) picks such
+  issues up, builds the requested site following this file, commits, pushes,
+  comments, and closes the issue. When asked to "kerjakan issue #N" locally,
+  do the same flow in this workspace.
+- **When a new site is added, add its card to the `SITES` array in
+  `sites/home/src/components/Sites.tsx`** (url:
+  `https://chalidade.github.io/weeknoo/<site>/`).
+- The homepage's display font is Instrument Serif (Google Fonts, loaded in
+  its `index.html`; `font-display` utility via `--font-display` in its
+  `index.css`). It renders dark-only (`class="dark"` on `<html>`).
+
 ## Data APIs (bundled library)
 
 Every site carries typed API clients in `src/lib/api/` (import from
