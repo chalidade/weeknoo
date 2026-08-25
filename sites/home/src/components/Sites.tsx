@@ -5,6 +5,12 @@ const ACTIONS = 'https://github.com/chalidade/weeknoo/actions'
 
 const SITES = [
   {
+    name: 'jaim',
+    title: 'JAIM — Jaga Iman',
+    description: 'Catat sholat harian, progres tilawah 30 juz, dan jadwal sholat sesuai lokasi.',
+    url: 'https://chalidade.github.io/weeknoo/jaim/',
+  },
+  {
     name: 'chalidade-portfolio-sites',
     title: 'Portfolio',
     description: 'Portfolio pribadi — profil, pengalaman, proyek, dan kontak.',

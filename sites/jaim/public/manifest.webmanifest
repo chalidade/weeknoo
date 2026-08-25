@@ -1,0 +1,17 @@
+{
+  "name": "JAIM — Jaga Iman",
+  "short_name": "JAIM",
+  "description": "Catat sholat harian, progres tilawah, dan jadwal sholat sesuai lokasimu.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F9FAFB",
+  "theme_color": "#3B82F6",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
