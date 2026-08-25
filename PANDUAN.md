@@ -190,6 +190,13 @@ artifact `<site>-apk`. APK debug langsung bisa dipakai; untuk Play Store,
 build `--release` lalu tanda tangani sendiri (lihat DEPLOY.md). Run pertama
 lambat (unduh Gradle); berikutnya cepat.
 
+**Izin Android** (lokasi, kamera, dll): jangan edit `android/` langsung —
+folder itu di-ignore git dan bisa dibuat ulang. Tulis nama izinnya di
+`sites/<site>/android-permissions.txt` (satu `android.permission.*` per
+baris); `npm run apk` menyuntikkannya ke AndroidManifest.xml otomatis di
+setiap build. Contoh: `sites/jaim/android-permissions.txt` berisi izin
+lokasi untuk tombol "Gunakan lokasiku".
+
 ## 7. Apa yang terjadi saat `git push`
 
 Workflow `.github/workflows/build.yml` berjalan di server GitHub (gratis,

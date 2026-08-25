@@ -80,6 +80,23 @@ fi
 echo "==> Syncing dist/ into the Android project"
 npx cap sync android
 
+# --- extra Android permissions ---------------------------------------------
+# The android/ project is git-ignored and regenerable, so manifest permissions
+# must not be hand-edited there. Declare them in sites/<name>/android-permissions.txt
+# (one android.permission.* name per line, # for comments) and they are
+# injected idempotently on every build.
+MANIFEST="android/app/src/main/AndroidManifest.xml"
+if [ -f android-permissions.txt ] && [ -f "$MANIFEST" ]; then
+  while IFS= read -r perm; do
+    perm="$(echo "$perm" | tr -d '[:space:]')"
+    case "$perm" in ''|'#'*) continue ;; esac
+    if ! grep -q "\"$perm\"" "$MANIFEST"; then
+      sed -i "s|</manifest>|    <uses-permission android:name=\"$perm\" />\n</manifest>|" "$MANIFEST"
+      echo "==> Added $perm to AndroidManifest.xml"
+    fi
+  done < android-permissions.txt
+fi
+
 echo "==> Building $VARIANT APK"
 ( cd android && ./gradlew "assemble${VARIANT^}" )
 

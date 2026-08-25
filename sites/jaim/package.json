@@ -12,7 +12,9 @@
   "dependencies": {
     "@capacitor/android": "^8.5.0",
     "@capacitor/core": "^8.5.0",
+    "@capacitor/geolocation": "^8.2.2",
     "@ckeditor/ckeditor5-react": "^11.2.0",
+    "capacitor-native-settings": "^8.2.0",
     "ckeditor5": "^48.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

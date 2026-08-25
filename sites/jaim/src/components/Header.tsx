@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Moon, Sun } from 'lucide-react'
+import { LogOut, Moon, Sun } from 'lucide-react'
+import { useSession } from '@/lib/auth'
 
 const THEME_KEY = 'jaim:theme'
 
 export function Header() {
+  const { user, logout } = useSession()
   const [dark, setDark] = useState(() =>
     document.documentElement.classList.contains('dark'),
   )
@@ -24,16 +26,29 @@ export function Header() {
           <img src="./icon.svg" alt="" className="size-8 rounded-lg" />
           <div className="leading-tight">
             <p className="text-sm font-bold tracking-tight">JAIM</p>
-            <p className="text-[11px] text-muted-foreground">Jaga Iman</p>
+            <p className="text-[11px] text-muted-foreground">
+              {user ? `Assalamu'alaikum, ${user.name}` : 'Jaga Iman'}
+            </p>
           </div>
         </div>
-        <button
-          onClick={() => setDark((d) => !d)}
-          aria-label={dark ? 'Mode terang' : 'Mode gelap'}
-          className="inline-flex size-9 items-center justify-center rounded-full border bg-card text-muted-foreground transition-colors hover:text-foreground"
-        >
-          {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setDark((d) => !d)}
+            aria-label={dark ? 'Mode terang' : 'Mode gelap'}
+            className="inline-flex size-9 items-center justify-center rounded-full border bg-card text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
+          </button>
+          {user && (
+            <button
+              onClick={logout}
+              aria-label="Keluar"
+              className="inline-flex size-9 items-center justify-center rounded-full border bg-card text-muted-foreground transition-colors hover:text-destructive"
+            >
+              <LogOut className="size-4" />
+            </button>
+          )}
+        </div>
       </div>
     </header>
   )

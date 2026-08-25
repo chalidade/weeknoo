@@ -29,6 +29,9 @@
   --border: #e5e7eb;
   --input: #e5e7eb;
   --ring: #3b82f6;
+  --warning: #d97706;
+  /* haid marker in charts — CVD-validated against --primary per mode */
+  --haid: #db2777;
 }
 
 .dark {
@@ -50,9 +53,13 @@
   --border: rgb(255 255 255 / 8%);
   --input: rgb(255 255 255 / 12%);
   --ring: #2563eb;
+  --warning: #f59e0b;
+  --haid: #ec4899;
 }
 
 @theme inline {
+  --color-warning: var(--warning);
+  --color-haid: var(--haid);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

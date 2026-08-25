@@ -1,0 +1,4 @@
+# Injected into android/app/src/main/AndroidManifest.xml by scripts/build-apk.sh
+# Needed by @capacitor/geolocation ("Gunakan lokasiku" on the Jadwal Sholat card)
+android.permission.ACCESS_COARSE_LOCATION
+android.permission.ACCESS_FINE_LOCATION

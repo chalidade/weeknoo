@@ -9,6 +9,7 @@ import {
   type PrayerName,
   type PrayerStatus,
 } from '@/lib/db/db'
+import { useUser } from '@/lib/auth'
 import { PRAYER_LABELS } from '@/components/JadwalSholat'
 
 const STATUS_OPTIONS: { value: PrayerStatus; label: string }[] = [
@@ -24,6 +25,7 @@ function toKey(d: Date) {
 }
 
 export function PrayerTracker() {
+  const user = useUser()
   const days = useMemo(() => {
     const list: Date[] = []
     for (let i = 13; i >= 0; i--) {
@@ -40,17 +42,17 @@ export function PrayerTracker() {
 
   useEffect(() => {
     let cancelled = false
-    db.prayerDays.get(selected).then((row) => {
-      if (!cancelled) setDay(row ?? emptyDay(selected))
+    db.prayerLogs.get([user.id, selected]).then((row) => {
+      if (!cancelled) setDay(row ?? emptyDay(user.id, selected))
     })
     return () => {
       cancelled = true
     }
-  }, [selected])
+  }, [user.id, selected])
 
   const save = (next: PrayerDay) => {
     setDay(next)
-    void db.prayerDays.put(next)
+    void db.prayerLogs.put(next)
   }
 
   const setStatus = (prayer: PrayerName, status: PrayerStatus) => {

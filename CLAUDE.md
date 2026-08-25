@@ -180,6 +180,15 @@ Output lands at `sites/<name>/<name>-debug.apk`. The generated
 `sites/*/android/` project and `*.apk` files are git-ignored (regenerated on
 demand). See DEPLOY.md for details and signing notes.
 
+Android runtime permissions (location, camera, …) must NOT be hand-edited
+into `android/` — it is regenerable. Declare them in
+`sites/<name>/android-permissions.txt` (one `android.permission.*` name per
+line); `build-apk.sh` injects them into the manifest idempotently on every
+build. Native device APIs go through the matching Capacitor plugin (e.g.
+`@capacitor/geolocation` — the WebView's own `navigator.geolocation` never
+gets a permission prompt in the APK), with a web fallback via
+`Capacitor.isNativePlatform()`.
+
 ## Per-site commands (run inside `sites/<name>/`)
 
 ```bash

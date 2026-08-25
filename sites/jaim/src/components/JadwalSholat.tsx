@@ -1,7 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'motion/react'
-import { LocateFixed, MapPin } from 'lucide-react'
+import { LoaderCircle, LocateFixed, MapPin, Settings } from 'lucide-react'
 import { PRAYER_NAMES, type PrayerName } from '@/lib/db/db'
+import {
+  GeoError,
+  getCurrentCoords,
+  isNativeApp,
+  openGeoSettings,
+  type GeoSettingsTarget,
+} from '@/lib/geolocation'
 import {
   DEFAULT_COORDS,
   getPrayerTimes,
@@ -47,6 +54,11 @@ export function JadwalSholat() {
   const [coords, setCoords] = useState<Coords>(() => loadSavedCoords() ?? DEFAULT_COORDS)
   const [jadwal, setJadwal] = useState<PrayerTimes | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [geoError, setGeoError] = useState<{
+    message: string
+    settings: GeoSettingsTarget | null
+  } | null>(null)
+  const [locating, setLocating] = useState(false)
   const [now, setNow] = useState(() => new Date())
 
   useEffect(() => {
@@ -70,19 +82,22 @@ export function JadwalSholat() {
     }
   }, [coords])
 
-  const useMyLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const c: Coords = {
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude,
-          label: 'Lokasimu',
-        }
-        saveCoords(c)
-        setCoords(c)
-      },
-      () => setError('Izin lokasi ditolak — memakai jadwal Jakarta.'),
-    )
+  const useMyLocation = async () => {
+    setLocating(true)
+    setGeoError(null)
+    try {
+      const pos = await getCurrentCoords()
+      const c: Coords = { ...pos, label: 'Lokasimu' }
+      saveCoords(c)
+      setCoords(c)
+    } catch (e) {
+      setGeoError({
+        message: e instanceof GeoError ? e.message : 'Gagal membaca lokasi.',
+        settings: e instanceof GeoError ? e.settings : null,
+      })
+    } finally {
+      setLocating(false)
+    }
   }
 
   const next = useMemo(
@@ -99,10 +114,15 @@ export function JadwalSholat() {
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold">Jadwal Sholat</h2>
         <button
-          onClick={useMyLocation}
-          className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          onClick={() => void useMyLocation()}
+          disabled={locating}
+          className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:opacity-60"
         >
-          <LocateFixed className="size-3" />
+          {locating ? (
+            <LoaderCircle className="size-3 animate-spin" />
+          ) : (
+            <LocateFixed className="size-3" />
+          )}
           Gunakan lokasiku
         </button>
       </div>
@@ -111,6 +131,20 @@ export function JadwalSholat() {
         {coords.label} · {jadwal?.dateReadable ?? '…'}
       </p>
 
+      {geoError && (
+        <div className="mt-3 rounded-xl bg-muted px-3 py-2.5">
+          <p className="text-xs text-destructive">{geoError.message}</p>
+          {isNativeApp && geoError.settings && (
+            <button
+              onClick={() => void openGeoSettings(geoError.settings!)}
+              className="mt-2 inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-xs font-medium transition-colors hover:text-foreground"
+            >
+              <Settings className="size-3" />
+              Buka Pengaturan
+            </button>
+          )}
+        </div>
+      )}
       {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
 
       {jadwal && next && (

@@ -2,17 +2,23 @@ import { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import { BookOpen } from 'lucide-react'
 import { db } from '@/lib/db/db'
+import { useUser } from '@/lib/auth'
 import { JUZ_LIST } from '@/lib/juz'
 
 export function TilawahGrid() {
+  const user = useUser()
   const [done, setDone] = useState<Set<number>>(new Set())
   const [selected, setSelected] = useState<number | null>(null)
 
   useEffect(() => {
-    void db.tilawah.toArray().then((rows) => {
-      setDone(new Set(rows.filter((r) => r.done).map((r) => r.juz)))
-    })
-  }, [])
+    void db.tilawahLogs
+      .where('userId')
+      .equals(user.id)
+      .toArray()
+      .then((rows) => {
+        setDone(new Set(rows.filter((r) => r.done).map((r) => r.juz)))
+      })
+  }, [user.id])
 
   const toggle = (juz: number) => {
     setSelected(juz)
@@ -21,7 +27,7 @@ export function TilawahGrid() {
     if (nowDone) next.add(juz)
     else next.delete(juz)
     setDone(next)
-    void db.tilawah.put({ juz, done: nowDone, updatedAt: Date.now() })
+    void db.tilawahLogs.put({ userId: user.id, juz, done: nowDone, updatedAt: Date.now() })
   }
 
   const detail = selected ? JUZ_LIST[selected - 1] : null
