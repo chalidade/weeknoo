@@ -62,3 +62,52 @@ jobs:
           name: ${{ matrix.site }}-apk
           path: sites/${{ matrix.site }}/${{ matrix.site }}-debug.apk
           retention-days: 30
+
+  # Publish every site to GitHub Pages:
+  #   https://chalidade.github.io/weeknoo/<site>/
+  # Sites are rebuilt with --base so assets resolve under the sub-path;
+  # local builds and the APK flow keep the default base.
+  pages:
+    needs: discover
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Build all sites for Pages
+        run: |
+          mkdir -p _pages
+          for site in $(ls sites); do
+            (cd "sites/$site" && npm ci && npx vite build --base="/weeknoo/$site/")
+            cp -r "sites/$site/dist" "_pages/$site"
+          done
+          {
+            echo '<!doctype html><html lang="en"><meta charset="utf-8">'
+            echo '<meta name="viewport" content="width=device-width, initial-scale=1">'
+            echo '<title>weeknoo</title>'
+            echo '<body style="font-family:system-ui;max-width:40rem;margin:4rem auto;padding:0 1rem">'
+            echo '<h1>weeknoo sites</h1><ul>'
+            for site in $(ls sites); do
+              echo "<li><a href=\"./$site/\">$site</a></li>"
+            done
+            echo '</ul></body></html>'
+          } > _pages/index.html
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _pages
+
+      - id: deployment
+        uses: actions/deploy-pages@v5
