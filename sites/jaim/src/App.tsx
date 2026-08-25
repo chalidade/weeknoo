@@ -7,6 +7,7 @@ import { JadwalSholat } from '@/components/JadwalSholat'
 import { PrayerTracker } from '@/components/PrayerTracker'
 import { PrayerStats } from '@/components/PrayerStats'
 import { PrayerAnalytics } from '@/components/PrayerAnalytics'
+import { QuranReader } from '@/components/QuranReader'
 import { TilawahGrid } from '@/components/TilawahGrid'
 import { Footer } from '@/components/Footer'
 
@@ -27,6 +28,8 @@ function Shell() {
             <PrayerTracker />
             <TilawahGrid />
           </>
+        ) : tab === 'quran' ? (
+          <QuranReader />
         ) : (
           <>
             <PrayerStats />

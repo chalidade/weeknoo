@@ -8,6 +8,13 @@
   --color-success: #10b981;
 }
 
+/* Arabic script for the Qur'an reader — system fonts only (Android WebView
+   ships Noto Naskh Arabic) */
+.font-quran {
+  font-family: "Noto Naskh Arabic", "KFGQPC Uthmanic Script HAFS",
+    "Traditional Arabic", "Scheherazade New", "Amiri", serif;
+}
+
 /* JAIM palette — blue primary per the product spec */
 :root {
   --radius: 0.75rem;

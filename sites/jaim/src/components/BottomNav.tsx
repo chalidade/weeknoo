@@ -1,16 +1,17 @@
-import { ChartColumn, Home } from 'lucide-react'
+import { BookOpen, ChartColumn, Home } from 'lucide-react'
 
-export type Tab = 'home' | 'stats'
+export type Tab = 'home' | 'quran' | 'stats'
 
 const TABS: { id: Tab; label: string; icon: typeof Home }[] = [
   { id: 'home', label: 'Beranda', icon: Home },
+  { id: 'quran', label: "Qur'an", icon: BookOpen },
   { id: 'stats', label: 'Evaluasi', icon: ChartColumn },
 ]
 
 export function BottomNav({ tab, onChange }: { tab: Tab; onChange: (tab: Tab) => void }) {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-10 border-t bg-background/80 pb-[env(safe-area-inset-bottom)] backdrop-blur">
-      <div className="mx-auto grid max-w-md grid-cols-2">
+      <div className="mx-auto grid max-w-md grid-cols-3">
         {TABS.map(({ id, label, icon: Icon }) => {
           const active = tab === id
           return (
