@@ -6,6 +6,7 @@ import { BottomNav, type Tab } from '@/components/BottomNav'
 import { JadwalSholat } from '@/components/JadwalSholat'
 import { PrayerTracker } from '@/components/PrayerTracker'
 import { PrayerStats } from '@/components/PrayerStats'
+import { PrayerAnalytics } from '@/components/PrayerAnalytics'
 import { TilawahGrid } from '@/components/TilawahGrid'
 import { Footer } from '@/components/Footer'
 
@@ -27,7 +28,10 @@ function Shell() {
             <TilawahGrid />
           </>
         ) : (
-          <PrayerStats />
+          <>
+            <PrayerStats />
+            <PrayerAnalytics />
+          </>
         )}
         <Footer />
       </main>

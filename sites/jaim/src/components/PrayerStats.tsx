@@ -13,6 +13,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -21,6 +22,7 @@ import {
 import { db, PRAYER_NAMES, type PrayerDay, type PrayerName } from '@/lib/db/db'
 import { useUser } from '@/lib/auth'
 import {
+  BASE_DAY_SCORE,
   dayScore,
   evaluate,
   MAX_DAY_SCORE,
@@ -80,7 +82,7 @@ function ScoreTooltip({
         {d.haid
           ? `Hari haid — nilai ${d.score}`
           : d.recorded
-            ? `Skor ${d.score} dari ${MAX_DAY_SCORE}`
+            ? `Skor ${d.score} · target ${BASE_DAY_SCORE}`
             : 'Belum dicatat'}
       </p>
     </div>
@@ -126,8 +128,8 @@ export function PrayerStats() {
     }
 
     const total = data.reduce((s, d) => s + d.score, 0)
-    const pct = Math.round((total / (range * MAX_DAY_SCORE)) * 100)
-    const fullDays = data.filter((d) => d.score === MAX_DAY_SCORE).length
+    const pct = Math.round((total / (range * BASE_DAY_SCORE)) * 100)
+    const fullDays = data.filter((d) => d.score >= BASE_DAY_SCORE).length
     const recordedDays = data.filter((d) => d.recorded).length
 
     let masjidCount = 0
@@ -191,7 +193,7 @@ export function PrayerStats() {
           <div className="flex items-baseline gap-2">
             <p className="text-3xl font-bold tabular-nums">{stats.pct}%</p>
             <p className="text-xs text-muted-foreground">
-              {stats.total} dari {range * MAX_DAY_SCORE} poin
+              {stats.total} poin · target {range * BASE_DAY_SCORE} (semua awal waktu)
             </p>
           </div>
           <p
@@ -206,7 +208,7 @@ export function PrayerStats() {
         <div className="mt-3 grid grid-cols-2 gap-2">
           <div className="rounded-xl border px-3 py-2.5">
             <p className="text-lg font-bold tabular-nums">{stats.fullDays}</p>
-            <p className="text-[11px] text-muted-foreground">hari skor penuh</p>
+            <p className="text-[11px] text-muted-foreground">hari capai target</p>
           </div>
           <div className="rounded-xl border px-3 py-2.5">
             <p className="inline-flex items-center gap-1.5 text-lg font-bold tabular-nums">
@@ -236,6 +238,12 @@ export function PrayerStats() {
                 tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
               />
               <Tooltip content={ScoreTooltip} cursor={{ fill: 'var(--muted)' }} />
+              <ReferenceLine
+                y={BASE_DAY_SCORE}
+                stroke="var(--muted-foreground)"
+                strokeDasharray="4 4"
+                strokeOpacity={0.5}
+              />
               <Bar dataKey="score" radius={[4, 4, 0, 0]} maxBarSize={18} isAnimationActive={false}>
                 {stats.data.map((d) => (
                   <Cell key={d.date} fill={d.haid ? 'var(--haid)' : 'var(--primary)'} />
@@ -247,7 +255,8 @@ export function PrayerStats() {
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
             <span className="size-2 rounded-full bg-primary" />
-            Skor harian (maks {MAX_DAY_SCORE})
+            Skor harian — garis putus-putus = target {BASE_DAY_SCORE}, bonus masjid s.d.{' '}
+            {MAX_DAY_SCORE}
           </span>
           {hasHaid && (
             <span className="inline-flex items-center gap-1.5">
@@ -270,7 +279,8 @@ export function PrayerStats() {
       >
         <h2 className="text-sm font-semibold">Rata-rata per Sholat</h2>
         <p className="mt-1 text-xs text-muted-foreground">
-          Skor 0–{MAX_PRAYER_SCORE}: tidak sholat 0 · akhir waktu 1 · awal waktu 2 · +1 di masjid.
+          Skor 0–{MAX_PRAYER_SCORE}: tidak sholat 0 · akhir waktu 1 · awal waktu 2. Bonus +1 di
+          masjid bisa melampaui {MAX_PRAYER_SCORE}.
         </p>
         <ul className="mt-4 space-y-3">
           {PRAYER_NAMES.map((name) => {
@@ -286,7 +296,7 @@ export function PrayerStats() {
                 <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted">
                   <div
                     className="h-full rounded-full bg-primary transition-all duration-500"
-                    style={{ width: `${(avg / MAX_PRAYER_SCORE) * 100}%` }}
+                    style={{ width: `${Math.min(100, (avg / MAX_PRAYER_SCORE) * 100)}%` }}
                   />
                 </div>
               </li>
