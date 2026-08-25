@@ -205,6 +205,16 @@ gate — it type-checks the whole app before bundling.
 - **Motion** for animation — import from `motion/react` (NOT `framer-motion`).
   The `Hero` component shows the house pattern: a `container` variant with
   `staggerChildren` driving `fadeUp` children.
+- **CKEditor 5** (WYSIWYG) is pre-installed with a prewired wrapper at
+  `@/components/editor/RichTextEditor` (GPL build, `licenseKey: "GPL"`) —
+  use it for rich-text input instead of adding another editor. It costs
+  nothing in the bundle until imported.
+- **Recharts** is the chart library (pairs with shadcn; `npm run add --
+  <site> chart` adds the styled shadcn chart components). Don't add other
+  chart libs.
+- The user-facing manual is **PANDUAN.md** (Indonesian) — keep it updated
+  when workspace behavior changes (new commands, new bundled libraries, new
+  pipeline steps).
 - Design tokens are semantic shadcn CSS variables (`bg-background`,
   `text-muted-foreground`, `border-border`, …) with light/dark via the `.dark`
   class. Style with these tokens, not hard-coded colors.

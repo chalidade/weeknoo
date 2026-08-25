@@ -30,10 +30,11 @@ pnpm-debug.log*
 sites/*/android/
 *.apk
 
-# Env
+# Env & credentials
 .env
 .env.*
 !.env.example
+.access-code
 
 # The UI/UX Pro Max skill is installed globally (~/.claude/skills) — the clone
 # does not belong in this repo.

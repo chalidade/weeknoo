@@ -3,6 +3,10 @@
 One repo, one flow. Every website lives in its own folder under `sites/`, all
 built from the same stack and generated from a single template.
 
+> **📖 Panduan lengkap (Bahasa Indonesia): [PANDUAN.md](PANDUAN.md)** — peta
+> repo, perintah harian, library bawaan, publish, APK, kode akses, dan
+> troubleshooting dalam satu dokumen.
+
 ## Stack
 
 - **Vite** + **React 19** + **TypeScript**

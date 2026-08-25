@@ -12,6 +12,8 @@
   "dependencies": {
     "@capacitor/android": "^8.5.0",
     "@capacitor/core": "^8.5.0",
+    "@ckeditor/ckeditor5-react": "^11.2.0",
+    "ckeditor5": "^48.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dexie": "^4.4.5",
@@ -19,6 +21,7 @@
     "motion": "^12.42.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "recharts": "^3.10.1",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
