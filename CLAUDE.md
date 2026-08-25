@@ -100,6 +100,13 @@ under `/weeknoo/<site>/` — this split is handled in the `pages` job of
 - The homepage's display font is Instrument Serif (Google Fonts, loaded in
   its `index.html`; `font-display` utility via `--font-display` in its
   `index.css`). It renders dark-only (`class="dark"` on `<html>`).
+- The homepage is gated by an access code (`Gate.tsx` — only the SHA-256
+  hash is embedded; to rotate: `echo -n "kode" | sha256sum`, replace
+  `ACCESS_HASH`). It is a client-side gate for casual visitors; the real
+  abuse protection is pipeline-side: GitHub ignores the `labels` URL param
+  for non-collaborators, and the runner routine only executes issues that
+  are BOTH labeled `prompt` AND authored by `chalidade`. Keep both checks
+  when editing the routine.
 
 ## Data APIs (bundled library)
 
