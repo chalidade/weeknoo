@@ -14,6 +14,9 @@ built from the same stack and generated from a single template.
   (equran.id), tafsir, asbabun nuzul (bundled Kemenag dataset), hadits
   (9 narrators + Arba'in), and wilayah Indonesia (provinsi → kelurahan).
   Free, keyless, browser-ready.
+- **Local database** in `src/lib/db/` (`@/lib/db`) — Dexie/IndexedDB per site
+  with JSON export/import backup helpers, for apps that store user data
+  (preview/personal use; per-device, no server).
 
 **Design reference:** [21st.dev community heroes](https://21st.dev/community/components/s/hero).
 **Design intelligence:** the globally-installed **UI/UX Pro Max** Claude skill

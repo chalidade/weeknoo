@@ -110,6 +110,33 @@ import { getSurah, getTafsir, getAsbabunNuzulBySurah,
 The library needs `"resolveJsonModule": true` in `tsconfig.app.json` (already
 set in the template and both existing sites).
 
+## Local database (bundled library)
+
+Every site carries `src/lib/db/` (import from `@/lib/db`) — an on-device
+database for apps that need to store user-written data, aimed at
+preview/personal use. Use it instead of localStorage:
+
+- **`db.ts`** — the site's Dexie (IndexedDB) database, named after the site.
+  Define one interface + one `stores` entry per table and bump the schema
+  `version` on change. The starter schema has an example `items` table —
+  replace it with the site's real tables.
+- **`backup.ts`** — file-based backup that works on any Dexie instance:
+  `exportDbJson(db)`, `downloadDbBackup(db)` (saves a .json file),
+  `importDbJson(db, json, {merge})`, `importDbFromFile(db, file)` (from an
+  `<input type="file">`). This is the migration path between devices.
+
+```ts
+import { db, downloadDbBackup } from "@/lib/db"
+await db.items.add({ title: "Halo", createdAt: Date.now() })
+const all = await db.items.orderBy("createdAt").toArray()
+await downloadDbBackup(db)
+```
+
+For live React views use `useLiveQuery` from `dexie-react-hooks` (install it
+in the site first). Data is per-device — it does not sync between devices or
+browsers; read-only content belongs in bundled JSON (see the asbabun nuzul
+pattern), and cross-device sync needs a hosted DB (e.g. Supabase), not this.
+
 ## Building an Android APK
 
 Any site can be wrapped into an Android APK via Capacitor. Always go through
