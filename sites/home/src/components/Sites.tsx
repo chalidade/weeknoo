@@ -22,6 +22,12 @@ const SITES = [
     description: 'Landing page app dengan animasi Motion.',
     url: 'https://chalidade.github.io/weeknoo/motion-app/',
   },
+  {
+    name: 'kopi-senja',
+    title: 'Kopi Senja',
+    description: 'Landing page coffee shop — menu unggulan, testimoni, jam buka, dan lokasi.',
+    url: 'https://chalidade.github.io/weeknoo/kopi-senja/',
+  },
 ]
 
 const fadeUp = {
