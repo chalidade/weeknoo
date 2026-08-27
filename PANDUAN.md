@@ -72,9 +72,14 @@ menayangkannya.
 
 **Jalur B — lewat halaman utama (tanpa buka terminal):** buka
 https://chalidade.github.io/weeknoo/, masukkan kode akses, tulis prompt, kirim
-— promptmu menjadi GitHub Issue berlabel `prompt`. Issue itu dieksekusi oleh
-routine cloud `weeknoo-prompt-runner` (atau bilang ke Claude di terminal:
-"kerjakan issue #N"). Hasilnya di-push otomatis dan CI menayangkannya.
+— promptmu menjadi GitHub Issue berlabel `prompt`. Routine cloud
+`weeknoo-prompt-runner` mengecek issue baru **setiap jam (menit :18)** dan
+mengeksekusinya otomatis (atau tanpa menunggu: bilang ke Claude di terminal
+"kerjakan issue #N" / "jalankan routine-nya sekarang"). Hasilnya di-push
+otomatis dan CI menayangkannya.
+
+Catatan: issue harus dibuat dari akun **`chalidade`** (bukan akun kerja) —
+kalau tidak, label `prompt` tidak terpasang dan routine mengabaikannya.
 
 **Jalur C — template kategori (auto, tanpa Claude):**
 
@@ -260,9 +265,12 @@ Kenapa orang asing tidak bisa menghabiskan token langgananmu:
    lain diperlakukan sebagai data, bukan perintah.
 3. Routine bisa dilihat/di-pause di https://claude.ai/code/routines.
 
-Status: pemicu webhook otomatis masih menunggu koneksi GitHub App Claude ke
-akun `chalidade` (satu kali, lewat claude.ai/code). Sampai tersambung,
-eksekusi issue lewat Claude di terminal ("kerjakan issue #N").
+Status: routine berjalan **tiap jam (cron `18 * * * *`)** — issue baru
+dieksekusi otomatis maksimal ±1 jam setelah dibuat. Pemicu instan (webhook
+`issues.opened`) masih menunggu instalasi GitHub App Claude untuk
+`chalidade/weeknoo` (satu kali: github.com/apps/claude → configure di akun
+`chalidade`); setelah terpasang, minta Claude memasang webhook-nya dan
+mengembalikan cron ke placeholder.
 
 ## 10. Gratis vs pakai langganan Claude
 
