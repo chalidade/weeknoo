@@ -53,6 +53,9 @@ Semua dijalankan dari **root workspace**, kecuali yang ditandai:
 | Perintah | Fungsi |
 | --- | --- |
 | `npm run new -- <nama>` | buat site baru dari template (nama: huruf kecil/angka/strip) |
+| `npm run new -- <nama> --category <kategori>` | buat site **utuh** (Navbar→Footer) dari template kategori — tanpa Claude |
+| `npm run categories` | daftar kategori template yang tersedia |
+| `npm run check-categories` | verifikasi build semua template kategori (untuk perawatan) |
 | `npm run sites` | daftar site yang ada |
 | `npm run add -- <site> <komponen>` | pasang komponen 21st.dev / shadcn ke site |
 | `npm run apk -- <site>` | build APK Android (tambah `--release` untuk rilis tak bertanda tangan) |
@@ -73,8 +76,26 @@ https://chalidade.github.io/weeknoo/, masukkan kode akses, tulis prompt, kirim
 routine cloud `weeknoo-prompt-runner` (atau bilang ke Claude di terminal:
 "kerjakan issue #N"). Hasilnya di-push otomatis dan CI menayangkannya.
 
-> Catatan: `npm run new` sendirian hanya menghasilkan halaman starter generik.
-> Yang mengubah prompt menjadi website jadi adalah Claude — lihat
+**Jalur C — template kategori (auto, tanpa Claude):**
+
+```bash
+npm run new -- kafe-senja --category restaurant
+```
+
+Hasilnya site **utuh** — Navbar, Hero, section konten, sampai Footer — dengan
+desain, palet warna, font, dan copy dummy berbahasa Indonesia khas kategorinya;
+langsung bisa `npm run dev` / di-deploy. Kategori yang tersedia saat ini (cek
+`npm run categories`): `portfolio`, `company-profile`, `landing-product`,
+`saas`, `restaurant`, `blog`, `education`, `photography`, `local-business`.
+Sebelas kategori lagi (`ecommerce`, `agency`, `event`, `wedding`,
+`nonprofit`, `real-estate`, `medical`, `travel`, `fitness`, `news`, `resume`)
+sudah dispesifikasikan di `categories/SPEC.md` dan menyusul — minta Claude
+"lanjutkan kategori berikutnya" untuk menambahkannya.
+
+> Catatan: `npm run new` tanpa `--category` hanya menghasilkan halaman starter
+> generik. Template kategori memberi halaman jadi tapi isinya masih dummy —
+> personalisasi (nama bisnis, konten asli, foto, warna brand) tetap lewat edit
+> manual atau minta Claude — lihat
 > [bagian 10](#10-gratis-vs-pakai-langganan-claude).
 
 Aturan penting: jangan pernah `npm create vite` langsung — selalu lewat
@@ -248,6 +269,7 @@ eksekusi issue lewat Claude di terminal ("kerjakan issue #N").
 | Aktivitas | Biaya |
 | --- | --- |
 | `npm run new` (kerangka site), build, preview, APK, CI, Pages, semua link | **Gratis selamanya** — jalan tanpa Claude |
+| Template kategori (`npm run new -- <nama> --category <kategori>`, 20 kategori) | **Gratis selamanya** — site utuh tanpa Claude, isi masih dummy |
 | Data API (Quran/hadits/wilayah), database lokal, CKEditor, Recharts | **Gratis** |
 | Mengubah prompt menjadi website jadi (desain + isi) | **Langganan Claude** — baik lewat terminal maupun routine cloud |
 | Registry 21st.dev (`npm run add`) | Akun 21st.dev sendiri (ada free tier) |

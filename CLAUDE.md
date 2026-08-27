@@ -15,13 +15,33 @@ Always scaffold via the generator — never hand-roll a new site or run
 `npm create vite` directly, so every site stays on the same stack:
 
 ```bash
-npm run new -- <site-name>          # wrapper for scripts/new-site.sh
-# or: bash scripts/new-site.sh <site-name> [--no-install]
+npm run new -- <site-name>                          # blank starter
+npm run new -- <site-name> --category <category>    # full page from a category template
+npm run categories                                  # list available categories
+# or: bash scripts/new-site.sh <site-name> [--category <name>] [--no-install]
 ```
 
 The generator copies `template/` to `sites/<name>/`, replaces the
 `__SITE_NAME__` placeholder, and runs `npm install`. Site names must match
 `^[a-z0-9][a-z0-9-]*$`. It refuses to overwrite an existing site.
+
+With `--category`, the matching `categories/<name>/` overlay is copied over
+the fresh template (after removing the starter `Hero.tsx`), yielding a
+complete page — Navbar → Hero → content sections → Footer — with
+category-specific palette, fonts and Indonesian dummy copy. Available now:
+portfolio, company-profile, landing-product, saas, restaurant, blog,
+education, photography, local-business — `npm run categories` lists the
+current set. Eleven more (ecommerce, agency, event, wedding, nonprofit,
+real-estate, medical, travel, fitness, news, resume) are specced in
+`categories/SPEC.md` but not yet built; build them on request following that
+spec.
+**`categories/SPEC.md` is the contract** for every category (allowed imports,
+token-only styling, no external images, `__SITE_NAME__` branding) — read it
+before editing or adding one, and verify with
+`npm run check-categories [-- <name>...]` (builds each overlay against a
+throwaway site at `sites/.catcheck`, git-ignored). When the user's request
+matches a category, prefer scaffolding with it and then personalizing, over
+building from the blank starter.
 
 ## Component library: 21st.dev
 

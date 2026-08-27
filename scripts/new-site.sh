@@ -3,10 +3,11 @@
 # new-site.sh — scaffold a new website into sites/<name> from ./template
 #
 # Usage:
-#   scripts/new-site.sh <site-name> [--no-install]
+#   scripts/new-site.sh <site-name> [--category <name>] [--no-install]
+#   scripts/new-site.sh --list-categories
 #
 # Example:
-#   scripts/new-site.sh acme-landing
+#   scripts/new-site.sh acme-landing --category company-profile
 #
 set -euo pipefail
 
@@ -16,19 +17,49 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TEMPLATE="$ROOT/template"
 SITES="$ROOT/sites"
+CATEGORIES="$ROOT/categories"
+
+list_categories() {
+  find "$CATEGORIES" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | sort
+}
 
 # --- args -------------------------------------------------------------------
+if [[ "${1:-}" == "--list-categories" ]]; then
+  list_categories
+  exit 0
+fi
+
 NAME="${1:-}"
 INSTALL=1
-for arg in "${@:2}"; do
-  case "$arg" in
+CATEGORY=""
+ARGS=("${@:2}")
+i=0
+while [[ $i -lt ${#ARGS[@]} ]]; do
+  case "${ARGS[$i]}" in
     --no-install) INSTALL=0 ;;
-    *) echo "Unknown option: $arg" >&2; exit 1 ;;
+    --category)
+      i=$((i + 1))
+      CATEGORY="${ARGS[$i]:-}"
+      if [[ -z "$CATEGORY" ]]; then
+        echo "--category needs a value. Available:" >&2
+        list_categories >&2
+        exit 1
+      fi
+      ;;
+    *) echo "Unknown option: ${ARGS[$i]}" >&2; exit 1 ;;
   esac
+  i=$((i + 1))
 done
 
 if [[ -z "$NAME" ]]; then
-  echo "Usage: scripts/new-site.sh <site-name> [--no-install]" >&2
+  echo "Usage: scripts/new-site.sh <site-name> [--category <name>] [--no-install]" >&2
+  echo "       scripts/new-site.sh --list-categories" >&2
+  exit 1
+fi
+
+if [[ -n "$CATEGORY" && ! -d "$CATEGORIES/$CATEGORY" ]]; then
+  echo "Unknown category '$CATEGORY'. Available:" >&2
+  list_categories >&2
   exit 1
 fi
 
@@ -53,6 +84,15 @@ echo "→ Creating sites/$NAME from template..."
 mkdir -p "$SITES"
 cp -R "$TEMPLATE" "$DEST"
 
+# Apply the category overlay: drop the starter hero, then copy the category's
+# files (a full page: Navbar → sections → Footer + its own index.css/index.html)
+# over the fresh template. Placeholder replacement below covers overlay files too.
+if [[ -n "$CATEGORY" ]]; then
+  echo "→ Applying category '$CATEGORY'..."
+  rm -f "$DEST/src/components/Hero.tsx"
+  cp -R "$CATEGORIES/$CATEGORY/." "$DEST/"
+fi
+
 # Replace the __SITE_NAME__ placeholder in all text files.
 grep -rl --binary-files=without-match '__SITE_NAME__' "$DEST" | while read -r file; do
   sed -i "s/__SITE_NAME__/$NAME/g" "$file"
@@ -67,7 +107,11 @@ else
 fi
 
 echo ""
-echo "✅ Site ready: sites/$NAME"
+if [[ -n "$CATEGORY" ]]; then
+  echo "✅ Site ready: sites/$NAME (category: $CATEGORY)"
+else
+  echo "✅ Site ready: sites/$NAME"
+fi
 echo ""
 echo "Next steps:"
 echo "  cd sites/$NAME"
