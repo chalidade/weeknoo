@@ -25,6 +25,13 @@ The generator copies `template/` to `sites/<name>/`, replaces the
 `__SITE_NAME__` placeholder, and runs `npm install`. Site names must match
 `^[a-z0-9][a-z0-9-]*$`. It refuses to overwrite an existing site.
 
+To delete a site, use `npm run delete -- <site-name>` (wrapper for
+`scripts/delete-site.sh`) — it asks the user to re-type the site name
+(`--yes` skips, for automation), removes `sites/<name>/`, and strips the
+site's card from `sites/home/src/components/Sites.tsx`. It touches only the
+working tree; committing and pushing is what takes the site off Pages. It
+refuses to delete `home`.
+
 With `--category`, the matching `categories/<name>/` overlay is copied over
 the fresh template (after removing the starter `Hero.tsx`), yielding a
 complete page — Navbar → Hero → content sections → Footer — with

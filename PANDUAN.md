@@ -57,6 +57,7 @@ Semua dijalankan dari **root workspace**, kecuali yang ditandai:
 | `npm run categories` | daftar kategori template yang tersedia |
 | `npm run check-categories` | verifikasi build semua template kategori (untuk perawatan) |
 | `npm run sites` | daftar site yang ada |
+| `npm run delete -- <site>` | hapus site + kartunya di halaman utama (minta konfirmasi ketik nama) |
 | `npm run add -- <site> <komponen>` | pasang komponen 21st.dev / shadcn ke site |
 | `npm run apk -- <site>` | build APK Android (tambah `--release` untuk rilis tak bertanda tangan) |
 | `npm run dev` *(di dalam folder site)* | dev server |
