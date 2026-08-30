@@ -28,6 +28,9 @@ mem-build web + APK lalu mem-publish-nya.
 ├── template/          # cetakan — semua site baru dibuat dari sini
 ├── sites/
 │   ├── home/          # halaman utama (privat, kode akses) — tampil di root Pages
+│   ├── ask/           # tanya AI lokal (Ollama) — lihat §4 "AI dengan reasoning"
+│   ├── jaim/
+│   ├── kopi-senja/
 │   ├── chalidade-portfolio-sites/
 │   └── motion-app/
 ├── scripts/

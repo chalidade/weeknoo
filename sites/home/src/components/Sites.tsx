@@ -5,6 +5,13 @@ const ACTIONS = 'https://github.com/chalidade/weeknoo/actions'
 
 const SITES = [
   {
+    name: 'ask',
+    title: 'ask — AI lokal',
+    description:
+      'Tanya AI yang jalan di komputermu sendiri lewat Ollama — gratis, tanpa internet, lengkap dengan proses berpikirnya. Perlu Ollama terpasang di perangkat yang membukanya.',
+    url: 'https://chalidade.github.io/weeknoo/ask/',
+  },
+  {
     name: 'jaim',
     title: 'JAIM — Jaga Iman',
     description: 'Catat sholat harian, progres tilawah 30 juz, dan jadwal sholat sesuai lokasi.',
