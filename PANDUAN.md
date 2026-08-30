@@ -207,6 +207,8 @@ sudo systemctl restart ollama
 | `could not connect to ollama server` | Service belum sempat menyala. Tunggu sebentar, atau `sudo systemctl start ollama`. |
 | `isOllamaRunning()` false padahal jalan | Origin site-nya belum diizinkan — atur `OLLAMA_ORIGINS` seperti di atas. |
 | Jawaban muncul tapi `reasoning` kosong | Modelnya bukan model reasoning (mis. llama3.1). Pakai `qwen3:4b`. |
+| Isi `content` malah berisi "Okay, so I need to..." | Jangan pakai `think: false` — model tetap berpikir, hanya labelnya yang hilang. Biarkan `think` kosong. |
+| Jawaban lama sekali (30–120 detik) | Wajar: model 4B di CPU jalan ~3–9 kata/detik. Pakai `chatStream()` supaya kelihatan mengetik, atau model lebih kecil `qwen3:1.7b`. |
 
 ### WYSIWYG editor — CKEditor 5
 

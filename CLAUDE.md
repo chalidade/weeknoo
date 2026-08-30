@@ -218,10 +218,23 @@ split across two chunks still resolves — and prefers Ollama's own `thinking`
 field when it sends one. Render it in a collapsible panel, never inline in the
 answer.
 
-**Default model:** `qwen3:4b` (~2.6 GB, runs on 8 GB of RAM, thinks). Override
-per call with `{ model }`, and list what is actually installed with
-`getOllamaModels()`. `llama3.1:8b` is a fine alternative but has **no**
-reasoning mode — `reasoning` comes back empty.
+**Default model:** `qwen3:4b` (~2.5 GB, thinks). Override per call with
+`{ model }`, and list what is actually installed with `getOllamaModels()`.
+`llama3.1:8b` is a fine alternative but has **no** reasoning mode —
+`reasoning` comes back empty.
+
+**Never pass `think: false`.** Measured on Ollama 0.33.2 + qwen3:4b, it does
+not stop the model thinking — it only stops Ollama labelling the thinking, so
+the chain of thought arrives in `content` untagged and cannot be split out.
+Leave `think` unset (thinks, cleanly separated) or pass `true`. For a fast
+non-thinking answer, switch model rather than the flag.
+
+**Speed is the real constraint, not correctness.** A 4B model on a CPU-only
+machine runs at roughly 3–9 tokens/sec, so a thinking answer takes 30–120
+seconds — and a reasoning model spends most of its tokens deliberating before
+it writes anything. Always stream (`chatStream`) and show the thinking as it
+arrives; a non-streaming `chat()` looks frozen for a minute. On a machine that
+is short on RAM, prefer `qwen3:1.7b`.
 
 **Setup** — Ollama has to be installed and a model pulled:
 

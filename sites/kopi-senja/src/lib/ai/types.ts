@@ -17,9 +17,15 @@ export interface ChatOptions {
   /** Cap on generated tokens. Default 1024. */
   maxTokens?: number
   /**
-   * Ask a reasoning model (qwen3, deepseek-r1) to think before it answers.
-   * Leave it unset to take the model's own default. The thinking text always
-   * arrives in `reasoning`, never mixed into `content`.
+   * Ask a reasoning model to think before it answers, putting the thinking in
+   * `reasoning`. Leave it UNSET — the default already thinks and separates it
+   * cleanly.
+   *
+   * `think: false` is a trap on qwen3 (measured on Ollama 0.33.2): it does not
+   * stop the model thinking, it only stops Ollama labelling it, so the
+   * chain of thought lands in `content` untagged and unsplittable. For a fast,
+   * genuinely non-thinking answer switch models instead — `qwen3:4b-instruct`
+   * or `llama3.1:8b` — rather than setting this to false.
    */
   think?: boolean
   /** Abort an in-flight request — pass an `AbortController.signal`. */
