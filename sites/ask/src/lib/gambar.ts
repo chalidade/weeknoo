@@ -1,10 +1,13 @@
 /**
  * Menyiapkan gambar sebelum dikirim ke model.
  *
- * Foto kamera zaman sekarang bisa 4000 piksel dan 5 MB. Model hanya melihat
- * versi kecilnya, jadi mengirim ukuran asli hanya membuang waktu — dan
- * salinannya ikut tersimpan di riwayat, yang lama-lama membengkakkan database
- * browser. Karena itu setiap gambar diperkecil dulu di sini.
+ * Foto kamera zaman sekarang bisa 4000 piksel dan 5 MB, dan salinannya ikut
+ * tersimpan di riwayat — tanpa diperkecil, database browser cepat membengkak.
+ *
+ * Yang TIDAK dihemat: waktu model. Terukur pada qwen2.5vl:3b, gambar 1024 px
+ * dan 640 px sama-sama menghasilkan 1.098 token dan sama-sama makan ~250 detik
+ * — Ollama mengubah ukurannya sendiri ke ukuran tetap sebelum diproses. Jadi
+ * memperkecil di sini murni soal penyimpanan dan pengiriman, bukan kecepatan.
  */
 
 /** Sisi terpanjang setelah diperkecil. Cukup untuk model membaca tulisan. */
