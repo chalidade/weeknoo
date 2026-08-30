@@ -10,17 +10,35 @@ import { Offline } from '@/components/chat/Offline'
 type Status = 'checking' | 'offline' | 'nomodel' | 'ready'
 
 /**
- * Tanpa ini qwen3 berpikir dalam Bahasa Inggris dan memeriksa ulang jawabannya
- * berkali-kali — pertanyaan "ibukota Jawa Barat" sempat memakan 100 detik lebih
- * tanpa hasil. Dengan perintah ini: 17 detik, jawabannya "Bandung".
+ * Model penalar seperti qwen3 menalar untuk SEGALA hal, termasuk sapaan.
+ * Terukur: "kamu bisa apa saja" menghasilkan 4.980 karakter proses berpikir
+ * demi jawaban 86 karakter — 384 detik. Perintah di bawah menekannya jadi
+ * 1.205 karakter, tapi tidak sampai nol: qwen3 tidak bisa disuruh berhenti
+ * berpikir (think:false dan /no_think sama-sama tidak mempan). Untuk obrolan
+ * sehari-hari, model tanpa penalaran seperti qwen3:4b-instruct jauh lebih
+ * tepat — lihat MODEL_PILIHAN.
  */
 const SISTEM: ChatMessage = {
   role: 'system',
-  content:
-    'Kamu asisten berbahasa Indonesia. SELALU jawab dalam Bahasa Indonesia. ' +
-    'Berpikirlah sesingkat mungkin: untuk pertanyaan faktual sederhana, langsung ' +
-    'simpulkan tanpa memeriksa ulang berkali-kali. Jawaban ringkas dan jelas.',
+  content: [
+    'Kamu asisten berbahasa Indonesia. SELALU jawab dalam Bahasa Indonesia.',
+    '',
+    'ATURAN BERPIKIR — penting:',
+    '- Untuk sapaan, obrolan biasa, atau pertanyaan tentang dirimu sendiri: JANGAN berpikir sama sekali. Langsung tulis jawabannya.',
+    '- Untuk pertanyaan faktual sederhana: langsung simpulkan, jangan memeriksa ulang.',
+    '- Hanya boleh berpikir panjang untuk hitungan, logika, atau analisis. Itu pun maksimal 3 kalimat.',
+    '',
+    'Jawaban ringkas dan jelas.',
+  ].join('\n'),
 }
+
+/**
+ * Urutan model yang dipilih otomatis kalau terpasang. Yang tanpa penalaran
+ * didahulukan: untuk obrolan biasa mereka menjawab dalam hitungan detik,
+ * sementara model penalar bisa memakan menit di mesin tanpa kartu grafis.
+ * Model penalar tetap bisa dipilih sendiri lewat menu saat memang dibutuhkan.
+ */
+const MODEL_PILIHAN = ['qwen3:4b-instruct', 'llama3.2:3b', 'qwen2.5:3b']
 
 const CONTOH = [
   'Jelaskan fotosintesis untuk anak SD',
@@ -66,7 +84,8 @@ export function Chat() {
       const names = (await getOllamaModels()).map((m) => m.name)
       setModels(names)
       if (names.length === 0) return setStatus('nomodel')
-      setModel((current) => (names.includes(current) ? current : names[0]))
+      const disukai = MODEL_PILIHAN.find((m) => names.includes(m))
+      setModel((current) => (names.includes(current) ? current : (disukai ?? names[0])))
       setStatus('ready')
     } catch {
       setStatus('offline')
