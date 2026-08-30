@@ -146,6 +146,68 @@ Skema tabel didefinisikan di `src/lib/db/db.ts` (satu interface + satu baris
 per tabel; naikkan `version` saat skema berubah). Butuh sinkron antar
 perangkat → naik ke Supabase, bukan ini.
 
+### AI dengan reasoning — `@/lib/ai`
+
+Chat ke model AI, lengkap dengan **proses berpikirnya**. Dua sumber, satu API:
+
+| | Ollama (utama) | Hugging Face (cadangan) |
+| --- | --- | --- |
+| Jalan di | komputer sendiri | server mereka |
+| Biaya | **gratis, tanpa batas** | bayar per token, akun gratis dapat jatah kecil per bulan |
+| Internet | tidak perlu | perlu |
+| API key | tidak perlu | perlu |
+| Data | tidak ke mana-mana | dikirim ke server |
+
+```ts
+import { chat, chatStream, isOllamaRunning } from "@/lib/ai"
+
+const jawab = await chat([{ role: "user", content: "Jelaskan zakat fitrah" }])
+jawab.content     // jawabannya
+jawab.reasoning   // proses berpikir model — terpisah, siap ditaruh di panel sendiri
+
+// tampilkan sambil model mengetik
+for await (const chunk of chatStream(pesan, { think: true })) {
+  setBerpikir((t) => t + chunk.reasoning)
+  setJawaban((a) => a + chunk.content)
+}
+```
+
+- `chat()` otomatis pakai Ollama kalau hidup, Hugging Face kalau tidak.
+  Paksa salah satu dengan `{ provider: "ollama" }`.
+- **Cek dulu, jangan langsung kirim:** `isOllamaRunning()` (atau
+  `hasHfToken()`) — wajar kalau pengunjung belum punya keduanya, tampilkan
+  pesan, jangan error.
+- Model default: `qwen3:4b` di lokal (~2,6 GB, cukup untuk RAM 8 GB) dan
+  `Qwen/Qwen3-4B-Thinking-2507` di Hugging Face. Ganti per panggilan lewat
+  `{ model: "..." }`. `llama3.1:8b` juga bisa, tapi **tidak punya** mode
+  berpikir — `reasoning` akan kosong.
+
+**Pasang Ollama sekali saja:**
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull qwen3:4b
+ollama run qwen3:4b            # tes cepat di terminal
+```
+
+`npm run dev` langsung jalan (localhost sudah diizinkan Ollama). Untuk site
+yang **sudah di-publish**, izinkan dulu alamatnya, kalau tidak diblokir CORS:
+
+```bash
+sudo systemctl edit ollama     # Environment="OLLAMA_ORIGINS=https://chalidade.github.io"
+sudo systemctl restart ollama
+```
+
+Catatan penting: AI-nya jalan di komputer **pengunjung**, bukan di server.
+Jadi site yang di-publish hanya bisa pakai Ollama kalau pengunjung itu sendiri
+memasangnya — untuk orang lain, sediakan jalur Hugging Face.
+
+> ⚠️ **Jangan pernah commit API key Hugging Face.** `VITE_HF_TOKEN` di `.env`
+> ikut masuk ke file hasil build dan bisa dibaca siapa pun yang membuka site —
+> pakai hanya untuk build lokal. Di site yang dipublish, minta pengunjung
+> memasukkan key-nya sendiri lalu simpan dengan `setHfToken()` (tersimpan di
+> browser mereka). Contoh isian ada di `template/.env.example`.
+
 ### WYSIWYG editor — CKEditor 5
 
 Wrapper siap pakai di `@/components/editor/RichTextEditor` (build GPL gratis).

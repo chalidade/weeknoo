@@ -191,6 +191,71 @@ in the site first). Data is per-device — it does not sync between devices or
 browsers; read-only content belongs in bundled JSON (see the asbabun nuzul
 pattern), and cross-device sync needs a hosted DB (e.g. Supabase), not this.
 
+## AI / LLM (bundled library)
+
+Every site carries `src/lib/ai/` (import from `@/lib/ai`) — chat against a
+model with **reasoning**, from two providers behind one API:
+
+- **`ollama.ts`** — a model running on the visitor's own machine
+  (`http://localhost:11434`). Free with no cap, no account, no API key, works
+  offline, and the conversation never leaves the device. **This is the
+  default — prefer it.**
+- **`huggingface.ts`** — hosted fallback via `router.huggingface.co`
+  (OpenAI-compatible). *Not* free the way Ollama is: every model on the router
+  is pay-per-token and a free account carries only a small monthly credit.
+  Needs a key from https://huggingface.co/settings/tokens.
+- **`index.ts`** — `chat()` / `chatStream()` pick Ollama when it is running and
+  Hugging Face otherwise (`detectProvider()`); pass `provider` to force one.
+
+```ts
+import { chat, chatStream, isOllamaRunning, setHfToken } from "@/lib/ai"
+
+const reply = await chat([{ role: "user", content: "Halo!" }])
+reply.content    // the answer
+reply.reasoning  // the chain of thought, split out — "" for non-reasoning models
+
+for await (const chunk of chatStream(messages, { think: true })) {
+  setThinking((t) => t + chunk.reasoning)
+  setAnswer((a) => a + chunk.content)
+}
+```
+
+`reasoning` is always separate from `content`: `reasoning.ts` strips
+`<think>…</think>` out of the answer — incrementally while streaming, so a tag
+split across two chunks still resolves — and prefers the provider's own
+`thinking` / `reasoning_content` field when it sends one. Render it in a
+collapsible panel, never inline in the answer.
+
+**Defaults:** `qwen3:4b` locally (~2.6 GB, runs on 8 GB of RAM, thinks) and
+`Qwen/Qwen3-4B-Thinking-2507` hosted (cheapest reasoning model on the router).
+Override per call with `{ model }`. `llama3.1:8b` is a fine local alternative
+but has **no** reasoning mode — `reasoning` comes back empty.
+
+**Setup** — Ollama has to be installed and a model pulled:
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull qwen3:4b
+```
+
+Ollama only answers browsers whose origin it trusts. localhost on any port is
+allowed out of the box, so `npm run dev` just works; a **deployed** site has to
+be named explicitly, otherwise the fetch fails CORS:
+
+```bash
+sudo systemctl edit ollama    # Environment="OLLAMA_ORIGINS=https://chalidade.github.io"
+```
+
+Gate the UI on `isOllamaRunning()` (or `hasHfToken()`) instead of letting the
+first message fail — a site whose visitor has neither is the normal case, and
+should say so rather than throw.
+
+**Never commit a Hugging Face key.** `VITE_HF_TOKEN` in a site's `.env` is
+baked into the bundle and readable by every visitor — local/preview builds
+only. On a deployed page ask the visitor for their own key and store it with
+`setHfToken()` (kept in their browser, never in the repo). See
+`template/.env.example`.
+
 ## Building an Android APK
 
 Any site can be wrapped into an Android APK via Capacitor. Always go through
