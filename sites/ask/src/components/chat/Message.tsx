@@ -66,7 +66,20 @@ function Answer({ turn }: { turn: Extract<Turn, { role: 'assistant' }> }) {
   const [manual, setManual] = useState<boolean | null>(null)
   const thinking = !turn.content && !turn.done && !turn.error
   const open = manual ?? thinking
-  const seconds = Math.round(turn.ms / 1000)
+
+  // Penghitung waktu berjalan sendiri, tidak menumpang pada potongan jawaban:
+  // model penglihat tidak mengirim apa pun sampai gambarnya selesai dibaca —
+  // terukur sampai 4 menit — jadi tanpa ini layar terlihat menggantung.
+  const mulai = useRef(Date.now())
+  const [sekarang, setSekarang] = useState(Date.now())
+  useEffect(() => {
+    if (turn.done) return
+    const id = setInterval(() => setSekarang(Date.now()), 1000)
+    return () => clearInterval(id)
+  }, [turn.done])
+  const seconds = turn.done
+    ? Math.round(turn.ms / 1000)
+    : Math.round((sekarang - mulai.current) / 1000)
 
   // Selama berpikir, kotaknya ikut turun ke baris terbaru — kalau tidak,
   // pembaca hanya melihat paragraf pertama sementara isinya terus bertambah.
@@ -106,6 +119,14 @@ function Answer({ turn }: { turn: Extract<Turn, { role: 'assistant' }> }) {
               </p>
             )}
           </div>
+        )}
+
+        {!turn.reasoning && !turn.content && !turn.error && !turn.done && (
+          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span className="size-1.5 animate-pulse rounded-full bg-primary" />
+            Sedang memproses…
+            <span className="tabular-nums">{seconds} detik</span>
+          </p>
         )}
 
         {turn.content && (
