@@ -58,6 +58,22 @@ const CONTOH = [
 const JEDA_SIMPAN = 1500
 
 /**
+ * Model pilihan terakhir diingat di localStorage, bukan di @/lib/db: ini
+ * setelan tampilan sepele, dan menu model harus terisi benar pada gambar
+ * pertama — membaca database itu tidak serentak, jadi menunya akan sempat
+ * menampilkan pilihan yang salah dulu.
+ */
+const KUNCI_MODEL = 'model-terakhir'
+
+function modelTersimpan(): string | null {
+  try {
+    return localStorage.getItem(KUNCI_MODEL)
+  } catch {
+    return null
+  }
+}
+
+/**
  * Menyimpan tidak boleh menjatuhkan percakapan: di mode penyamaran atau saat
  * penyimpanan situs diblokir, IndexedDB melempar error — jawabannya tetap harus
  * sampai ke layar.
@@ -73,7 +89,7 @@ async function aman<T>(kerja: Promise<T>): Promise<T | undefined> {
 export function Chat() {
   const [status, setStatus] = useState<Status>('checking')
   const [models, setModels] = useState<OllamaModel[]>([])
-  const [model, setModel] = useState(OLLAMA_MODEL)
+  const [model, setModel] = useState(() => modelTersimpan() ?? OLLAMA_MODEL)
   const [turns, setTurns] = useState<Turn[]>([])
   const [busy, setBusy] = useState(false)
   const [chatId, setChatId] = useState<number | null>(null)
@@ -82,7 +98,7 @@ export function Chat() {
   const abort = useRef<AbortController | null>(null)
   // Menandai bahwa pembaca sudah memilih model sendiri, dan bahwa ia sudah
   // menyentuh percakapan — dua-duanya tidak boleh ditimpa proses otomatis.
-  const modelDipilihSendiri = useRef(false)
+  const modelDipilihSendiri = useRef(modelTersimpan() !== null)
   const sudahDisentuh = useRef(false)
   const scroller = useRef<HTMLDivElement>(null)
   // Ikut turun otomatis hanya selama pembaca memang sedang di bawah — kalau ia
@@ -314,6 +330,12 @@ export function Chat() {
               onChange={(e) => {
                 modelDipilihSendiri.current = true
                 setModel(e.target.value)
+                try {
+                  localStorage.setItem(KUNCI_MODEL, e.target.value)
+                } catch {
+                  // Penyimpanan browser bisa diblokir; pilihannya tetap berlaku
+                  // untuk sesi ini, hanya tidak diingat setelah dimuat ulang.
+                }
               }}
               disabled={busy}
               className="rounded-md border border-input bg-card px-2 py-1 text-xs outline-none disabled:opacity-50"
