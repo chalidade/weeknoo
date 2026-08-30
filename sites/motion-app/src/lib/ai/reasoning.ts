@@ -1,7 +1,7 @@
 // Reasoning models put their chain of thought in a <think>…</think> block
-// ahead of the answer. Newer Ollama builds and some hosted providers split it
-// into a field of its own, but plenty still leave it inline — these helpers
-// cope with both, so the UI always gets `content` and `reasoning` apart.
+// ahead of the answer. Newer Ollama builds split it into a `thinking` field of
+// its own, but older ones leave it inline — these helpers cope with both, so
+// the UI always gets `content` and `reasoning` apart.
 import type { ChatChunk } from "./types"
 
 const OPEN = "<think>"

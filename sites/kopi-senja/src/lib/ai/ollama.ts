@@ -1,6 +1,6 @@
 // Ollama — an AI model running on the visitor's own machine. Free with no cap,
 // no account and no API key, works offline, and the conversation never leaves
-// the device. This is the provider to prefer; ./huggingface is the fallback.
+// the device.
 //
 // It needs Ollama installed and a model pulled:
 //

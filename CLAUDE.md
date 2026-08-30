@@ -194,21 +194,13 @@ pattern), and cross-device sync needs a hosted DB (e.g. Supabase), not this.
 ## AI / LLM (bundled library)
 
 Every site carries `src/lib/ai/` (import from `@/lib/ai`) — chat against a
-model with **reasoning**, from two providers behind one API:
-
-- **`ollama.ts`** — a model running on the visitor's own machine
-  (`http://localhost:11434`). Free with no cap, no account, no API key, works
-  offline, and the conversation never leaves the device. **This is the
-  default — prefer it.**
-- **`huggingface.ts`** — hosted fallback via `router.huggingface.co`
-  (OpenAI-compatible). *Not* free the way Ollama is: every model on the router
-  is pay-per-token and a free account carries only a small monthly credit.
-  Needs a key from https://huggingface.co/settings/tokens.
-- **`index.ts`** — `chat()` / `chatStream()` pick Ollama when it is running and
-  Hugging Face otherwise (`detectProvider()`); pass `provider` to force one.
+model with **reasoning**, running through Ollama on the visitor's own machine
+(`http://localhost:11434`). Free with no cap, no account, no API key, works
+offline, and the conversation never leaves the device. There is deliberately
+no hosted provider here; don't add one without asking.
 
 ```ts
-import { chat, chatStream, isOllamaRunning, setHfToken } from "@/lib/ai"
+import { chat, chatStream, isOllamaRunning } from "@/lib/ai"
 
 const reply = await chat([{ role: "user", content: "Halo!" }])
 reply.content    // the answer
@@ -222,21 +214,26 @@ for await (const chunk of chatStream(messages, { think: true })) {
 
 `reasoning` is always separate from `content`: `reasoning.ts` strips
 `<think>…</think>` out of the answer — incrementally while streaming, so a tag
-split across two chunks still resolves — and prefers the provider's own
-`thinking` / `reasoning_content` field when it sends one. Render it in a
-collapsible panel, never inline in the answer.
+split across two chunks still resolves — and prefers Ollama's own `thinking`
+field when it sends one. Render it in a collapsible panel, never inline in the
+answer.
 
-**Defaults:** `qwen3:4b` locally (~2.6 GB, runs on 8 GB of RAM, thinks) and
-`Qwen/Qwen3-4B-Thinking-2507` hosted (cheapest reasoning model on the router).
-Override per call with `{ model }`. `llama3.1:8b` is a fine local alternative
-but has **no** reasoning mode — `reasoning` comes back empty.
+**Default model:** `qwen3:4b` (~2.6 GB, runs on 8 GB of RAM, thinks). Override
+per call with `{ model }`, and list what is actually installed with
+`getOllamaModels()`. `llama3.1:8b` is a fine alternative but has **no**
+reasoning mode — `reasoning` comes back empty.
 
 **Setup** — Ollama has to be installed and a model pulled:
 
 ```bash
-curl -fsSL https://ollama.com/install.sh | sh
+curl -fsSL https://ollama.com/install.sh | sh   # installs + starts a systemd service
 ollama pull qwen3:4b
 ```
+
+The installer starts `ollama.service` and enables it at boot, so it is already
+listening — running `ollama serve` by hand afterwards fails with `address
+already in use`, which means it is working, not broken. Use
+`systemctl status ollama` to check it.
 
 Ollama only answers browsers whose origin it trusts. localhost on any port is
 allowed out of the box, so `npm run dev` just works; a **deployed** site has to
@@ -244,17 +241,15 @@ be named explicitly, otherwise the fetch fails CORS:
 
 ```bash
 sudo systemctl edit ollama    # Environment="OLLAMA_ORIGINS=https://chalidade.github.io"
+sudo systemctl restart ollama
 ```
 
-Gate the UI on `isOllamaRunning()` (or `hasHfToken()`) instead of letting the
-first message fail — a site whose visitor has neither is the normal case, and
-should say so rather than throw.
-
-**Never commit a Hugging Face key.** `VITE_HF_TOKEN` in a site's `.env` is
-baked into the bundle and readable by every visitor — local/preview builds
-only. On a deployed page ask the visitor for their own key and store it with
-`setHfToken()` (kept in their browser, never in the repo). See
-`template/.env.example`.
+**The model runs on the visitor's machine, not on a server.** A published site
+therefore has working AI only for visitors who installed Ollama themselves —
+for everyone else `isOllamaRunning()` is false. Gate the UI on it and explain
+what is missing, rather than letting the first message throw. Treat AI features
+as local-first tools (your own machine, an APK, a preview), not as something
+every visitor to Pages will get.
 
 ## Building an Android APK
 

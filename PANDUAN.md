@@ -148,15 +148,9 @@ perangkat → naik ke Supabase, bukan ini.
 
 ### AI dengan reasoning — `@/lib/ai`
 
-Chat ke model AI, lengkap dengan **proses berpikirnya**. Dua sumber, satu API:
-
-| | Ollama (utama) | Hugging Face (cadangan) |
-| --- | --- | --- |
-| Jalan di | komputer sendiri | server mereka |
-| Biaya | **gratis, tanpa batas** | bayar per token, akun gratis dapat jatah kecil per bulan |
-| Internet | tidak perlu | perlu |
-| API key | tidak perlu | perlu |
-| Data | tidak ke mana-mana | dikirim ke server |
+Chat ke model AI, lengkap dengan **proses berpikirnya**. Modelnya jalan di
+komputer sendiri lewat Ollama: **gratis tanpa batas**, tanpa akun, tanpa API
+key, jalan tanpa internet, dan percakapannya tidak ke mana-mana.
 
 ```ts
 import { chat, chatStream, isOllamaRunning } from "@/lib/ai"
@@ -172,14 +166,11 @@ for await (const chunk of chatStream(pesan, { think: true })) {
 }
 ```
 
-- `chat()` otomatis pakai Ollama kalau hidup, Hugging Face kalau tidak.
-  Paksa salah satu dengan `{ provider: "ollama" }`.
-- **Cek dulu, jangan langsung kirim:** `isOllamaRunning()` (atau
-  `hasHfToken()`) — wajar kalau pengunjung belum punya keduanya, tampilkan
-  pesan, jangan error.
-- Model default: `qwen3:4b` di lokal (~2,6 GB, cukup untuk RAM 8 GB) dan
-  `Qwen/Qwen3-4B-Thinking-2507` di Hugging Face. Ganti per panggilan lewat
-  `{ model: "..." }`. `llama3.1:8b` juga bisa, tapi **tidak punya** mode
+- **Cek dulu, jangan langsung kirim:** `isOllamaRunning()` — wajar kalau
+  pengunjung belum memasang Ollama, tampilkan pesan, jangan error.
+- Model default `qwen3:4b` (~2,6 GB, cukup untuk RAM 8 GB). Ganti per
+  panggilan lewat `{ model: "..." }`, lihat yang terpasang dengan
+  `getOllamaModels()`. `llama3.1:8b` juga bisa, tapi **tidak punya** mode
   berpikir — `reasoning` akan kosong.
 
 **Pasang Ollama sekali saja:**
@@ -190,6 +181,10 @@ ollama pull qwen3:4b
 ollama run qwen3:4b            # tes cepat di terminal
 ```
 
+Installer-nya sekalian menyalakan Ollama sebagai service dan mengaktifkannya
+saat booting — jadi setelah dipasang ia **sudah jalan sendiri**. Cek dengan
+`systemctl status ollama`.
+
 `npm run dev` langsung jalan (localhost sudah diizinkan Ollama). Untuk site
 yang **sudah di-publish**, izinkan dulu alamatnya, kalau tidak diblokir CORS:
 
@@ -198,15 +193,20 @@ sudo systemctl edit ollama     # Environment="OLLAMA_ORIGINS=https://chalidade.g
 sudo systemctl restart ollama
 ```
 
-Catatan penting: AI-nya jalan di komputer **pengunjung**, bukan di server.
-Jadi site yang di-publish hanya bisa pakai Ollama kalau pengunjung itu sendiri
-memasangnya — untuk orang lain, sediakan jalur Hugging Face.
+> ⚠️ **AI-nya jalan di komputer pengunjung, bukan di server.** Jadi site yang
+> dipublish hanya punya AI untuk orang yang memasang Ollama sendiri; untuk
+> yang lain `isOllamaRunning()` bernilai false. Cocoknya untuk dipakai
+> sendiri, di APK, atau saat preview — bukan fitur untuk semua pengunjung
+> Pages.
 
-> ⚠️ **Jangan pernah commit API key Hugging Face.** `VITE_HF_TOKEN` di `.env`
-> ikut masuk ke file hasil build dan bisa dibaca siapa pun yang membuka site —
-> pakai hanya untuk build lokal. Di site yang dipublish, minta pengunjung
-> memasukkan key-nya sendiri lalu simpan dengan `setHfToken()` (tersimpan di
-> browser mereka). Contoh isian ada di `template/.env.example`.
+**Kalau muncul error:**
+
+| Pesan | Artinya |
+| --- | --- |
+| `address already in use` saat `ollama serve` | Ollama **sudah** jalan sebagai service. Tidak ada yang rusak — tidak perlu `ollama serve` lagi. |
+| `could not connect to ollama server` | Service belum sempat menyala. Tunggu sebentar, atau `sudo systemctl start ollama`. |
+| `isOllamaRunning()` false padahal jalan | Origin site-nya belum diizinkan — atur `OLLAMA_ORIGINS` seperti di atas. |
+| Jawaban muncul tapi `reasoning` kosong | Modelnya bukan model reasoning (mis. llama3.1). Pakai `qwen3:4b`. |
 
 ### WYSIWYG editor — CKEditor 5
 

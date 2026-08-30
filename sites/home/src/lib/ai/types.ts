@@ -1,8 +1,6 @@
-// Shared shapes for the AI clients. Two providers implement them: ./ollama
-// (a model running on the visitor's own machine — free, unlimited, offline)
-// and ./huggingface (hosted, pay-per-token with a small free monthly credit).
-// Both hand back the same ChatReply, so a UI can switch between them without
-// changing a line.
+// Shared shapes for the AI client in ./ollama — a model running on the
+// visitor's own machine: free, unlimited, offline. Kept apart from the client
+// itself so a UI can type its state without importing the fetch code.
 
 export type ChatRole = "system" | "user" | "assistant"
 

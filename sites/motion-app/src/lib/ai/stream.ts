@@ -1,6 +1,6 @@
-// Both providers stream line-delimited JSON over the response body — Ollama
-// one bare object per line, Hugging Face the same wrapped in `data: ` SSE
-// frames. This reads the body into whole lines; each client parses its own.
+// Ollama streams line-delimited JSON — one bare object per line — over the
+// response body. This turns the raw byte stream into whole lines; parsing them
+// is ollama.ts's job.
 
 /** Yields the response body one complete line at a time. */
 export async function* readLines(res: Response): AsyncGenerator<string> {
