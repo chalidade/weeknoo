@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Cpu } from 'lucide-react'
+import { Clock, Cpu, Plus } from 'lucide-react'
 import { chatStream, getOllamaModels, isOllamaRunning, OLLAMA_MODEL, type ChatMessage } from '@/lib/ai'
+import { buatChat, chatTerakhir, perbaruiPesan, pesanDari, simpanPesan } from '@/lib/db'
 import { Composer } from '@/components/chat/Composer'
+import { History } from '@/components/chat/History'
 import { Message, type Turn } from '@/components/chat/Message'
 import { Offline } from '@/components/chat/Offline'
 
@@ -10,7 +12,7 @@ type Status = 'checking' | 'offline' | 'nomodel' | 'ready'
 /**
  * Tanpa ini qwen3 berpikir dalam Bahasa Inggris dan memeriksa ulang jawabannya
  * berkali-kali — pertanyaan "ibukota Jawa Barat" sempat memakan 100 detik lebih
- * tanpa hasil. Dengan perintah ini: 14 detik, jawabannya "Bandung".
+ * tanpa hasil. Dengan perintah ini: 17 detik, jawabannya "Bandung".
  */
 const SISTEM: ChatMessage = {
   role: 'system',
@@ -26,12 +28,30 @@ const CONTOH = [
   'Apa beda let, const, dan var?',
 ]
 
+/** Jeda minimum antar penulisan ke database selama jawaban mengalir. */
+const JEDA_SIMPAN = 1500
+
+/**
+ * Menyimpan tidak boleh menjatuhkan percakapan: di mode penyamaran atau saat
+ * penyimpanan situs diblokir, IndexedDB melempar error — jawabannya tetap harus
+ * sampai ke layar.
+ */
+async function aman<T>(kerja: Promise<T>): Promise<T | undefined> {
+  try {
+    return await kerja
+  } catch {
+    return undefined
+  }
+}
+
 export function Chat() {
   const [status, setStatus] = useState<Status>('checking')
   const [models, setModels] = useState<string[]>([])
   const [model, setModel] = useState(OLLAMA_MODEL)
   const [turns, setTurns] = useState<Turn[]>([])
   const [busy, setBusy] = useState(false)
+  const [chatId, setChatId] = useState<number | null>(null)
+  const [riwayatTerbuka, setRiwayatTerbuka] = useState(false)
 
   const abort = useRef<AbortController | null>(null)
   const scroller = useRef<HTMLDivElement>(null)
@@ -53,9 +73,30 @@ export function Chat() {
     }
   }, [])
 
+  /** Memindahkan satu percakapan tersimpan ke layar. */
+  const muat = useCallback(async (id: number) => {
+    const rows = (await aman(pesanDari(id))) ?? []
+    setChatId(id)
+    setTurns(
+      rows.map((r) =>
+        r.role === 'user'
+          ? { role: 'user', content: r.content }
+          : { role: 'assistant', content: r.content, reasoning: r.reasoning, ms: r.ms, done: true },
+      ),
+    )
+  }, [])
+
   useEffect(() => {
     void connect()
   }, [connect])
+
+  // Percakapan terakhir dipulihkan sendiri saat halaman dibuka.
+  useEffect(() => {
+    void (async () => {
+      const id = await aman(chatTerakhir())
+      if (id !== undefined) await muat(id)
+    })()
+  }, [muat])
 
   useEffect(() => {
     const el = scroller.current
@@ -64,6 +105,13 @@ export function Chat() {
 
   // Membatalkan permintaan yang masih jalan kalau halaman ditutup.
   useEffect(() => () => abort.current?.abort(), [])
+
+  const percakapanBaru = useCallback(() => {
+    abort.current?.abort()
+    setChatId(null)
+    setTurns([])
+    setRiwayatTerbuka(false)
+  }, [])
 
   const send = useCallback(
     async (question: string) => {
@@ -90,12 +138,33 @@ export function Chat() {
       const started = Date.now()
 
       /** Menambal giliran terakhir — selalu giliran asisten yang baru dibuat. */
-      const patch = (change: (last: Extract<Turn, { role: 'assistant' }>) => Partial<Turn>) =>
+      const patch = (change: Partial<Turn>) =>
         setTurns((t) => {
           const last = t[t.length - 1]
           if (last?.role !== 'assistant') return t
-          return [...t.slice(0, -1), { ...last, ...change(last) }]
+          return [...t.slice(0, -1), { ...last, ...change }]
         })
+
+      // Percakapan dan kedua barisnya dibuat sekarang, sebelum jawaban datang,
+      // supaya pertanyaan tetap tersimpan walau jawabannya nanti gagal.
+      let id = chatId
+      if (id === null) {
+        id = (await aman(buatChat(question))) ?? null
+        if (id !== null) setChatId(id)
+      }
+      let baris: number | undefined
+      if (id !== null) {
+        const now = Date.now()
+        await aman(
+          simpanPesan({ chatId: id, role: 'user', content: question, reasoning: '', ms: 0, createdAt: now }),
+        )
+        baris = await aman(
+          simpanPesan({ chatId: id, role: 'assistant', content: '', reasoning: '', ms: 0, createdAt: now }),
+        )
+      }
+
+      let isi = { content: '', reasoning: '', ms: 0 }
+      let ditulis = 0
 
       try {
         // Proses berpikir ikut memakan jatah token, jadi batasnya dinaikkan —
@@ -105,24 +174,33 @@ export function Chat() {
           maxTokens: 2048,
           signal: controller.signal,
         })) {
-          patch((last) => ({
-            content: last.content + chunk.content,
-            reasoning: last.reasoning + chunk.reasoning,
+          isi = {
+            content: isi.content + chunk.content,
+            reasoning: isi.reasoning + chunk.reasoning,
             ms: Date.now() - started,
-          }))
+          }
+          patch(isi)
+          // Ditulis berkala, bukan tiap potongan: satu jawaban bisa 300 potongan.
+          if (baris !== undefined && Date.now() - ditulis > JEDA_SIMPAN) {
+            ditulis = Date.now()
+            void aman(perbaruiPesan(baris, isi))
+          }
         }
       } catch (err) {
         // Berhenti karena tombol stop bukan kesalahan — biarkan apa adanya.
         if (!controller.signal.aborted) {
-          patch(() => ({ error: err instanceof Error ? err.message : String(err) }))
+          patch({ error: err instanceof Error ? err.message : String(err) })
         }
       } finally {
-        patch(() => ({ done: true }))
+        patch({ done: true })
+        // Simpanan terakhir mencakup potongan setelah penulisan berkala tadi,
+        // termasuk kalau jawabannya dihentikan di tengah.
+        if (baris !== undefined) await aman(perbaruiPesan(baris, isi))
         setBusy(false)
         abort.current = null
       }
     },
-    [busy, turns, model],
+    [busy, turns, model, chatId],
   )
 
   if (status === 'checking') {
@@ -139,23 +217,53 @@ export function Chat() {
 
   return (
     <>
+      {riwayatTerbuka && (
+        <History
+          activeId={chatId}
+          onPick={(id) => {
+            abort.current?.abort()
+            void muat(id)
+            setRiwayatTerbuka(false)
+          }}
+          onNew={percakapanBaru}
+          onClose={() => setRiwayatTerbuka(false)}
+        />
+      )}
+
       <div className="shrink-0 border-b border-border">
         <div className="mx-auto flex max-w-3xl items-center gap-2 px-4 py-2 text-xs text-muted-foreground sm:px-6">
-          <span className="size-1.5 rounded-full bg-accent" />
-          <span>siap</span>
-          <Cpu className="ml-2 size-3.5" />
-          <select
-            value={model}
-            onChange={(e) => setModel(e.target.value)}
-            disabled={busy}
-            className="rounded-md border border-input bg-card px-2 py-1 text-xs outline-none disabled:opacity-50"
+          <button
+            type="button"
+            onClick={() => setRiwayatTerbuka(true)}
+            className="flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors hover:bg-secondary hover:text-foreground"
           >
-            {models.map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
+            <Clock className="size-3.5" />
+            Riwayat
+          </button>
+          <button
+            type="button"
+            onClick={percakapanBaru}
+            className="flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            <Plus className="size-3.5" />
+            Baru
+          </button>
+
+          <span className="ml-auto flex items-center gap-1.5">
+            <Cpu className="size-3.5" />
+            <select
+              value={model}
+              onChange={(e) => setModel(e.target.value)}
+              disabled={busy}
+              className="rounded-md border border-input bg-card px-2 py-1 text-xs outline-none disabled:opacity-50"
+            >
+              {models.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </span>
         </div>
       </div>
 
