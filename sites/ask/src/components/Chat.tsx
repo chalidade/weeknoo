@@ -72,6 +72,10 @@ export function Chat() {
   const [riwayatTerbuka, setRiwayatTerbuka] = useState(false)
 
   const abort = useRef<AbortController | null>(null)
+  // Menandai bahwa pembaca sudah memilih model sendiri, dan bahwa ia sudah
+  // menyentuh percakapan — dua-duanya tidak boleh ditimpa proses otomatis.
+  const modelDipilihSendiri = useRef(false)
+  const sudahDisentuh = useRef(false)
   const scroller = useRef<HTMLDivElement>(null)
   // Ikut turun otomatis hanya selama pembaca memang sedang di bawah — kalau ia
   // menggulir ke atas untuk membaca ulang, jangan direbut.
@@ -84,8 +88,13 @@ export function Chat() {
       const names = (await getOllamaModels()).map((m) => m.name)
       setModels(names)
       if (names.length === 0) return setStatus('nomodel')
-      const disukai = MODEL_PILIHAN.find((m) => names.includes(m))
-      setModel((current) => (names.includes(current) ? current : (disukai ?? names[0])))
+      // Pilihan pembaca selalu menang. Kalau ia belum memilih apa-apa, jangan
+      // pertahankan nilai awal hanya karena kebetulan terpasang — nilai awal
+      // itu model penalar, justru yang ingin dihindari untuk obrolan biasa.
+      setModel((current) => {
+        if (modelDipilihSendiri.current && names.includes(current)) return current
+        return MODEL_PILIHAN.find((m) => names.includes(m)) ?? (names.includes(current) ? current : names[0])
+      })
       setStatus('ready')
     } catch {
       setStatus('offline')
@@ -109,11 +118,14 @@ export function Chat() {
     void connect()
   }, [connect])
 
-  // Percakapan terakhir dipulihkan sendiri saat halaman dibuka.
+  // Percakapan terakhir dipulihkan sendiri saat halaman dibuka — kecuali
+  // pembaca keburu menekan "Baru" atau mengirim pertanyaan lebih dulu.
+  // Pembacaan database sempat kalah cepat dari jari, dan hasilnya menimpa
+  // percakapan kosong yang baru saja ia minta.
   useEffect(() => {
     void (async () => {
       const id = await aman(chatTerakhir())
-      if (id !== undefined) await muat(id)
+      if (id !== undefined && !sudahDisentuh.current) await muat(id)
     })()
   }, [muat])
 
@@ -126,6 +138,7 @@ export function Chat() {
   useEffect(() => () => abort.current?.abort(), [])
 
   const percakapanBaru = useCallback(() => {
+    sudahDisentuh.current = true
     abort.current?.abort()
     setChatId(null)
     setTurns([])
@@ -135,6 +148,7 @@ export function Chat() {
   const send = useCallback(
     async (question: string) => {
       if (busy) return
+      sudahDisentuh.current = true
 
       const history: ChatMessage[] = [
         SISTEM,
@@ -272,7 +286,10 @@ export function Chat() {
             <Cpu className="size-3.5" />
             <select
               value={model}
-              onChange={(e) => setModel(e.target.value)}
+              onChange={(e) => {
+                modelDipilihSendiri.current = true
+                setModel(e.target.value)
+              }}
               disabled={busy}
               className="rounded-md border border-input bg-card px-2 py-1 text-xs outline-none disabled:opacity-50"
             >
