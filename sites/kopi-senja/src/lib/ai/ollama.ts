@@ -31,6 +31,18 @@ export interface OllamaModel {
   /** On-disk size in bytes. */
   size: number
   modifiedAt: string
+  /**
+   * What the model can do — "completion", "tools", "thinking", "vision".
+   * Gate features on this rather than on the model's name: only a model with
+   * "vision" can read ChatMessage.images, and only "thinking" produces a
+   * `reasoning`.
+   */
+  capabilities: string[]
+}
+
+/** True when the model can read images. */
+export function modelBisaLihat(model: OllamaModel): boolean {
+  return model.capabilities.includes("vision")
 }
 
 /** True when Ollama is reachable. Never throws — a refused connection is `false`. */
@@ -46,8 +58,15 @@ export async function isOllamaRunning(signal?: AbortSignal): Promise<boolean> {
 export async function getOllamaModels(signal?: AbortSignal): Promise<OllamaModel[]> {
   const res = await fetch(`${OLLAMA_URL}/api/tags`, { signal })
   if (!res.ok) throw new Error(`Ollama ${res.status} ${res.statusText} — ${OLLAMA_URL}/api/tags`)
-  const body = (await res.json()) as { models?: { name: string; size: number; modified_at: string }[] }
-  return (body.models ?? []).map((m) => ({ name: m.name, size: m.size, modifiedAt: m.modified_at }))
+  const body = (await res.json()) as {
+    models?: { name: string; size: number; modified_at: string; capabilities?: string[] }[]
+  }
+  return (body.models ?? []).map((m) => ({
+    name: m.name,
+    size: m.size,
+    modifiedAt: m.modified_at,
+    capabilities: m.capabilities ?? [],
+  }))
 }
 
 /** One full answer. Prefer ollamaChatStream() for anything a person watches. */

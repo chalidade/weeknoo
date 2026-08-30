@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { Brain, ChevronDown, TriangleAlert, User } from 'lucide-react'
+import { sebagaiSumberGambar } from '@/lib/gambar'
 import { cn } from '@/lib/utils'
 
 // Perender Markdown membawa highlight.js — sekitar 320 kB, dua kali lipat
@@ -14,7 +15,7 @@ const Markdown = lazy(() =>
  * berpikirnya — itulah yang membuat panel "proses berpikir" bisa ada.
  */
 export type Turn =
-  | { role: 'user'; content: string }
+  | { role: 'user'; content: string; images?: string[] }
   | {
       role: 'assistant'
       content: string
@@ -29,9 +30,25 @@ export function Message({ turn }: { turn: Turn }) {
   if (turn.role === 'user') {
     return (
       <div className="flex justify-end gap-3">
-        <p className="max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-4 py-2.5 text-primary-foreground whitespace-pre-wrap">
-          {turn.content}
-        </p>
+        <div className="flex max-w-[85%] flex-col items-end gap-2">
+          {turn.images && turn.images.length > 0 && (
+            <div className="flex flex-wrap justify-end gap-2">
+              {turn.images.map((gambar, i) => (
+                <img
+                  key={i}
+                  src={sebagaiSumberGambar(gambar)}
+                  alt={`Lampiran ${i + 1}`}
+                  className="max-h-48 rounded-xl border border-border object-cover"
+                />
+              ))}
+            </div>
+          )}
+          {turn.content && (
+            <p className="rounded-2xl rounded-br-sm bg-primary px-4 py-2.5 text-primary-foreground whitespace-pre-wrap">
+              {turn.content}
+            </p>
+          )}
+        </div>
         <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
           <User className="size-3.5" />
         </div>

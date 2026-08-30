@@ -176,6 +176,11 @@ for await (const chunk of chatStream(pesan, { think: true })) {
   `getOllamaModels()`. `llama3.1:8b` juga bisa, tapi **tidak punya** mode
   berpikir — `reasoning` akan kosong.
 
+**Gambar.** Model yang punya kemampuan `vision` (mis. `qwen2.5vl:3b`) bisa
+membaca gambar — kirim lewat `ChatMessage.images` dalam base64 tanpa awalan
+`data:`. Cek dulu kemampuannya dengan `modelBisaLihat()`, jangan menebak dari
+namanya; model teks biasa menerima gambarnya lalu mengabaikannya diam-diam.
+
 **Pasang Ollama sekali saja:**
 
 ```bash

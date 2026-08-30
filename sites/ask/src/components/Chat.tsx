@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Clock, Cpu, Plus } from 'lucide-react'
-import { chatStream, getOllamaModels, isOllamaRunning, OLLAMA_MODEL, type ChatMessage } from '@/lib/ai'
+import {
+  chatStream,
+  getOllamaModels,
+  isOllamaRunning,
+  modelBisaLihat,
+  OLLAMA_MODEL,
+  type ChatMessage,
+  type OllamaModel,
+} from '@/lib/ai'
 import { buatChat, chatTerakhir, perbaruiPesan, pesanDari, simpanPesan } from '@/lib/db'
 import { Composer } from '@/components/chat/Composer'
 import { History } from '@/components/chat/History'
@@ -64,7 +72,7 @@ async function aman<T>(kerja: Promise<T>): Promise<T | undefined> {
 
 export function Chat() {
   const [status, setStatus] = useState<Status>('checking')
-  const [models, setModels] = useState<string[]>([])
+  const [models, setModels] = useState<OllamaModel[]>([])
   const [model, setModel] = useState(OLLAMA_MODEL)
   const [turns, setTurns] = useState<Turn[]>([])
   const [busy, setBusy] = useState(false)
@@ -85,8 +93,9 @@ export function Chat() {
     setStatus('checking')
     if (!(await isOllamaRunning())) return setStatus('offline')
     try {
-      const names = (await getOllamaModels()).map((m) => m.name)
-      setModels(names)
+      const daftar = await getOllamaModels()
+      const names = daftar.map((m) => m.name)
+      setModels(daftar)
       if (names.length === 0) return setStatus('nomodel')
       // Pilihan pembaca selalu menang. Kalau ia belum memilih apa-apa, jangan
       // pertahankan nilai awal hanya karena kebetulan terpasang — nilai awal
@@ -108,7 +117,7 @@ export function Chat() {
     setTurns(
       rows.map((r) =>
         r.role === 'user'
-          ? { role: 'user', content: r.content }
+          ? { role: 'user', content: r.content, ...(r.images?.length ? { images: r.images } : {}) }
           : { role: 'assistant', content: r.content, reasoning: r.reasoning, ms: r.ms, done: true },
       ),
     )
@@ -146,7 +155,7 @@ export function Chat() {
   }, [])
 
   const send = useCallback(
-    async (question: string) => {
+    async (question: string, images: string[] = []) => {
       if (busy) return
       sudahDisentuh.current = true
 
@@ -154,13 +163,17 @@ export function Chat() {
         SISTEM,
         ...turns
           .filter((t) => t.role === 'user' || (t.content !== '' && !t.error))
-          .map((t) => ({ role: t.role, content: t.content })),
-        { role: 'user', content: question },
+          .map((t) => ({
+            role: t.role,
+            content: t.content,
+            ...(t.role === 'user' && t.images?.length ? { images: t.images } : {}),
+          })),
+        { role: 'user', content: question, ...(images.length ? { images } : {}) },
       ]
 
       setTurns((t) => [
         ...t,
-        { role: 'user', content: question },
+        { role: 'user', content: question, ...(images.length ? { images } : {}) },
         { role: 'assistant', content: '', reasoning: '', ms: 0, done: false },
       ])
       setBusy(true)
@@ -182,14 +195,22 @@ export function Chat() {
       // supaya pertanyaan tetap tersimpan walau jawabannya nanti gagal.
       let id = chatId
       if (id === null) {
-        id = (await aman(buatChat(question))) ?? null
+        id = (await aman(buatChat(question || 'Gambar'))) ?? null
         if (id !== null) setChatId(id)
       }
       let baris: number | undefined
       if (id !== null) {
         const now = Date.now()
         await aman(
-          simpanPesan({ chatId: id, role: 'user', content: question, reasoning: '', ms: 0, createdAt: now }),
+          simpanPesan({
+            chatId: id,
+            role: 'user',
+            content: question,
+            reasoning: '',
+            ms: 0,
+            createdAt: now,
+            ...(images.length ? { images } : {}),
+          }),
         )
         baris = await aman(
           simpanPesan({ chatId: id, role: 'assistant', content: '', reasoning: '', ms: 0, createdAt: now }),
@@ -235,6 +256,10 @@ export function Chat() {
     },
     [busy, turns, model, chatId],
   )
+
+  // Kemampuan diambil dari model yang sedang dipilih, bukan dari namanya —
+  // Ollama sendiri yang memberi tahu lewat /api/tags.
+  const bisaLihat = models.some((m) => m.name === model && modelBisaLihat(m))
 
   if (status === 'checking') {
     return (
@@ -293,9 +318,10 @@ export function Chat() {
               disabled={busy}
               className="rounded-md border border-input bg-card px-2 py-1 text-xs outline-none disabled:opacity-50"
             >
-              {models.map((name) => (
-                <option key={name} value={name}>
-                  {name}
+              {models.map((m) => (
+                <option key={m.name} value={m.name}>
+                  {m.name}
+                  {modelBisaLihat(m) ? ' · bisa lihat gambar' : ''}
                 </option>
               ))}
             </select>
@@ -320,7 +346,7 @@ export function Chat() {
                   <button
                     key={contoh}
                     type="button"
-                    onClick={() => void send(contoh)}
+                    onClick={() => void send(contoh, [])}
                     className="rounded-full border border-border bg-card px-3.5 py-1.5 text-xs text-muted-foreground transition-colors hover:border-ring hover:text-foreground"
                   >
                     {contoh}
@@ -334,7 +360,12 @@ export function Chat() {
         </div>
       </div>
 
-      <Composer busy={busy} onSend={(text) => void send(text)} onStop={() => abort.current?.abort()} />
+      <Composer
+        busy={busy}
+        bisaLihat={bisaLihat}
+        onSend={(text, images) => void send(text, images)}
+        onStop={() => abort.current?.abort()}
+      />
     </>
   )
 }

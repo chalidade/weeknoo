@@ -29,6 +29,12 @@ export interface Message {
   reasoning: string
   /** Lama menjawab dalam milidetik. 0 untuk pesan dari pengguna. */
   ms: number
+  /**
+   * Gambar yang dilampirkan, base64 tanpa awalan data:. Tidak diindeks, jadi
+   * penambahan kolom ini tidak perlu menaikkan version — Dexie hanya peduli
+   * pada indeks, bukan pada bentuk isinya.
+   */
+  images?: string[]
   /** Date.now() */
   createdAt: number
 }

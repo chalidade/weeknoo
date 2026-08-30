@@ -218,6 +218,13 @@ split across two chunks still resolves — and prefers Ollama's own `thinking`
 field when it sends one. Render it in a collapsible panel, never inline in the
 answer.
 
+**Images (vision).** `ChatMessage.images` takes base64 **without** the
+`data:image/...;base64,` prefix — Ollama rejects prefixed strings. Only a model
+whose `capabilities` include `vision` can read them; text models ignore them
+silently, so gate the UI on `modelBisaLihat(model)` from `getOllamaModels()`
+rather than on the model's name. Downscale before sending: a phone photo is
+~5 MB and the model only ever sees a small version.
+
 **Default model:** `qwen3:4b` (~2.5 GB, thinks). Override per call with
 `{ model }`, and list what is actually installed with `getOllamaModels()`.
 `llama3.1:8b` is a fine alternative but has **no** reasoning mode —

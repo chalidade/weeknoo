@@ -7,6 +7,13 @@ export type ChatRole = "system" | "user" | "assistant"
 export interface ChatMessage {
   role: ChatRole
   content: string
+  /**
+   * Gambar yang ikut dikirim, dalam base64 TANPA awalan `data:image/...;base64,`
+   * — Ollama menolak yang masih berawalan. Hanya berguna pada model yang punya
+   * kemampuan "vision" (lihat modelBisaLihat di ./ollama); model teks biasa
+   * mengabaikannya diam-diam.
+   */
+  images?: string[]
 }
 
 export interface ChatOptions {
