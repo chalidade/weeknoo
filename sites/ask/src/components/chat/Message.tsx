@@ -1,6 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { Brain, ChevronDown, TriangleAlert, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
+
+// Perender Markdown membawa highlight.js — sekitar 320 kB, dua kali lipat
+// sisa aplikasinya. Dimuat terpisah saat jawaban pertama muncul, bukan saat
+// halaman dibuka; selama chunk-nya datang, teksnya tetap tampil apa adanya.
+const Markdown = lazy(() =>
+  import('@/components/chat/Markdown').then((m) => ({ default: m.Markdown })),
+)
 
 /**
  * Satu giliran percakapan. Jawaban model disimpan terpisah dari proses
@@ -85,10 +92,14 @@ function Answer({ turn }: { turn: Extract<Turn, { role: 'assistant' }> }) {
         )}
 
         {turn.content && (
-          <p className="leading-relaxed whitespace-pre-wrap">
-            {turn.content}
-            {!turn.done && <span className="ml-0.5 inline-block h-4 w-1.5 translate-y-0.5 animate-pulse bg-primary" />}
-          </p>
+          <div>
+            <Suspense fallback={<p className="leading-relaxed whitespace-pre-wrap">{turn.content}</p>}>
+              <Markdown>{turn.content}</Markdown>
+            </Suspense>
+            {!turn.done && (
+              <span className="ml-0.5 inline-block h-4 w-1.5 translate-y-0.5 animate-pulse bg-primary" />
+            )}
+          </div>
         )}
 
         {turn.error && (

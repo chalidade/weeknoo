@@ -82,3 +82,51 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Pewarnaan kode (highlight.js). Ditulis sendiri memakai token palet situs ini
+   supaya menyatu — tema bawaan highlight.js membawa warnanya sendiri dan
+   bentrok dengan violet/cyan di sini. Hanya kelas yang benar-benar sering
+   muncul yang diatur; sisanya mewarisi warna teks biasa. */
+@layer components {
+  .hljs-comment,
+  .hljs-quote {
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+  .hljs-keyword,
+  .hljs-selector-tag,
+  .hljs-literal,
+  .hljs-type {
+    color: var(--primary);
+  }
+  .hljs-string,
+  .hljs-regexp,
+  .hljs-addition {
+    color: var(--accent);
+  }
+  .hljs-number,
+  .hljs-symbol {
+    color: oklch(0.78 0.14 85);
+  }
+  .hljs-title,
+  .hljs-name,
+  .hljs-section,
+  .hljs-built_in {
+    color: oklch(0.8 0.12 150);
+  }
+  .hljs-attr,
+  .hljs-attribute,
+  .hljs-variable,
+  .hljs-params {
+    color: oklch(0.82 0.09 30);
+  }
+  .hljs-deletion {
+    color: var(--destructive);
+  }
+  .hljs-emphasis {
+    font-style: italic;
+  }
+  .hljs-strong {
+    font-weight: 600;
+  }
+}
