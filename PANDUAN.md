@@ -311,6 +311,32 @@ repo publik) — mesinmu tidak perlu menyala:
 Aturan kerja dengan Claude: **semua perubahan di-commit lokal dulu; push hanya
 saat kamu bilang "push"** — saat itulah semuanya tayang.
 
+### Kenapa repo ini pakai SSH, bukan HTTPS
+
+Di laptop ini ada dua akun GitHub: `chalidade` (pribadi, pemilik weeknoo) dan
+`chalidade-kpi` (kerja, yang punya akses ke repo Lerero di organisasi
+Worldskills-Romania). Keduanya login di `gh`, tapi `gh` hanya punya **satu**
+saklar "akun aktif" untuk seluruh komputer, dan Git meminta kredensialnya ke
+`gh`. Akibatnya push ke weeknoo pernah ditolak dengan:
+
+```
+remote: Permission to chalidade/weeknoo.git denied to chalidade-kpi
+```
+
+Solusinya: remote weeknoo dipindah ke SSH.
+
+```
+origin  git@github.com:chalidade/weeknoo.git
+```
+
+SSH tidak peduli pada saklar akun — identitasnya menempel pada kunci
+(`~/.ssh/id_ed25519`, terdaftar di akun `chalidade`). Jadi akun aktif `gh`
+boleh tetap `chalidade-kpi` supaya Lerero jalan seperti biasa, sementara
+weeknoo tetap bisa di-push. **Tidak perlu tukar-tukar akun lagi.**
+
+Kalau suatu saat push weeknoo ditolak, cek dulu `ssh -T git@github.com` —
+jawabannya harus `Hi chalidade!`, bukan nama akun lain.
+
 ## 8. Halaman utama & kode akses
 
 Halaman utama (`sites/home`) dikunci layar kode akses. **Kodenya tersimpan di
