@@ -296,6 +296,75 @@ build. Native device APIs go through the matching Capacitor plugin (e.g.
 gets a permission prompt in the APK), with a web fallback via
 `Capacitor.isNativePlatform()`.
 
+## Building a WordPress theme
+
+Any site can also be shipped as an installable **WordPress block theme**. Go
+through the script — it prerenders the site, derives the theme from it and
+zips the result:
+
+```bash
+npm run wp -- <site-name>                  # wrapper for scripts/build-wp.sh
+npm run wp -- <site-name> --no-screenshot  # skip the Chrome preview capture
+npm run wp -- <site-name> --keep-build     # leave .wp-build/ for inspection
+```
+
+Output is `sites/<name>/<name>-wp-theme.zip` (unzipped copy in
+`sites/<name>/wp-theme/`, both git-ignored). Install it through
+**Appearance → Themes → Add New → Upload Theme**.
+
+### How it works
+
+1. `npm run build` runs first — it is still the type-check gate, and its
+   compiled Tailwind CSS becomes the theme's stylesheet.
+2. `scripts/wp/gen-entry.mjs` reads `src/App.tsx` and writes an SSR entry that
+   renders **each section on its own** with `renderToStaticMarkup`. This is why
+   the one-file-per-section convention matters: section boundaries survive into
+   the theme.
+3. `scripts/wp/build-theme.mjs` turns each section's HTML into WordPress block
+   markup and assembles the theme:
+   - `theme.json` — palette and font families read straight out of the `:root`
+     tokens in `src/index.css`, so the design system is the single source.
+   - `patterns/<section>.php` — one block pattern per section, insertable from
+     the editor. A section named `Nav`/`Navbar`/`Header` becomes
+     `parts/header.html` instead, `Footer` becomes `parts/footer.html`.
+   - `templates/index.html` — the landing page, composed exactly as `App.tsx`
+     composes it; plus `page`, `single`, `archive`, `search` and `404`.
+   - `assets/theme.css` — the compiled Tailwind CSS plus a short interop block.
+
+### Two things that will bite you if you edit this
+
+- **Cascade layers.** Tailwind v4 emits everything inside `@layer`, and
+  WordPress's core block CSS is unlayered — an unlayered rule beats every
+  layered one regardless of specificity, so core silently outranks the whole
+  design system (`:where(figure){margin:0 0 1em}` beat Tailwind's preflight and
+  added 16px to a section). `build-theme.mjs` therefore **unwraps Tailwind's
+  layers** so both stylesheets compete on plain specificity. Keep anything you
+  add to the interop CSS narrow and specific: a blanket reset there would
+  outrank the utility classes on the sections.
+- **Tailwind only compiles the classes a site actually uses.** Never style the
+  generated `page`/`single`/`404` templates with utility classes — a utility
+  the sections happen not to use simply does not exist in the compiled CSS.
+  Those templates use theme-owned classes (`site-main`, `site-content`) styled
+  in the interop block.
+
+### What survives, what does not
+
+- **Editable in the Site Editor:** headings, paragraphs and the structural
+  containers, which become `core/heading`, `core/paragraph` and `core/group`.
+  Colors and fonts come from `theme.json`.
+- **Preserved verbatim as `core/html`:** icons, images, and any element whose
+  markup would not round-trip through a core block's `save()` (that mismatch is
+  what makes WordPress show "unexpected or invalid content"). It still renders
+  exactly right, it is just edited as markup.
+- **Motion animations are dropped.** Sections after the first fade in with a
+  scroll-driven CSS animation (`animation-timeline: view()`) instead — chosen
+  over a JavaScript reveal so a browser without support shows the content
+  rather than hiding it forever.
+- **React interactivity is gone.** The theme is a static snapshot, so this fits
+  content sites (portfolio, company profile, restaurant, blog). App-shaped
+  sites — `ask`, `jaim` — will build, but you get their initial render with no
+  behaviour; ship those as a site or an APK instead.
+
 ## Per-site commands (run inside `sites/<name>/`)
 
 ```bash

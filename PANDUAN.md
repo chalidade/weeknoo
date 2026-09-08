@@ -13,11 +13,12 @@ mem-build web + APK lalu mem-publish-nya.
 4. [Library bawaan setiap site](#4-library-bawaan-setiap-site)
 5. [Publish & link](#5-publish--link)
 6. [APK Android](#6-apk-android)
-7. [Apa yang terjadi saat `git push`](#7-apa-yang-terjadi-saat-git-push)
-8. [Halaman utama & kode akses](#8-halaman-utama--kode-akses)
-9. [Keamanan pipeline prompt](#9-keamanan-pipeline-prompt)
-10. [Gratis vs pakai langganan Claude](#10-gratis-vs-pakai-langganan-claude)
-11. [Troubleshooting](#11-troubleshooting)
+7. [Tema WordPress](#7-tema-wordpress)
+8. [Apa yang terjadi saat `git push`](#8-apa-yang-terjadi-saat-git-push)
+9. [Halaman utama & kode akses](#9-halaman-utama--kode-akses)
+10. [Keamanan pipeline prompt](#10-keamanan-pipeline-prompt)
+11. [Gratis vs pakai langganan Claude](#11-gratis-vs-pakai-langganan-claude)
+12. [Troubleshooting](#12-troubleshooting)
 
 ---
 
@@ -63,6 +64,7 @@ Semua dijalankan dari **root workspace**, kecuali yang ditandai:
 | `npm run delete -- <site>` | hapus site + kartunya di halaman utama (minta konfirmasi ketik nama) |
 | `npm run add -- <site> <komponen>` | pasang komponen 21st.dev / shadcn ke site |
 | `npm run apk -- <site>` | build APK Android (tambah `--release` untuk rilis tak bertanda tangan) |
+| `npm run wp -- <site>` | build tema WordPress (.zip siap di-upload) |
 | `npm run dev` *(di dalam folder site)* | dev server |
 | `npm run build` *(di dalam folder site)* | type-check + build produksi — **gerbang koreksi** |
 | `npm run preview` *(di dalam folder site)* | tes hasil build secara lokal |
@@ -105,7 +107,7 @@ sudah dispesifikasikan di `categories/SPEC.md` dan menyusul — minta Claude
 > generik. Template kategori memberi halaman jadi tapi isinya masih dummy —
 > personalisasi (nama bisnis, konten asli, foto, warna brand) tetap lewat edit
 > manual atau minta Claude — lihat
-> [bagian 10](#10-gratis-vs-pakai-langganan-claude).
+> [bagian 11](#11-gratis-vs-pakai-langganan-claude).
 
 Aturan penting: jangan pernah `npm create vite` langsung — selalu lewat
 generator supaya semua site satu stack.
@@ -296,7 +298,52 @@ baris); `npm run apk` menyuntikkannya ke AndroidManifest.xml otomatis di
 setiap build. Contoh: `sites/jaim/android-permissions.txt` berisi izin
 lokasi untuk tombol "Gunakan lokasiku".
 
-## 7. Apa yang terjadi saat `git push`
+## 7. Tema WordPress
+
+Site mana pun bisa dikemas jadi **tema blok WordPress** yang tinggal di-upload:
+
+```bash
+npm run wp -- <site>          # → sites/<site>/<site>-wp-theme.zip
+```
+
+Pasang di WordPress: **Appearance → Themes → Add New → Upload Theme** → pilih
+zip → **Activate**. Selesai — halaman depannya persis seperti site aslinya.
+
+### Yang kamu dapat di dalam WordPress
+
+- **Halaman depan yang sama persis.** Tiap section React di-render jadi HTML
+  statis, lalu jadi blok WordPress. Diuji berdampingan dengan versi React:
+  identik piksel demi piksel.
+- **Warna & font ikut pindah.** Token di `src/index.css` diterjemahkan ke
+  `theme.json`, jadi palet site muncul di color picker WordPress.
+- **Teks bisa diedit.** Judul dan paragraf jadi blok Heading/Paragraph biasa —
+  klik dan ketik di Site Editor. Ikon dan gambar disimpan apa adanya sebagai
+  blok HTML: tampilannya pasti benar, editnya lewat markup.
+- **Tiap section jadi pattern.** Bisa disisipkan ulang di halaman lain lewat
+  menu Patterns.
+- **Halaman & artikel WordPress tetap jalan** — template `page`, `single`,
+  `archive`, `search`, dan `404` ikut dibuat, dengan tipografi yang cocok.
+
+### Yang hilang
+
+- **Interaksi React hilang.** Tema ini snapshot statis. Cocok untuk site
+  konten (portfolio, company profile, restoran, blog). Site yang berupa
+  aplikasi — `ask`, `jaim` — tetap bisa di-build, tapi yang kamu dapat cuma
+  tampilan awalnya tanpa fungsi. Untuk itu pakai site biasa atau APK.
+- **Animasi Motion diganti.** Section setelah yang pertama muncul dengan
+  animasi CSS saat di-scroll. Sengaja pakai CSS, bukan JavaScript: kalau
+  browser-nya tidak mendukung, kontennya tetap tampil — tidak pernah
+  tersembunyi.
+
+### Kalau perlu mengubah
+
+Jangan edit isi `sites/<site>/wp-theme/` — folder itu dibuat ulang tiap build
+dan di-ignore git. Ubah site-nya, lalu jalankan `npm run wp` lagi.
+
+Opsi tambahan: `--no-screenshot` (lewati pengambilan pratinjau tema, lebih
+cepat), `--keep-build` (simpan `.wp-build/` untuk diperiksa).
+
+## 8. Apa yang terjadi saat `git push`
 
 Workflow `.github/workflows/build.yml` berjalan di server GitHub (gratis,
 repo publik) — mesinmu tidak perlu menyala:
@@ -337,7 +384,7 @@ weeknoo tetap bisa di-push. **Tidak perlu tukar-tukar akun lagi.**
 Kalau suatu saat push weeknoo ditolak, cek dulu `ssh -T git@github.com` —
 jawabannya harus `Hi chalidade!`, bukan nama akun lain.
 
-## 8. Halaman utama & kode akses
+## 9. Halaman utama & kode akses
 
 Halaman utama (`sites/home`) dikunci layar kode akses. **Kodenya tersimpan di
 file `.access-code` di root workspace** — file ini di-gitignore sehingga tidak
@@ -350,9 +397,9 @@ pernah ikut ter-push.
 
 Jujur soal batasannya: ini gerbang sisi-browser — cukup untuk menahan
 pengunjung iseng, bukan benteng kriptografis (repo-nya publik). Perlindungan
-yang sesungguhnya ada di lapisan pipeline (bagian 9).
+yang sesungguhnya ada di lapisan pipeline (bagian 10).
 
-## 9. Keamanan pipeline prompt
+## 10. Keamanan pipeline prompt
 
 Kenapa orang asing tidak bisa menghabiskan token langgananmu:
 
@@ -371,7 +418,7 @@ dieksekusi otomatis maksimal ±1 jam setelah dibuat. Pemicu instan (webhook
 `chalidade`); setelah terpasang, minta Claude memasang webhook-nya dan
 mengembalikan cron ke placeholder.
 
-## 10. Gratis vs pakai langganan Claude
+## 11. Gratis vs pakai langganan Claude
 
 | Aktivitas | Biaya |
 | --- | --- |
@@ -381,7 +428,7 @@ mengembalikan cron ke placeholder.
 | Mengubah prompt menjadi website jadi (desain + isi) | **Langganan Claude** — baik lewat terminal maupun routine cloud |
 | Registry 21st.dev (`npm run add`) | Akun 21st.dev sendiri (ada free tier) |
 
-## 11. Troubleshooting
+## 12. Troubleshooting
 
 - **Build gagal** — baca error `npm run build`-nya; itu type-check TypeScript.
   Perbaiki sampai hijau; jangan mem-bypass.

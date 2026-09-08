@@ -65,6 +65,13 @@ A site can also be packaged as an **Android APK** via Capacitor:
 npm run apk -- my-site        # → sites/my-site/my-site-debug.apk
 ```
 
+…or as an installable **WordPress block theme** — the sections become block
+patterns and `src/index.css` becomes `theme.json`:
+
+```bash
+npm run wp -- my-site         # → sites/my-site/my-site-wp-theme.zip
+```
+
 ## Layout
 
 ```

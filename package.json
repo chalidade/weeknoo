@@ -10,6 +10,7 @@
     "check-categories": "bash scripts/check-categories.sh",
     "add": "bash scripts/add-component.sh",
     "apk": "bash scripts/build-apk.sh",
+    "wp": "bash scripts/build-wp.sh",
     "sites": "ls -1 sites 2>/dev/null || echo 'No sites yet.'"
   }
 }
