@@ -5,6 +5,10 @@ saja kamu lupa alurnya. Satu repo, satu alur: setiap website hidup di
 `sites/<nama>/`, dibuat dari `template/`, dan setiap `git push` otomatis
 mem-build web + APK lalu mem-publish-nya.
 
+> Baru mengambil repo ini? Mulai dari **[INSTALL.md](INSTALL.md)** — syarat,
+> cara memasang, dan apa saja yang perlu diganti kalau dipakai di akun GitHub
+> sendiri.
+
 ## Daftar isi
 
 1. [Peta repo](#1-peta-repo)
@@ -307,41 +311,25 @@ npm run wp -- <site>          # → sites/<site>/<site>-wp-theme.zip
 ```
 
 Pasang di WordPress: **Appearance → Themes → Add New → Upload Theme** → pilih
-zip → **Activate**. Selesai — halaman depannya persis seperti site aslinya.
+zip → **Activate**. Halaman depannya persis seperti site aslinya — diuji
+berdampingan dengan versi React, identik piksel demi piksel.
 
-### Yang kamu dapat di dalam WordPress
+Ini **tidak** otomatis saat push; kamu jalankan sendiri di laptop. Skripnya
+bash + Node biasa, tanpa AI dan tanpa API key. Butuh `zip`; Chrome dan Python
+opsional (hanya untuk gambar pratinjau tema).
 
-- **Halaman depan yang sama persis.** Tiap section React di-render jadi HTML
-  statis, lalu jadi blok WordPress. Diuji berdampingan dengan versi React:
-  identik piksel demi piksel.
-- **Warna & font ikut pindah.** Token di `src/index.css` diterjemahkan ke
-  `theme.json`, jadi palet site muncul di color picker WordPress.
-- **Teks bisa diedit.** Judul dan paragraf jadi blok Heading/Paragraph biasa —
-  klik dan ketik di Site Editor. Ikon dan gambar disimpan apa adanya sebagai
-  blok HTML: tampilannya pasti benar, editnya lewat markup.
-- **Tiap section jadi pattern.** Bisa disisipkan ulang di halaman lain lewat
-  menu Patterns.
-- **Halaman & artikel WordPress tetap jalan** — template `page`, `single`,
-  `archive`, `search`, dan `404` ikut dibuat, dengan tipografi yang cocok.
+Singkatnya, yang kamu dapat di dalam WordPress:
 
-### Yang hilang
+- Judul dan paragraf bisa diedit di Site Editor; warna dan font site masuk ke
+  `theme.json` jadi muncul di color picker.
+- Tiap section jadi block pattern yang bisa disisipkan ulang.
+- Template halaman, artikel, arsip, pencarian, dan 404 ikut dibuat.
+- Interaksi React hilang — ini snapshot statis. Cocok untuk site konten,
+  tidak untuk site berupa aplikasi seperti `ask` atau `jaim`.
 
-- **Interaksi React hilang.** Tema ini snapshot statis. Cocok untuk site
-  konten (portfolio, company profile, restoran, blog). Site yang berupa
-  aplikasi — `ask`, `jaim` — tetap bisa di-build, tapi yang kamu dapat cuma
-  tampilan awalnya tanpa fungsi. Untuk itu pakai site biasa atau APK.
-- **Animasi Motion diganti.** Section setelah yang pertama muncul dengan
-  animasi CSS saat di-scroll. Sengaja pakai CSS, bukan JavaScript: kalau
-  browser-nya tidak mendukung, kontennya tetap tampil — tidak pernah
-  tersembunyi.
-
-### Kalau perlu mengubah
-
-Jangan edit isi `sites/<site>/wp-theme/` — folder itu dibuat ulang tiap build
-dan di-ignore git. Ubah site-nya, lalu jalankan `npm run wp` lagi.
-
-Opsi tambahan: `--no-screenshot` (lewati pengambilan pratinjau tema, lebih
-cepat), `--keep-build` (simpan `.wp-build/` untuk diperiksa).
+> 📖 **Panduan lengkapnya: [WORDPRESS.md](WORDPRESS.md)** — isi tema, apa yang
+> bisa diedit, cara memperbarui, cara menguji sendiri di WordPress lokal, dan
+> troubleshooting.
 
 ## 8. Apa yang terjadi saat `git push`
 

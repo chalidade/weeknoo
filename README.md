@@ -3,6 +3,9 @@
 One repo, one flow. Every website lives in its own folder under `sites/`, all
 built from the same stack and generated from a single template.
 
+> **🚀 Baru di sini? [INSTALL.md](INSTALL.md)** — syarat, cara memasang di
+> laptop sendiri, dan apa yang harus diganti kalau dipakai di akun GitHub lain.
+>
 > **📖 Panduan lengkap (Bahasa Indonesia): [PANDUAN.md](PANDUAN.md)** — peta
 > repo, perintah harian, library bawaan, publish, APK, kode akses, dan
 > troubleshooting dalam satu dokumen.
@@ -72,6 +75,8 @@ patterns and `src/index.css` becomes `theme.json`:
 npm run wp -- my-site         # → sites/my-site/my-site-wp-theme.zip
 ```
 
+See [WORDPRESS.md](WORDPRESS.md) for the full guide.
+
 ## Layout
 
 ```
@@ -82,3 +87,13 @@ npm run wp -- my-site         # → sites/my-site/my-site-wp-theme.zip
 ├── sites/           # all generated websites live here
 └── CLAUDE.md        # workflow guidance for Claude Code
 ```
+
+## Docs
+
+| File | What's in it |
+| --- | --- |
+| [INSTALL.md](INSTALL.md) | set the workspace up on your own machine |
+| [PANDUAN.md](PANDUAN.md) | the full workspace manual (Indonesian) |
+| [WORDPRESS.md](WORDPRESS.md) | package a site as a WordPress block theme |
+| [DEPLOY.md](DEPLOY.md) | publish the web build, and build/sign the APK |
+| [CLAUDE.md](CLAUDE.md) | repo conventions for Claude Code |

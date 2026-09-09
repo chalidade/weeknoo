@@ -312,6 +312,9 @@ Output is `sites/<name>/<name>-wp-theme.zip` (unzipped copy in
 `sites/<name>/wp-theme/`, both git-ignored). Install it through
 **Appearance → Themes → Add New → Upload Theme**.
 
+**WORDPRESS.md is the user-facing guide** for this flow (Indonesian) — keep it
+in step with the generator, including its local-WordPress test recipe.
+
 ### How it works
 
 1. `npm run build` runs first — it is still the type-check gate, and its
@@ -397,9 +400,11 @@ gate — it type-checks the whole app before bundling.
 - **Recharts** is the chart library (pairs with shadcn; `npm run add --
   <site> chart` adds the styled shadcn chart components). Don't add other
   chart libs.
-- The user-facing manual is **PANDUAN.md** (Indonesian) — keep it updated
-  when workspace behavior changes (new commands, new bundled libraries, new
-  pipeline steps).
+- The user-facing manuals are **PANDUAN.md** (the workspace manual),
+  **INSTALL.md** (setting the repo up from scratch, and what a fork has to
+  change), **WORDPRESS.md** and **DEPLOY.md** — all Indonesian. Keep them
+  updated when workspace behavior changes (new commands, new bundled
+  libraries, new pipeline steps, new prerequisites).
 - Design tokens are semantic shadcn CSS variables (`bg-background`,
   `text-muted-foreground`, `border-border`, …) with light/dark via the `.dark`
   class. Style with these tokens, not hard-coded colors.
