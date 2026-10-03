@@ -17,24 +17,6 @@ const SITES = [
     description: 'Catat sholat harian, progres tilawah 30 juz, dan jadwal sholat sesuai lokasi.',
     url: 'https://chalidade.github.io/weeknoo/jaim/',
   },
-  {
-    name: 'chalidade-portfolio-sites',
-    title: 'Portfolio',
-    description: 'Portfolio pribadi — profil, pengalaman, proyek, dan kontak.',
-    url: 'https://chalidade.github.io/weeknoo/chalidade-portfolio-sites/',
-  },
-  {
-    name: 'motion-app',
-    title: 'Motion App',
-    description: 'Landing page app dengan animasi Motion.',
-    url: 'https://chalidade.github.io/weeknoo/motion-app/',
-  },
-  {
-    name: 'kopi-senja',
-    title: 'Kopi Senja',
-    description: 'Landing page coffee shop — menu unggulan, testimoni, jam buka, dan lokasi.',
-    url: 'https://chalidade.github.io/weeknoo/kopi-senja/',
-  },
 ]
 
 const fadeUp = {

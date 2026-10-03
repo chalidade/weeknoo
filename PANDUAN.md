@@ -34,10 +34,7 @@ mem-build web + APK lalu mem-publish-nya.
 ├── sites/
 │   ├── home/          # halaman utama (privat, kode akses) — tampil di root Pages
 │   ├── ask/           # tanya AI lokal (Ollama) — lihat §4 "AI dengan reasoning"
-│   ├── jaim/
-│   ├── kopi-senja/
-│   ├── chalidade-portfolio-sites/
-│   └── motion-app/
+│   └── jaim/
 ├── scripts/
 │   ├── new-site.sh        # generator site baru
 │   ├── add-component.sh   # installer komponen 21st.dev / shadcn
@@ -276,8 +273,6 @@ Setiap push, semua site otomatis tayang di GitHub Pages:
 | Link | Isi |
 | --- | --- |
 | https://chalidade.github.io/weeknoo/ | **halaman utama** (privat — kode akses) |
-| https://chalidade.github.io/weeknoo/chalidade-portfolio-sites/ | portfolio (publik) |
-| https://chalidade.github.io/weeknoo/motion-app/ | motion app (publik) |
 | https://chalidade.github.io/weeknoo/`<site-baru>`/ | site baru — otomatis |
 
 Butuh custom domain / preview deploy → pakai Vercel/Netlify/Cloudflare;

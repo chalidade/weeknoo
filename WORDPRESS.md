@@ -61,6 +61,9 @@ di-`npm install`. Setelah itu offline pun bisa.
 
 ## 3. Cara pakai
 
+Contoh di panduan ini memakai `kopi-senja`, site restoran yang dibuat dengan
+`npm run new -- kopi-senja --category restaurant`. Ganti dengan nama site-mu.
+
 Dari **root workspace**:
 
 ```bash
@@ -225,14 +228,14 @@ sudah ada — pilih **Replace current with uploaded**.
 
 | Cocok | Kurang cocok |
 | --- | --- |
-| Portfolio, company profile, landing product, restoran, blog, sekolah, fotografi, usaha lokal | Aplikasi: `ask` (chat AI), `jaim` (tracker ibadah), `motion-app` |
+| Portfolio, company profile, landing product, restoran, blog, sekolah, fotografi, usaha lokal | Aplikasi: `ask` (chat AI), `jaim` (tracker ibadah) |
 
 Site berupa aplikasi tetap bisa di-build, tapi yang kamu dapat cuma tampilan
 awalnya tanpa fungsi apa pun. Untuk itu pakai site biasa (GitHub Pages) atau
 APK.
 
-`motion-app` bahkan akan ditolak dengan pesan jelas, karena `App.tsx`-nya tidak
-mengikuti konvensi satu-berkas-per-section:
+Site yang `App.tsx`-nya tidak mengikuti konvensi satu-berkas-per-section bahkan
+akan ditolak dengan pesan jelas:
 
 ```
 error: no sections found in src/App.tsx — App must import and render

@@ -67,7 +67,7 @@ Untuk menjalankan salah satu site yang sudah ada, install dependensinya dulu
 (sekali per site):
 
 ```bash
-cd sites/kopi-senja
+cd sites/jaim
 npm install          # ~330 paket
 npm run dev          # buka URL yang muncul
 ```
@@ -262,11 +262,6 @@ oleh pemilik repo**.
 **Menyalakan GitHub Pages.** Di repo barumu: **Settings → Pages → Source →
 GitHub Actions**. Workflow-nya sudah menangani sisanya — `home` di root, site
 lain di `/<repo>/<site>/`.
-
-**Site milik orang lain.** `sites/chalidade-portfolio-sites/` berisi data
-pribadi pemilik repo (nama, email, foto, riwayat kerja) di `src/lib/profile.ts`.
-Hapus site itu (`npm run delete -- chalidade-portfolio-sites`) atau ganti
-seluruh isinya.
 
 **Komentar di `src/lib/ai/ollama.ts`** menyebut `chalidade.github.io` sebagai
 contoh `OLLAMA_ORIGINS`. Cuma komentar — tidak wajib diganti, tapi enak kalau
