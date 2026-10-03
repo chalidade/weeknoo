@@ -141,6 +141,12 @@ under `/weeknoo/<site>/` — this split is handled in the `pages` job of
   GitHub ignores the `labels` URL param for non-collaborators, and the
   runner routine only executes issues that are BOTH labeled `prompt` AND
   authored by `chalidade`. Keep both checks when editing the routine.
+- Spam hygiene: `.github/workflows/guard-issues.yml` closes + locks every
+  issue opened by anyone but the repo owner (`github.repository_owner`).
+  For a spam wave, `npm run guard -- on|off|status` (`scripts/guard.sh`)
+  toggles GitHub's temporary collaborators-only interaction limit (max six
+  months) using the owner's `gh` token. Do not switch it on unprompted —
+  it also blocks legitimate outside comments.
 
 ## Data APIs (bundled library)
 

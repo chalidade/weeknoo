@@ -387,6 +387,26 @@ Kenapa orang asing tidak bisa menghabiskan token langgananmu:
    lain diperlakukan sebagai data, bukan perintah.
 3. Routine bisa dilihat/di-pause di https://claude.ai/code/routines.
 
+**Menjaga daftar issue tetap bersih dari spam:**
+
+- **Otomatis (selalu aktif):** workflow `.github/workflows/guard-issues.yml`
+  menutup dan mengunci setiap issue yang dibuka akun selain `chalidade`,
+  sambil meninggalkan komentar singkat. Issue-mu sendiri tidak tersentuh.
+  Action tidak bisa *menghapus* issue — kalau perlu, hapus manual dari
+  halaman issue (tombol **Delete issue**, khusus admin).
+- **Rem darurat (saat ada serbuan spam):** batasi interaksi hanya untuk
+  kolaborator — orang lain tidak bisa membuat issue/komentar/PR sama sekali.
+
+  ```bash
+  npm run guard -- status            # cek apakah sedang aktif
+  npm run guard -- on                # aktifkan 6 bulan (atau: one_day, one_week, one_month)
+  npm run guard -- off               # matikan
+  ```
+
+  Butuh login `gh` akun `chalidade` (admin repo); script memakai token akun
+  itu walau akun aktif `gh` sedang `chalidade-kpi`. GitHub membatasi maksimal
+  6 bulan — jalankan `on` lagi untuk memperpanjang.
+
 Status: routine berjalan **tiap jam (cron `18 * * * *`)** — issue baru
 dieksekusi otomatis maksimal ±1 jam setelah dibuat. Pemicu instan (webhook
 `issues.opened`) masih menunggu instalasi GitHub App Claude untuk

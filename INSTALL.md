@@ -241,7 +241,9 @@ ke repo aslinya (`chalidade/weeknoo`). Ganti semuanya sebelum push pertama.
 **Pengaman pipeline prompt.** Halaman utama publik tanpa kunci; yang
 menjaga token langgananmu adalah routine, yang hanya mengeksekusi issue
 berlabel `prompt` **dan** dibuat akun pemilik repo. Di fork, ganti nama akun
-`chalidade` di prompt routine dengan akunmu. Baca
+`chalidade` di prompt routine dengan akunmu. Workflow `guard-issues.yml`
+(menutup issue dari akun selain pemilik) otomatis mengikuti pemilik repo;
+untuk rem darurat `npm run guard`, set `GUARD_REPO=<akun>/<repo>`. Baca
 [PANDUAN.md bagian 10](PANDUAN.md#10-keamanan-pipeline-prompt).
 
 **Pipeline prompt→issue.** Kotak prompt di halaman utama membuat GitHub issue

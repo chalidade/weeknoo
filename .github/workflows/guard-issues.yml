@@ -1,0 +1,31 @@
+# Keeps the issue tracker clean. Only the repo owner's issues feed the prompt
+# pipeline (the weeknoo-prompt-runner routine ignores everyone else's anyway),
+# so an issue opened by any other account is closed and locked on arrival.
+#
+# GitHub Actions cannot delete issues — an admin can still do that by hand
+# (issue page → "Delete issue"). For a spam wave, also switch on the
+# temporary interaction limit: `npm run guard -- on` (see PANDUAN.md §10).
+name: guard-issues
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  close-foreign:
+    if: github.event.issue.user.login != github.repository_owner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close and lock
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          gh issue comment "$NUMBER" --body "Terima kasih! Repo ini hanya memproses issue dari @$OWNER, jadi issue ini ditutup otomatis. Prompt dari halaman utama weeknoo hanya dijalankan untuk pemilik repo."
+          gh issue close "$NUMBER" --reason "not planned"
+          gh issue lock "$NUMBER"

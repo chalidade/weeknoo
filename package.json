@@ -2,7 +2,7 @@
   "name": "chalid-websites",
   "private": true,
   "version": "1.0.0",
-  "description": "Website workspace — one repo, one flow. Generate a new site with the shared React + Tailwind + shadcn + Motion stack.",
+  "description": "Website workspace \u2014 one repo, one flow. Generate a new site with the shared React + Tailwind + shadcn + Motion stack.",
   "scripts": {
     "new": "bash scripts/new-site.sh",
     "delete": "bash scripts/delete-site.sh",
@@ -11,6 +11,7 @@
     "add": "bash scripts/add-component.sh",
     "apk": "bash scripts/build-apk.sh",
     "wp": "bash scripts/build-wp.sh",
+    "guard": "bash scripts/guard.sh",
     "sites": "ls -1 sites 2>/dev/null || echo 'No sites yet.'"
   }
 }
