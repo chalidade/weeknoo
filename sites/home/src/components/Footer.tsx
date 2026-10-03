@@ -1,23 +1,24 @@
-import { Asterisk } from 'lucide-react'
+const REPO = 'https://github.com/chalidade/weeknoo'
 
 export function Footer() {
   return (
-    <footer className="border-t">
-      <div className="mx-auto flex max-w-4xl flex-col items-center gap-2 px-6 py-10 text-center text-sm text-muted-foreground">
-        <span className="inline-flex items-center gap-1 font-medium text-foreground">
-          <Asterisk className="size-4 text-primary" />
-          weeknoo
-        </span>
-        <p>
+    <footer className="relative overflow-hidden border-t">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-6 pt-12 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-muted-foreground">
           Satu repo, satu alur —{' '}
-          <a
-            href="https://github.com/chalidade/weeknoo"
-            className="underline underline-offset-4 hover:text-foreground"
-          >
+          <a href={REPO} className="text-foreground underline underline-offset-4 hover:text-primary">
             chalidade/weeknoo
           </a>
         </p>
+        <p className="font-mono text-xs text-muted-foreground/70">
+          Dibangun dengan Claude Code · {new Date().getFullYear()}
+        </p>
       </div>
+      {/* Oversized wordmark that bleeds off the bottom edge */}
+      <div
+        aria-hidden
+        className="logo-mask mx-auto mt-10 -mb-[4vw] aspect-[1386/263] w-[min(92vw,64rem)] bg-gradient-to-b from-foreground/15 to-transparent"
+      />
     </footer>
   )
 }

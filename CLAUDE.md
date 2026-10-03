@@ -124,9 +124,17 @@ under `/weeknoo/<site>/` — this split is handled in the `pages` job of
 - **When a new site is added, add its card to the `SITES` array in
   `sites/home/src/components/Sites.tsx`** (url:
   `https://chalidade.github.io/weeknoo/<site>/`).
-- The homepage's display font is Instrument Serif (Google Fonts, loaded in
-  its `index.html`; `font-display` utility via `--font-display` in its
-  `index.css`). It renders dark-only (`class="dark"` on `<html>`).
+- The homepage's fonts are Geist (body/headings, `font-sans`), Geist Mono
+  (`font-mono`) and Instrument Serif italic for accent words (`font-display`)
+  — all Google Fonts loaded in its `index.html`, wired in its `index.css`. It
+  renders dark-only (`class="dark"` on `<html>`) with a lime `--primary` and
+  violet `--accent`.
+- Brand assets live in `sites/home/public/`: `weeknoo-logo.png` (white
+  wordmark on transparent, used through the `logo-mask` utility so it takes
+  any background), `favicon.png`, `apple-touch-icon.png`, and `og.png`
+  (1200×630 link-preview card). The Open Graph / Twitter meta tags in its
+  `index.html` use absolute `https://chalidade.github.io/weeknoo/…` URLs —
+  scrapers ignore relative ones. Re-render `og.png` if the tagline changes.
 - The homepage is public — there is no access-code gate (it was removed:
   the repo is public, so anyone can open an issue directly and a client-side
   gate protected nothing). The real abuse protection is pipeline-side:
