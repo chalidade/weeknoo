@@ -211,7 +211,7 @@ site secara manual.
 
 | Dokumen | Isi |
 | --- | --- |
-| [PANDUAN.md](PANDUAN.md) | panduan lengkap workspace (bahasa Indonesia) — perintah harian, library bawaan, publish, kode akses, troubleshooting |
+| [PANDUAN.md](PANDUAN.md) | panduan lengkap workspace (bahasa Indonesia) — perintah harian, library bawaan, publish, keamanan pipeline, troubleshooting |
 | [WORDPRESS.md](WORDPRESS.md) | mengemas site jadi tema WordPress |
 | [DEPLOY.md](DEPLOY.md) | publish ke Vercel/Netlify/Cloudflare/Pages, dan build + tanda tangan APK |
 | [CLAUDE.md](CLAUDE.md) | konvensi repo untuk Claude Code — juga bacaan bagus kalau kamu ingin tahu aturan mainnya |
@@ -238,16 +238,10 @@ ke repo aslinya (`chalidade/weeknoo`). Ganti semuanya sebelum push pertama.
 
 ### Perlu diperhatikan
 
-**Kode akses halaman utama.** `sites/home/src/components/Gate.tsx` menyimpan
-SHA-256 dari kode akses (bukan kodenya). Ganti dengan milikmu:
-
-```bash
-echo -n "kode-rahasiamu" | sha256sum
-# tempel hasilnya ke ACCESS_HASH
-```
-
-Ini gerbang sisi klien untuk pengunjung iseng saja — perlindungan
-sesungguhnya ada di sisi pipeline. Baca
+**Pengaman pipeline prompt.** Halaman utama publik tanpa kunci; yang
+menjaga token langgananmu adalah routine, yang hanya mengeksekusi issue
+berlabel `prompt` **dan** dibuat akun pemilik repo. Di fork, ganti nama akun
+`chalidade` di prompt routine dengan akunmu. Baca
 [PANDUAN.md bagian 10](PANDUAN.md#10-keamanan-pipeline-prompt).
 
 **Pipeline prompt→issue.** Kotak prompt di halaman utama membuat GitHub issue

@@ -7,7 +7,7 @@ built from the same stack and generated from a single template.
 > laptop sendiri, dan apa yang harus diganti kalau dipakai di akun GitHub lain.
 >
 > **📖 Panduan lengkap (Bahasa Indonesia): [PANDUAN.md](PANDUAN.md)** — peta
-> repo, perintah harian, library bawaan, publish, APK, kode akses, dan
+> repo, perintah harian, library bawaan, publish, APK, keamanan pipeline, dan
 > troubleshooting dalam satu dokumen.
 
 ## Stack

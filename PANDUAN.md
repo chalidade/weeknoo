@@ -19,7 +19,7 @@ mem-build web + APK lalu mem-publish-nya.
 6. [APK Android](#6-apk-android)
 7. [Tema WordPress](#7-tema-wordpress)
 8. [Apa yang terjadi saat `git push`](#8-apa-yang-terjadi-saat-git-push)
-9. [Halaman utama & kode akses](#9-halaman-utama--kode-akses)
+9. [Halaman utama](#9-halaman-utama)
 10. [Keamanan pipeline prompt](#10-keamanan-pipeline-prompt)
 11. [Gratis vs pakai langganan Claude](#11-gratis-vs-pakai-langganan-claude)
 12. [Troubleshooting](#12-troubleshooting)
@@ -32,7 +32,7 @@ mem-build web + APK lalu mem-publish-nya.
 .
 ├── template/          # cetakan — semua site baru dibuat dari sini
 ├── sites/
-│   ├── home/          # halaman utama (privat, kode akses) — tampil di root Pages
+│   ├── home/          # halaman utama (publik) — tampil di root Pages
 │   ├── ask/           # tanya AI lokal (Ollama) — lihat §4 "AI dengan reasoning"
 │   └── jaim/
 ├── scripts/
@@ -40,7 +40,6 @@ mem-build web + APK lalu mem-publish-nya.
 │   ├── add-component.sh   # installer komponen 21st.dev / shadcn
 │   └── build-apk.sh       # pembungkus site → APK Android (Capacitor)
 ├── .github/workflows/build.yml   # CI: build web + APK + publish Pages
-├── .access-code       # kode akses halaman utama (DI-GITIGNORE, jangan commit)
 ├── PANDUAN.md         # dokumen ini
 ├── DEPLOY.md          # detail publish/deploy & CI
 ├── CLAUDE.md          # instruksi kerja untuk Claude Code
@@ -78,7 +77,7 @@ memverifikasi dengan `npm run build`, lalu commit. Bilang **push** untuk
 menayangkannya.
 
 **Jalur B — lewat halaman utama (tanpa buka terminal):** buka
-https://chalidade.github.io/weeknoo/, masukkan kode akses, tulis prompt, kirim
+https://chalidade.github.io/weeknoo/ (login GitHub sebagai `chalidade`), tulis prompt, kirim
 — promptmu menjadi GitHub Issue berlabel `prompt`. Routine cloud
 `weeknoo-prompt-runner` mengecek issue baru **setiap jam (menit :18)** dan
 mengeksekusinya otomatis (atau tanpa menunggu: bilang ke Claude di terminal
@@ -272,7 +271,7 @@ Setiap push, semua site otomatis tayang di GitHub Pages:
 
 | Link | Isi |
 | --- | --- |
-| https://chalidade.github.io/weeknoo/ | **halaman utama** (privat — kode akses) |
+| https://chalidade.github.io/weeknoo/ | **halaman utama** (kotak prompt → GitHub Issue) |
 | https://chalidade.github.io/weeknoo/`<site-baru>`/ | site baru — otomatis |
 
 Butuh custom domain / preview deploy → pakai Vercel/Netlify/Cloudflare;
@@ -367,20 +366,14 @@ weeknoo tetap bisa di-push. **Tidak perlu tukar-tukar akun lagi.**
 Kalau suatu saat push weeknoo ditolak, cek dulu `ssh -T git@github.com` —
 jawabannya harus `Hi chalidade!`, bukan nama akun lain.
 
-## 9. Halaman utama & kode akses
+## 9. Halaman utama
 
-Halaman utama (`sites/home`) dikunci layar kode akses. **Kodenya tersimpan di
-file `.access-code` di root workspace** — file ini di-gitignore sehingga tidak
-pernah ikut ter-push.
-
-- Kode diminta sekali per perangkat (diingat browser via localStorage).
-- Yang tertanam di halaman hanya hash SHA-256-nya, bukan kodenya.
-- **Ganti kode:** ikuti 3 langkah yang tertulis di dalam `.access-code`.
-- Site-site lain tetap publik tanpa kunci.
-
-Jujur soal batasannya: ini gerbang sisi-browser — cukup untuk menahan
-pengunjung iseng, bukan benteng kriptografis (repo-nya publik). Perlindungan
-yang sesungguhnya ada di lapisan pipeline (bagian 10).
+Halaman utama (`sites/home`) publik — siapa pun boleh membuka dan mengisi
+kotak prompt-nya. Itu aman: kotak prompt hanya membuka form GitHub Issue, dan
+issue dari akun selain `chalidade` tidak akan pernah dieksekusi (lihat
+bagian 10). Dulu ada layar kode akses, tapi sudah dihapus karena tidak
+menambah perlindungan apa pun — repo-nya publik, jadi siapa pun bisa membuka
+issue langsung di GitHub tanpa lewat halaman ini.
 
 ## 10. Keamanan pipeline prompt
 
@@ -421,6 +414,5 @@ mengembalikan cron ke placeholder.
   atau key 21st.dev habis kuota (free tier 2 install/hari).
 - **APK build error soal SDK/Java** — pastikan Android Studio terpasang;
   script otomatis memakai `~/Android/Sdk` dan JDK bawaannya.
-- **Lupa kode akses** — baca `.access-code` di root workspace.
 - **Routine tidak jalan** — cek https://claude.ai/code/routines; debug run
   bisa diminta ke Claude ("cek log run terakhir weeknoo-prompt-runner").
