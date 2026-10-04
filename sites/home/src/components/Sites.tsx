@@ -24,6 +24,15 @@ const SITES = [
     tag: 'Ibadah',
     hue: 160,
   },
+  {
+    name: 'hachili-coffee',
+    title: 'Ha.Chi.Li Coffee',
+    description:
+      'Website cafe bertema rumah lebah di Singosari, Malang — menu lengkap dengan harga, paket rekomendasi, rating Google 4.6, dan reservasi via WhatsApp.',
+    url: 'https://chalidade.github.io/weeknoo/hachili-coffee/',
+    tag: 'Cafe',
+    hue: 45,
+  },
 ]
 
 const fadeUp = {
