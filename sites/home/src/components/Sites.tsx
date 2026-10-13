@@ -33,6 +33,15 @@ const SITES = [
     tag: 'Cafe',
     hue: 45,
   },
+  {
+    name: 'bubur-bara',
+    title: 'Bubur Bara — sarapan claypot',
+    description:
+      'Menu bubur bakar claypot dengan keranjang, pesan terjadwal H-1, bayar QRIS + unggah bukti, kirim pesanan via WhatsApp, riwayat pesanan, dan simulasi kemitraan.',
+    url: 'https://chalidade.github.io/weeknoo/bubur-bara/',
+    tag: 'Kuliner',
+    hue: 25,
+  },
 ]
 
 const fadeUp = {
