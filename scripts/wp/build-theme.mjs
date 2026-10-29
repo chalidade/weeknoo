@@ -204,13 +204,15 @@ const sections = rendered.map((section) => {
   for (const node of prune(tree, (n) => HOISTED_TAGS.has(n.tagName))) {
     if (node.tagName !== 'title') hoisted.set(serialize(node), true)
   }
-  const reveal = !isHeader && !isFooter && bodyIndex++ > 0
+  const body = !isHeader && !isFooter
+  const hero = body && bodyIndex === 0
+  const reveal = body && bodyIndex++ > 0
   return {
     ...section,
     slug: kebab(section.name),
     isHeader,
     isFooter,
-    blocks: sectionToBlocks(tree, { reveal }),
+    blocks: sectionToBlocks(tree, { reveal, hero }),
   }
 })
 
@@ -458,7 +460,7 @@ const interopCss = `
 .wp-block-post-content blockquote { border-inline-start: 3px solid var(--border); padding-inline-start: 1rem; font-style: italic; margin-block: 1.5rem; }
 .wp-block-post-content img { border-radius: var(--radius, 0.5rem); }
 
-/* Sections fade in as they scroll into view — the block theme's stand-in for
+/* Sections fade (and un-blur) in as they scroll into view — the block theme's stand-in for
    the Motion animations the React build runs. This is a scroll-driven CSS
    animation on purpose: a browser that does not support view() timelines
    simply shows the section, so content can never end up stranded invisible
@@ -466,12 +468,37 @@ const interopCss = `
 @keyframes wp-reveal-in {
   from {
     opacity: 0;
+    filter: blur(6px);
     transform: translateY(1.25rem);
   }
   to {
     opacity: 1;
+    filter: none;
     transform: none;
   }
+}
+
+/* The hero blurs in on load, item by item (marked by markHero in blocks.mjs).
+   A time-based animation with fill "both": it always ends fully visible. */
+@keyframes wp-hero-in {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(0.75rem);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .wp-hero-item,
+  .wp-hero-visual {
+    animation: wp-hero-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .wp-hero-item:nth-child(2) { animation-delay: 0.08s; }
+  .wp-hero-item:nth-child(3) { animation-delay: 0.16s; }
+  .wp-hero-item:nth-child(4) { animation-delay: 0.24s; }
+  .wp-hero-item:nth-child(5) { animation-delay: 0.32s; }
+  .wp-hero-item:nth-child(n + 6) { animation-delay: 0.4s; }
+  .wp-hero-visual { animation-delay: 0.3s; }
 }
 
 @supports (animation-timeline: view()) {

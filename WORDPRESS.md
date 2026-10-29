@@ -39,7 +39,7 @@ Sebuah tema blok WordPress lengkap — bukan sekadar HTML yang dibungkus:
 - **Tiap section jadi block pattern**, bisa disisipkan ulang di halaman lain.
 - **Halaman dan artikel WordPress tetap jalan** — template `page`, `single`,
   `archive`, `search`, dan `404` ikut dibuat dengan tipografi yang serasi.
-- **Animasi muncul saat di-scroll**, versi CSS dari animasi Motion di site asli.
+- **Animasi masuk hero + muncul saat di-scroll**, versi CSS dari animasi Motion di site asli.
 
 Yang **tidak** ikut: interaksi React. Tema ini snapshot statis — lihat
 [bagian 8](#8-site-mana-yang-cocok).
@@ -199,11 +199,13 @@ mengubah jadi blok inti **hanya** kalau hasilnya pasti sama.
 ### Hilang
 
 - **Interaksi React** — form, tab, akordeon, chart, apa pun yang butuh state.
-- **Animasi Motion** — diganti animasi CSS saat di-scroll
+- **Animasi Motion** — diganti animasi CSS. Section pertama (hero) muncul
+  bertahap dengan efek blur saat halaman dibuka: badge, judul, teks, tombol,
+  lalu gambar. Section berikutnya muncul (dan hilang blurnya) saat di-scroll
   (`animation-timeline: view()`). Sengaja pakai CSS, bukan JavaScript: kalau
   browser-nya tidak mendukung, kontennya tetap tampil — tidak pernah
-  tersembunyi selamanya. Section pertama tidak dianimasikan karena ada di atas
-  lipatan.
+  tersembunyi selamanya. Semuanya mati kalau pengunjung memilih "kurangi
+  gerakan" di perangkatnya.
 
 ## 7. Memperbarui tema setelah site berubah
 

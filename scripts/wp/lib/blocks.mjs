@@ -140,16 +140,39 @@ export function stripAnimationStyles(tree) {
   return tree
 }
 
-// A section renders as a single root element; give it the reveal hook and hand
-// the whole thing to the converter.
-export function sectionToBlocks(tree, { reveal = false } = {}) {
+function addClass(node, name) {
+  const current = attr(node, 'class')
+  setAttr(node, 'class', current ? `${current} ${name}` : name)
+}
+
+// The hero stands in for its Motion entrance (a staggered fade-up) with CSS:
+// the siblings of the <h1> — badge, title, text, buttons — become
+// `wp-hero-item`s that blur in one after another, and the columns beside that
+// stack (the picture) become `wp-hero-visual`, which follows last. A hero
+// without an <h1> is left still.
+function markHero(tree) {
+  const path = []
+  const find = (node) => {
+    for (const child of elements(node)) {
+      path.push(child)
+      if (child.tagName === 'h1' || find(child)) return true
+      path.pop()
+    }
+    return false
+  }
+  if (!find(tree) || path.length < 2) return
+  const stack = path[path.length - 2]
+  for (const item of elements(stack)) addClass(item, 'wp-hero-item')
+  const grid = path[path.length - 3]
+  if (grid) for (const column of elements(grid)) if (column !== stack) addClass(column, 'wp-hero-visual')
+}
+
+// A section renders as a single root element; give it the reveal (or hero)
+// hook and hand the whole thing to the converter.
+export function sectionToBlocks(tree, { reveal = false, hero = false } = {}) {
   const roots = elements(tree)
   if (roots.length === 0) return ''
-  if (reveal) {
-    for (const root of roots) {
-      const current = attr(root, 'class')
-      setAttr(root, 'class', current ? `${current} wp-reveal` : 'wp-reveal')
-    }
-  }
+  if (reveal) for (const root of roots) addClass(root, 'wp-reveal')
+  if (hero) markHero(tree)
   return roots.map((root) => convert(root, 0)).join('\n')
 }

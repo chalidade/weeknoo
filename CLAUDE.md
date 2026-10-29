@@ -372,10 +372,13 @@ in step with the generator, including its local-WordPress test recipe.
   markup would not round-trip through a core block's `save()` (that mismatch is
   what makes WordPress show "unexpected or invalid content"). It still renders
   exactly right, it is just edited as markup.
-- **Motion animations are dropped.** Sections after the first fade in with a
-  scroll-driven CSS animation (`animation-timeline: view()`) instead — chosen
-  over a JavaScript reveal so a browser without support shows the content
-  rather than hiding it forever.
+- **Motion animations become CSS.** The hero blurs in on load, staggered:
+  `markHero` in `scripts/wp/lib/blocks.mjs` tags the `<h1>`'s siblings
+  `wp-hero-item` and the column beside them `wp-hero-visual` (a hero without
+  an `<h1>` stays still). Sections after it fade and un-blur in with a
+  scroll-driven animation (`animation-timeline: view()`) — chosen over a
+  JavaScript reveal so a browser without support shows the content rather
+  than hiding it forever. All of it is off under `prefers-reduced-motion`.
 - **React interactivity is gone.** The theme is a static snapshot, so this fits
   content sites (portfolio, company profile, restaurant, blog). App-shaped
   sites — `ask`, `jaim` — will build, but you get their initial render with no
