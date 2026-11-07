@@ -42,6 +42,15 @@ const SITES = [
     tag: 'Kuliner',
     hue: 25,
   },
+  {
+    name: 'birds',
+    title: 'Birds — Baugment Insights',
+    description:
+      'Majalah digital eksekutif ala McKinsey: riset workforce & leadership GCC dan Asia Tenggara, chart interaktif, hero video, akses Free vs Member, dan unduh PDF dossier.',
+    url: 'https://chalidade.github.io/weeknoo/birds/',
+    tag: 'Editorial',
+    hue: 220,
+  },
 ]
 
 const fadeUp = {
