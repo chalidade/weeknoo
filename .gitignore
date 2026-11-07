@@ -47,3 +47,4 @@ ui-ux-pro-max-skill/
 sites/*/.wp-build/
 sites/*/wp-theme/
 *-wp-theme.zip
+sites/*/*.zip

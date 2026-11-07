@@ -37,6 +37,39 @@ SITE_DIR="$ROOT/sites/$NAME"
 [ -d "$SITE_DIR" ] || die "site not found: sites/$NAME (run: npm run sites)"
 [ -f "$SITE_DIR/src/App.tsx" ] || die "sites/$NAME has no src/App.tsx"
 
+# --- hand-built WordPress package -------------------------------------------
+# A site that ships its own theme (sites/<name>/wordpress/theme/<slug>/) and
+# optional plugins (sites/<name>/wordpress/plugin/<slug>/) is packaged as-is
+# instead of generating a static snapshot — used when the WordPress version
+# needs real, editable content (posts, menus, Customizer, Elementor widgets).
+if [ -d "$SITE_DIR/wordpress/theme" ]; then
+  command -v zip >/dev/null 2>&1 || die "zip not found (sudo apt install zip)"
+  THEME_PARENT="$SITE_DIR/wp-theme"
+  rm -rf "$THEME_PARENT" && mkdir -p "$THEME_PARENT"
+  step "Mengemas tema WordPress buatan tangan (sites/$NAME/wordpress/)"
+  for dir in "$SITE_DIR"/wordpress/theme/*/; do
+    slug="$(basename "$dir")"
+    [ -f "$dir/style.css" ] || die "wordpress/theme/$slug has no style.css"
+    while IFS= read -r f; do php -l "$f" >/dev/null 2>&1 || { php -l "$f"; die "PHP syntax error in $f"; }; done < <(command -v php >/dev/null && find "$dir" -name '*.php' || true)
+    cp -r "$dir" "$THEME_PARENT/$slug"
+    rm -f "$SITE_DIR/$NAME-wp-theme.zip"
+    (cd "$THEME_PARENT" && zip -qr "$SITE_DIR/$NAME-wp-theme.zip" "$slug" -x '*.DS_Store')
+    echo "  tema   : sites/$NAME/$NAME-wp-theme.zip  ($(du -h "$SITE_DIR/$NAME-wp-theme.zip" | cut -f1))"
+  done
+  if [ -d "$SITE_DIR/wordpress/plugin" ]; then
+    for dir in "$SITE_DIR"/wordpress/plugin/*/; do
+      slug="$(basename "$dir")"
+      while IFS= read -r f; do php -l "$f" >/dev/null 2>&1 || { php -l "$f"; die "PHP syntax error in $f"; }; done < <(command -v php >/dev/null && find "$dir" -name '*.php' || true)
+      rm -f "$SITE_DIR/$slug.zip"
+      (cd "$SITE_DIR/wordpress/plugin" && zip -qr "$SITE_DIR/$slug.zip" "$slug" -x '*.DS_Store')
+      echo "  plugin : sites/$NAME/$slug.zip  ($(du -h "$SITE_DIR/$slug.zip" | cut -f1))"
+    done
+  fi
+  echo
+  echo "Pasang plugin dulu (Plugins → Add New → Upload Plugin), lalu tema (Appearance → Themes → Upload Theme)."
+  exit 0
+fi
+
 SLUG="$NAME"
 BUILD_DIR="$SITE_DIR/.wp-build"
 THEME_PARENT="$SITE_DIR/wp-theme"

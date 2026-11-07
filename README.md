@@ -100,7 +100,7 @@ Android runtime permissions are declared per site in `sites/<site>/android-permi
 | [`jaim`](sites/jaim) | Daily prayer log, Quran reading progress and location-based prayer times | [/weeknoo/jaim/](https://chalidade.github.io/weeknoo/jaim/) |
 | [`hachili-coffee`](sites/hachili-coffee) | Cafe website with menu, recommended bundles and WhatsApp reservations | [/weeknoo/hachili-coffee/](https://chalidade.github.io/weeknoo/hachili-coffee/) |
 | [`bubur-bara`](sites/bubur-bara) | Breakfast ordering app: cart, next-day scheduled orders, QRIS payment proof upload, order history | [/weeknoo/bubur-bara/](https://chalidade.github.io/weeknoo/bubur-bara/) |
-| [`birds`](sites/birds) | Birds — Baugment's executive insights magazine: transparent nav with dropdowns, video/image heroes, zero-sidebar reader, interactive charts, free vs member gating, executive PDF export | [/weeknoo/birds/](https://chalidade.github.io/weeknoo/birds/) |
+| [`birds`](sites/birds) | Birds — Baugment's executive insights magazine: transparent nav with dropdowns, video/image heroes, zero-sidebar reader, interactive charts, free vs member gating, executive PDF export. Also ships as a WordPress theme + Elementor plugin ([guide](sites/birds/wordpress/README.md)) | [/weeknoo/birds/](https://chalidade.github.io/weeknoo/birds/) |
 
 Site content is in Indonesian.
 

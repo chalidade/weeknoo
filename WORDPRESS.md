@@ -236,6 +236,24 @@ Site berupa aplikasi tetap bisa di-build, tapi yang kamu dapat cuma tampilan
 awalnya tanpa fungsi apa pun. Untuk itu pakai site biasa (GitHub Pages) atau
 APK.
 
+### Paket WordPress buatan tangan
+
+Kalau versi WordPress-nya harus punya **konten yang bisa diatur** (artikel,
+kategori, member, widget Elementor), site boleh membawa paket sendiri di
+`sites/<nama>/wordpress/theme/<slug>/` (+ opsional
+`sites/<nama>/wordpress/plugin/<slug>/`). `npm run wp -- <nama>` lalu tidak
+membuat snapshot, melainkan mengecek PHP-nya (`php -l`) dan mengemas apa
+adanya:
+
+```
+sites/<nama>/<nama>-wp-theme.zip
+sites/<nama>/<slug-plugin>.zip
+```
+
+Contohnya `birds` — tema majalah + plugin **Birds Elements** dengan 12 widget
+Elementor, shortcode, profil kontributor, dan akses Free/Member. Panduan
+lengkapnya: [`sites/birds/wordpress/README.md`](sites/birds/wordpress/README.md).
+
 Site yang `App.tsx`-nya tidak mengikuti konvensi satu-berkas-per-section bahkan
 akan ditolak dengan pesan jelas:
 

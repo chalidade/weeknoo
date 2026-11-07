@@ -1,0 +1,5 @@
+/* Block editor: match the reading canvas. */
+body { font-family: "Inter", ui-sans-serif, system-ui, sans-serif; color: #000f34; }
+.editor-styles-wrapper p { font-size: 1.125rem; line-height: 1.8; color: rgba(0,0,0,.9); }
+.editor-styles-wrapper h2 { font-size: 1.75rem; font-weight: 600; letter-spacing: -.02em; color: #000; }
+.editor-styles-wrapper .wp-block-shortcode { font-family: ui-monospace, monospace; font-size: .8125rem; }

@@ -1,0 +1,16 @@
+/*
+Theme Name: Birds
+Theme URI: https://chalidade.github.io/weeknoo/birds/
+Author: Baugment
+Description: Executive-tier editorial magazine theme for Birds — Baugment’s Insights, Research, and Discoveries. Transparent navigation with series dropdowns, video or image heroes, a zero-sidebar reading canvas, author and expert profiles, interactive charts, free vs member access and executive PDF export. Pair with the Birds Elements plugin (Elementor widgets + shortcodes).
+Version: 1.0.0
+Requires at least: 6.4
+Tested up to: 6.8
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: birds
+Tags: news, blog, one-column, custom-colors, custom-logo, custom-menu, featured-images, sticky-post, translation-ready, editor-style
+*/
+
+/* Styles live in assets/css/theme.css (enqueued by functions.php). */
