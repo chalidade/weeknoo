@@ -1,0 +1,271 @@
+<!doctype html>
+<!--
+  Birds brand film — 24 s seamless loop, 1920×1080.
+  Every frame is a pure function of time: render(t). video/render.mjs steps t
+  frame by frame in Chromium and ffmpeg encodes the result, so the film is
+  deterministic and can be re-rendered after copy or palette changes.
+
+  Composition weight sits on the right: on the home page the headline
+  overlays the left side of the hero.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=block" rel="stylesheet">
+<style>
+	:root { --navy: #000f34; --royal: #0972cb; --sky: #38bdf8; --slate: #94a3b8; --grey: #f5f5f7; }
+	* { box-sizing: border-box; margin: 0; }
+	html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--navy); font-family: Inter, sans-serif; -webkit-font-smoothing: antialiased; color: #fff; }
+	#stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: radial-gradient(120% 90% at 75% 40%, #06306b 0%, #021a4a 38%, var(--navy) 70%, #00081d 100%); }
+	svg { position: absolute; inset: 0; }
+	.layer { position: absolute; inset: 0; }
+	.kicker { position: absolute; font-size: 22px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--sky); white-space: nowrap; }
+	.big { position: absolute; font-weight: 600; letter-spacing: -.035em; line-height: 1.04; white-space: nowrap; }
+	.small { position: absolute; font-size: 22px; color: rgba(255,255,255,.72); line-height: 1.5; }
+	.label { position: absolute; font-size: 18px; color: rgba(255,255,255,.7); white-space: nowrap; }
+	.note { position: absolute; font-size: 15px; letter-spacing: .06em; color: rgba(255,255,255,.4); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="stage">
+	<!-- persistent background: perspective grid, drifting light, particles -->
+	<svg id="bg" viewBox="0 0 1920 1080"></svg>
+
+	<!-- scene 1: wordmark -->
+	<div class="layer" id="s1">
+		<div class="big" id="word" style="right:150px; top:360px; font-size:220px;">Birds<span style="color:var(--royal)">.</span></div>
+		<div class="kicker" id="tag" style="right:156px; top:640px; font-size:17px; color:rgba(255,255,255,.78);">Baugment’s Insights, Research, and Discoveries</div>
+		<svg viewBox="0 0 1920 1080"><line id="s1line" x1="1764" y1="700" x2="1764" y2="700" stroke="#0972cb" stroke-width="4"/></svg>
+	</div>
+
+	<!-- scene 2: workforce intelligence -->
+	<div class="layer" id="s2">
+		<div class="kicker" id="s2k" style="left:1130px; top:235px;">Workforce Intelligence</div>
+		<div class="big" id="s2n" style="left:1124px; top:270px; font-size:136px;">+82%</div>
+		<div class="small" id="s2c" style="left:1132px; top:428px; width:700px; font-size:19px;">Demand for AI &amp; data skills since 2023 — talent supply grew 21%.</div>
+		<svg viewBox="0 0 1920 1080" id="s2svg"></svg>
+		<div class="note" id="s2note" style="left:1132px; top:905px;">Illustrative data · Birds Research Desk</div>
+	</div>
+
+	<!-- scene 3: human leadership -->
+	<div class="layer" id="s3">
+		<svg viewBox="0 0 1920 1080" id="s3svg"></svg>
+		<div class="kicker" id="s3k" style="left:1130px; top:330px;">Human Leadership</div>
+		<div class="big" id="s3q" style="left:1126px; top:372px; font-size:78px; white-space:normal; width:700px;">Leadership is the binding constraint.</div>
+		<div class="small" id="s3c" style="left:1132px; top:572px; width:720px; font-size:18px; white-space:nowrap;">Practitioners Perspective · Leading with Heart · L&amp;D Around the World</div>
+	</div>
+
+	<!-- scene 4: mind & impact -->
+	<div class="layer" id="s4">
+		<div class="kicker" id="s4k" style="left:1130px; top:235px;">Mind &amp; Impact</div>
+		<div class="big" id="s4t" style="left:1126px; top:270px; font-size:70px; white-space:normal; width:520px;">Learning ROI the board believes.</div>
+		<svg viewBox="0 0 1920 1080" id="s4svg"></svg>
+		<div class="label" id="s4a" style="left:1712px; top:620px; color:#fff; font-weight:600; font-size:26px;">121</div>
+		<div class="label" id="s4b" style="left:1712px; top:758px; font-size:24px;">105</div>
+		<div class="label" id="s4l1" style="left:1132px; top:875px;"><span style="display:inline-block;width:28px;height:4px;background:#0972cb;vertical-align:middle;margin-right:10px"></span>Programme cohort</div>
+		<div class="label" id="s4l2" style="left:1400px; top:875px;"><span style="display:inline-block;width:28px;border-top:3px dashed #94a3b8;vertical-align:middle;margin-right:10px"></span>Control group</div>
+		<div class="note" id="s4note" style="left:1132px; top:910px;">Illustrative data · Birds Research Desk</div>
+	</div>
+
+	<!-- scene 5: reach + sign-off -->
+	<div class="layer" id="s5">
+		<svg viewBox="0 0 1920 1080" id="s5svg"></svg>
+		<div class="kicker" id="s5k" style="right:150px; top:235px; text-align:right;">GCC · Southeast Asia · Global</div>
+		<div class="big" id="s5w" style="right:150px; top:735px; font-size:104px;">Birds<span style="color:var(--royal)">.</span></div>
+		<div class="small" id="s5c" style="right:156px; top:862px; font-size:20px; text-align:right; color:rgba(255,255,255,.8);">Executive intelligence, without the paywall.</div>
+	</div>
+</div>
+
+<script>
+const T = 24
+const NS = 'http://www.w3.org/2000/svg'
+const $ = (id) => document.getElementById(id)
+const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent.appendChild(n); return n }
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v))
+const seg = (t, a, b) => clamp((t - a) / (b - a))
+const ease = (x) => 1 - Math.pow(1 - x, 3)
+const easeIO = (x) => (x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2)
+// deterministic pseudo-random
+let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
+
+/* Scene windows [in, out] — each fades in over .6 s and out over .5 s. */
+const S = { s1: [0.2, 4.6], s2: [4.6, 10], s3: [10, 15], s4: [15, 20], s5: [20, 23.5] }
+const vis = (t, [a, b]) => Math.min(ease(seg(t, a, a + .6)), 1 - seg(t, b - .5, b))
+function show(node, a, dy = 24, blur = 8) {
+	node.style.opacity = a
+	node.style.transform = `translateY(${(1 - a) * dy}px)`
+	node.style.filter = a < 1 ? `blur(${(1 - a) * blur}px)` : 'none'
+}
+
+/* ---------- background ---------- */
+const bg = $('bg')
+const defs = el('defs', {}, bg)
+const glow = el('radialGradient', { id: 'glow' }, defs)
+el('stop', { offset: 0, 'stop-color': '#0972cb', 'stop-opacity': .5 }, glow)
+el('stop', { offset: 1, 'stop-color': '#0972cb', 'stop-opacity': 0 }, glow)
+const glow2 = el('radialGradient', { id: 'glow2' }, defs)
+el('stop', { offset: 0, 'stop-color': '#38bdf8', 'stop-opacity': .28 }, glow2)
+el('stop', { offset: 1, 'stop-color': '#38bdf8', 'stop-opacity': 0 }, glow2)
+const orb1 = el('circle', { r: 620, fill: 'url(#glow)' }, bg)
+const orb2 = el('circle', { r: 420, fill: 'url(#glow2)' }, bg)
+const grid = el('g', { stroke: '#0972cb', 'stroke-opacity': .16, fill: 'none' }, bg)
+const vlines = [], hlines = []
+for (let i = -18; i <= 18; i++) vlines.push(el('line', {}, grid))
+for (let i = 0; i < 12; i++) hlines.push(el('line', {}, grid))
+const parts = []
+for (let i = 0; i < 70; i++) parts.push({ x: rnd() * 1920, y: rnd() * 1080, r: .8 + rnd() * 2.2, s: .3 + rnd() * .7, ph: rnd() * 6.28, n: el('circle', { fill: '#fff' }, bg) })
+
+function renderBg(t) {
+	const w = (2 * Math.PI * t) / T // one full cycle per loop → seamless
+	orb1.setAttribute('cx', 1350 + Math.cos(w) * 160); orb1.setAttribute('cy', 430 + Math.sin(w) * 90)
+	orb2.setAttribute('cx', 1650 + Math.sin(w * 2) * 120); orb2.setAttribute('cy', 760 + Math.cos(w) * 80)
+	const horizon = 700
+	vlines.forEach((l, k) => { const i = k - 18; l.setAttribute('x1', 1300 + i * 22); l.setAttribute('y1', horizon); l.setAttribute('x2', 1300 + i * 150); l.setAttribute('y2', 1080) })
+	const shift = (t / T) % 1 // grid rows glide toward the viewer, period = loop
+	hlines.forEach((l, k) => { const p = (k + shift) / 12; const y = horizon + Math.pow(p, 2.2) * 380; l.setAttribute('x1', 0); l.setAttribute('x2', 1920); l.setAttribute('y1', y); l.setAttribute('y2', y); l.setAttribute('stroke-opacity', p) })
+	parts.forEach((p) => {
+		const y = ((p.y - (t / T) * 1080 * p.s) % 1080 + 1080) % 1080
+		p.n.setAttribute('cx', p.x + Math.sin(w * 2 + p.ph) * 12); p.n.setAttribute('cy', y); p.n.setAttribute('r', p.r)
+		p.n.setAttribute('opacity', (.12 + .3 * (.5 + .5 * Math.sin(w * 3 + p.ph))) * (p.x > 700 ? 1 : .5))
+	})
+}
+
+/* ---------- scene 2: columns ---------- */
+const s2svg = $('s2svg')
+const COLS = [['AI & data', 182, 121], ['Cloud & cyber', 164, 118], ['Leadership', 141, 104], ['Green skills', 156, 109], ['Customer', 118, 112]]
+const base2 = 850, h2 = 300, x2 = 1130, step2 = 140
+el('line', { x1: x2 - 10, x2: x2 + step2 * 5 - 20, y1: base2, y2: base2, stroke: '#fff', 'stroke-opacity': .5, 'stroke-width': 2 }, s2svg)
+const bars = COLS.map(([lab, d, s], i) => {
+	const g = el('g', {}, s2svg)
+	const a = el('rect', { x: x2 + i * step2, width: 54, fill: '#0972cb' }, g)
+	const b = el('rect', { x: x2 + i * step2 + 58, width: 54, fill: '#94a3b8' }, g)
+	const v = el('text', { x: x2 + i * step2 + 27, 'text-anchor': 'middle', fill: '#fff', 'font-size': 20, 'font-weight': 600 }, g); v.textContent = d
+	const l = el('text', { x: x2 + i * step2 + 56, y: base2 + 32, 'text-anchor': 'middle', fill: 'rgba(255,255,255,.72)', 'font-size': 17 }, g); l.textContent = lab
+	return { a, b, v, d, s }
+})
+
+/* ---------- scene 3: network ---------- */
+const s3svg = $('s3svg')
+seed = 41
+const nodes = []
+for (let i = 0; i < 26; i++) nodes.push({ x: 1080 + rnd() * 800, y: 200 + rnd() * 720, big: i % 6 === 0 })
+const links = []
+nodes.forEach((a, i) => nodes.forEach((b, j) => { if (j > i) { const d = Math.hypot(a.x - b.x, a.y - b.y); if (d < 260) links.push({ a, b, d, n: el('line', { x1: a.x, y1: a.y, x2: a.x, y2: a.y, stroke: d < 170 ? '#38bdf8' : '#0972cb', 'stroke-width': 1.6 }, s3svg) }) } }))
+nodes.forEach((n) => { n.el = el('circle', { cx: n.x, cy: n.y, r: n.big ? 10 : 5, fill: n.big ? '#38bdf8' : '#fff' }, s3svg) })
+
+/* ---------- scene 4: line + donut ---------- */
+const s4svg = $('s4svg')
+const L = [100, 104, 111, 116, 121], C = [100, 101, 102, 104, 105]
+const lx = (i) => 1130 + i * 140, ly = (v) => 850 - (v - 95) / 30 * 250
+for (let k = 0; k <= 3; k++) el('line', { x1: 1130, x2: 1690, y1: 850 - k * 83, y2: 850 - k * 83, stroke: '#fff', 'stroke-opacity': k ? .1 : .45, 'stroke-width': k ? 1 : 2 }, s4svg)
+const pathOf = (arr) => arr.map((v, i) => `${i ? 'L' : 'M'}${lx(i)},${ly(v)}`).join(' ')
+const pc = el('path', { d: pathOf(C), fill: 'none', stroke: '#94a3b8', 'stroke-width': 3, 'stroke-dasharray': '10 8' }, s4svg)
+const pl = el('path', { d: pathOf(L), fill: 'none', stroke: '#0972cb', 'stroke-width': 6, 'stroke-linejoin': 'round' }, s4svg)
+const dots = L.map((v, i) => el('circle', { cx: lx(i), cy: ly(v), r: 9, fill: '#000f34', stroke: '#0972cb', 'stroke-width': 4 }, s4svg))
+const clipR = el('clipPath', { id: 'reveal' }, el('defs', {}, s4svg))
+const clipRect = el('rect', { x: 1120, y: 560, height: 320, width: 0 }, clipR)
+pc.setAttribute('clip-path', 'url(#reveal)'); pl.setAttribute('clip-path', 'url(#reveal)')
+const R = 64, CIRC = 2 * Math.PI * R
+el('circle', { cx: 1748, cy: 390, r: R, fill: 'none', stroke: 'rgba(255,255,255,.12)', 'stroke-width': 26 }, s4svg)
+const donut = el('circle', { cx: 1748, cy: 390, r: R, fill: 'none', stroke: '#38bdf8', 'stroke-width': 26, transform: 'rotate(-90 1748 390)', 'stroke-dasharray': `0 ${CIRC}` }, s4svg)
+const dTxt = el('text', { x: 1748, y: 401, 'text-anchor': 'middle', fill: '#fff', 'font-size': 30, 'font-weight': 600 }, s4svg)
+const dLab = el('text', { x: 1748, y: 492, 'text-anchor': 'middle', fill: 'rgba(255,255,255,.7)', 'font-size': 18 }, s4svg); dLab.textContent = 'cite leadership first'
+
+/* ---------- scene 5: reach ---------- */
+const s5svg = $('s5svg')
+// stylised dot field (no real map data) with labelled hubs
+seed = 99
+const field = []
+for (let i = 0; i < 260; i++) { const x = 1110 + rnd() * 730, y = 300 + rnd() * 400; field.push(el('circle', { cx: x, cy: y, r: 2.2, fill: '#0972cb' }, s5svg)) }
+const HUBS = [['Riyadh', 1170, 520], ['Dubai', 1280, 470], ['Doha', 1225, 570], ['Singapore', 1690, 640], ['Jakarta', 1730, 690], ['Kuala Lumpur', 1630, 585]]
+const hubEls = HUBS.map(([name, x, y]) => {
+	const ring = el('circle', { cx: x, cy: y, r: 10, fill: 'none', stroke: '#38bdf8', 'stroke-width': 2 }, s5svg)
+	const dot = el('circle', { cx: x, cy: y, r: 7, fill: '#fff' }, s5svg)
+	const txt = el('text', { x: x + 16, y: y - 14, fill: '#fff', 'font-size': 20, 'font-weight': 500 }, s5svg); txt.textContent = name
+	return { ring, dot, txt }
+})
+const ARCS = [[1, 3], [0, 4], [2, 5], [1, 4]].map(([a, b]) => {
+	const [, x1, y1] = HUBS[a], [, x3, y3] = HUBS[b]
+	const mx = (x1 + x3) / 2, my = Math.min(y1, y3) - 140
+	const p = el('path', { d: `M${x1},${y1} Q${mx},${my} ${x3},${y3}`, fill: 'none', stroke: '#38bdf8', 'stroke-width': 2.5 }, s5svg)
+	const len = p.getTotalLength(); p.setAttribute('stroke-dasharray', `${len} ${len}`)
+	return { p, len }
+})
+
+/* ---------- frame ---------- */
+window.render = function (t) {
+	renderBg(t)
+
+	// s1 — wordmark
+	const v1 = vis(t, S.s1)
+	$('s1').style.opacity = v1 > 0 ? 1 : 0
+	show($('word'), Math.min(ease(seg(t, .3, 1.5)), 1 - seg(t, 4.1, 4.6)), 30, 18)
+	show($('tag'), Math.min(ease(seg(t, 1.1, 2.1)), 1 - seg(t, 4.1, 4.6)), 16, 6)
+	$('tag').style.letterSpacing = `${.32 - .12 * ease(seg(t, 1.1, 2.6))}em`
+	const ln = ease(seg(t, 1.6, 2.8)) * (1 - seg(t, 4.1, 4.6))
+	$('s1line').setAttribute('x1', 1764 - 520 * ln)
+
+	// s2 — columns
+	const v2 = vis(t, S.s2)
+	$('s2').style.opacity = v2
+	show($('s2k'), ease(seg(t, 4.7, 5.3)))
+	show($('s2n'), ease(seg(t, 4.9, 5.6)))
+	$('s2n').textContent = '+' + Math.round(82 * easeIO(seg(t, 5.0, 7.0))) + '%'
+	show($('s2c'), ease(seg(t, 5.3, 6.0)))
+	$('s2note').style.opacity = ease(seg(t, 6.5, 7.2)) * .9
+	bars.forEach((b, i) => {
+		const p = easeIO(seg(t, 5.4 + i * .18, 6.8 + i * .18))
+		const hd = (b.d / 200) * h2 * p, hs = (b.s / 200) * h2 * easeIO(seg(t, 5.6 + i * .18, 7.0 + i * .18))
+		b.a.setAttribute('y', base2 - hd); b.a.setAttribute('height', hd)
+		b.b.setAttribute('y', base2 - hs); b.b.setAttribute('height', hs)
+		b.v.setAttribute('y', base2 - hd - 14); b.v.setAttribute('opacity', seg(t, 6.6 + i * .18, 7.0 + i * .18))
+	})
+
+	// s3 — network
+	const v3 = vis(t, S.s3)
+	$('s3').style.opacity = v3
+	nodes.forEach((n, i) => { const a = ease(seg(t, 10.1 + i * .05, 10.6 + i * .05)); n.el.setAttribute('opacity', a); n.el.setAttribute('r', (n.big ? 10 : 5) * (.4 + .6 * a)) })
+	links.forEach((l, i) => {
+		const p = easeIO(seg(t, 10.5 + (i % 30) * .04, 11.6 + (i % 30) * .04))
+		l.n.setAttribute('x2', l.a.x + (l.b.x - l.a.x) * p); l.n.setAttribute('y2', l.a.y + (l.b.y - l.a.y) * p)
+		l.n.setAttribute('stroke-opacity', (l.d < 170 ? .55 : .3))
+	})
+	$('s3svg').style.opacity = .55
+	show($('s3k'), ease(seg(t, 10.6, 11.2)))
+	show($('s3q'), ease(seg(t, 10.9, 11.8)), 30, 14)
+	show($('s3c'), ease(seg(t, 11.6, 12.3)))
+
+	// s4 — line + donut
+	const v4 = vis(t, S.s4)
+	$('s4').style.opacity = v4
+	show($('s4k'), ease(seg(t, 15.1, 15.7)))
+	show($('s4t'), ease(seg(t, 15.3, 16.1)), 30, 12)
+	clipRect.setAttribute('width', 600 * easeIO(seg(t, 15.8, 17.8)))
+	dots.forEach((d, i) => d.setAttribute('opacity', seg(t, 15.9 + i * .45, 16.2 + i * .45)))
+	$('s4a').style.opacity = seg(t, 17.6, 18.0); $('s4b').style.opacity = seg(t, 17.7, 18.1)
+	;['s4l1', 's4l2'].forEach((id, k) => { $(id).style.opacity = seg(t, 16.2 + k * .15, 16.8 + k * .15) })
+	$('s4note').style.opacity = seg(t, 17.5, 18.1) * .9
+	const dp = easeIO(seg(t, 16.0, 17.6)) * .34
+	donut.setAttribute('stroke-dasharray', `${CIRC * dp} ${CIRC}`)
+	dTxt.textContent = Math.round(dp * 100) + '%'
+	dLab.setAttribute('opacity', seg(t, 16.8, 17.4))
+
+	// s5 — reach
+	const v5 = vis(t, S.s5)
+	$('s5').style.opacity = v5
+	field.forEach((f, i) => f.setAttribute('opacity', .55 * ease(seg(t, 20.0 + (i % 40) * .015, 20.6 + (i % 40) * .015))))
+	hubEls.forEach((h, i) => {
+		const a = ease(seg(t, 20.4 + i * .12, 20.8 + i * .12))
+		h.dot.setAttribute('opacity', a); h.txt.setAttribute('opacity', a)
+		const pulse = (t * .9 + i * .3) % 1
+		h.ring.setAttribute('r', 10 + pulse * 26); h.ring.setAttribute('opacity', a * (1 - pulse))
+	})
+	ARCS.forEach((a, i) => a.p.setAttribute('stroke-dashoffset', a.len * (1 - easeIO(seg(t, 20.8 + i * .25, 21.9 + i * .25)))))
+	show($('s5k'), ease(seg(t, 20.2, 20.8)))
+	show($('s5w'), ease(seg(t, 21.4, 22.2)), 26, 14)
+	show($('s5c'), ease(seg(t, 21.8, 22.5)))
+}
+window.render(0)
+</script>
+</body>
+</html>

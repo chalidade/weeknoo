@@ -1,0 +1,807 @@
+import type { Article } from './types'
+import { AUTHORS, EXPERTS } from './contributors'
+
+// SAMPLE EDITORIAL CONTENT. Copy is original placeholder writing; every chart
+// value is illustrative demonstration data, not a published statistic.
+// featuredImage / imageUrl accept a real image URL or an "art:<preset>"
+// artwork id rendered by components/Artwork.tsx.
+
+const ILLUSTRATIVE = 'Birds Research Desk analysis. Illustrative data for demonstration.'
+const VIDEO = 'media/ambient-briefing.mp4'
+// Brand film rendered from video/brand-film.html (node video/render.mjs).
+const FILM = 'media/birds-film.mp4'
+
+export const ARTICLES: Article[] = [
+  {
+    id: 'skills-ledger-2026',
+    featured: true,
+    title: 'The GCC & Southeast Asia Skills Ledger 2026: where capability gaps are widening',
+    subtitle:
+      'Demand for digital, analytical and leadership skills is outrunning supply in both regions. Our analysis shows where the gap is largest — and which employers are closing it fastest.',
+    category: 'Workforce Intelligence',
+    series: 'GCC & SEA Report',
+    accessType: 'member',
+    heroType: 'video',
+    featuredImage: 'art:skyline',
+    heroVideoUrl: FILM,
+    author: AUTHORS.arif,
+    interviewedExperts: [EXPERTS.hamad, EXPERTS.ratna, EXPERTS.sofia],
+    publishedAt: '2026-11-03',
+    readTime: '14 min read',
+    keyTakeaways: [
+      'Across both regions, demand for advanced digital and data skills is growing roughly twice as fast as the talent pool able to meet it.',
+      'Leadership capability, not technical skill, is the most-cited bottleneck to transformation among the executives we interviewed.',
+      'Employers that pair skills data with internal mobility fill critical roles up to 40 percent faster than those relying on external hiring.',
+      'The organisations closing the gap fastest treat reskilling as a capital investment with a board-level owner and a measurable return.',
+    ],
+    charts: [
+      {
+        type: 'column',
+        title: 'Skills demand growth versus available talent, by capability cluster',
+        subtitle: 'Index, 2023 = 100',
+        valueLabel: 'Demand (2026)',
+        benchmarkLabel: 'Talent supply (2026)',
+        data: [
+          { label: 'AI & data', value: 182, benchmark: 121 },
+          { label: 'Cloud & cyber', value: 164, benchmark: 118 },
+          { label: 'Leadership', value: 141, benchmark: 104 },
+          { label: 'Green skills', value: 156, benchmark: 109 },
+          { label: 'Customer', value: 118, benchmark: 112 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+      {
+        type: 'line',
+        title: 'Corporate reskilling investment per employee',
+        subtitle: 'US dollars, GCC sample versus global benchmark',
+        unit: '',
+        valueLabel: 'GCC sample',
+        benchmarkLabel: 'Global benchmark',
+        data: [
+          { label: '2020', value: 640, benchmark: 720 },
+          { label: '2021', value: 710, benchmark: 745 },
+          { label: '2022', value: 820, benchmark: 790 },
+          { label: '2023', value: 960, benchmark: 830 },
+          { label: '2024', value: 1080, benchmark: 870 },
+          { label: '2025', value: 1215, benchmark: 905 },
+          { label: '2026', value: 1340, benchmark: 940 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+      {
+        type: 'pie',
+        title: 'Where executives say the capability gap hurts most',
+        subtitle: 'Share of respondents naming each area as their #1 constraint',
+        unit: '%',
+        data: [
+          { label: 'Leadership & change', value: 34 },
+          { label: 'Data & AI', value: 29 },
+          { label: 'Digital operations', value: 18 },
+          { label: 'Sustainability', value: 11 },
+          { label: 'Other', value: 8 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+      {
+        type: 'bar',
+        title: 'Time to fill critical roles, by sourcing strategy',
+        subtitle: 'Average days',
+        unit: ' days',
+        valueLabel: 'Days to fill',
+        benchmarkLabel: 'Regional median',
+        data: [
+          { label: 'Internal mobility + skills data', value: 38, benchmark: 64 },
+          { label: 'Internal mobility only', value: 51, benchmark: 64 },
+          { label: 'External hiring, local', value: 72, benchmark: 64 },
+          { label: 'External hiring, international', value: 96, benchmark: 64 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+    ],
+    carouselItems: [
+      {
+        imageUrl: 'art:columns',
+        caption:
+          'Capability academies are moving out of HR and into the business: most new programmes in our sample are co-owned by an operating executive.',
+        attribution: 'Birds Research Desk',
+      },
+      {
+        imageUrl: 'art:contours',
+        quote:
+          'We stopped asking how many people we trained. We now ask how many critical roles we can fill from inside within ninety days.',
+        caption: 'Hamad Al-Mansoori, Chief People Officer, Gulf Horizon Holdings',
+      },
+      {
+        imageUrl: 'art:network',
+        caption:
+          'Skills-based talent marketplaces surface hidden capability: in one bank, 1 in 5 data roles was filled by an employee from a non-technical function.',
+        attribution: 'Birds Research Desk',
+      },
+    ],
+    contentSections: [
+      {
+        paragraphs: [
+          'For most of the past decade, the conversation about skills in the Gulf and Southeast Asia has been framed as a pipeline problem: produce more graduates in the right disciplines and the gap will close. Our latest research suggests that framing is no longer adequate. The gap is widening not because the pipeline has stalled, but because the skills that matter are changing faster than any pipeline can adapt.',
+          'Drawing on assessment data, job-posting analysis and interviews with more than forty senior executives, the Skills Ledger 2026 maps where demand is outrunning supply — and identifies the employers that are closing the gap fastest. The pattern is consistent across both regions: organisations that treat capability as a strategic asset, measured and managed like any other, are pulling away from those that treat it as a training budget.',
+        ],
+      },
+      {
+        heading: 'Demand is compounding faster than supply',
+        paragraphs: [
+          'Across the five capability clusters we track, demand has grown far faster than the pool of people able to meet it. The gap is widest in AI and data, where demand has nearly doubled since 2023 while available talent has grown by roughly a fifth. Cloud, cybersecurity and green skills show a similar shape.',
+          'Customer-facing skills are the exception. Here supply has broadly kept pace, largely because employers have invested heavily in service academies over the past five years. That experience is instructive: where organisations commit to building a capability at scale, the gap can be closed within a planning cycle.',
+        ],
+        chartIndex: 0,
+      },
+      {
+        heading: 'Leadership is the binding constraint',
+        paragraphs: [
+          'When we asked executives to name the single capability gap that most limits their transformation agenda, technical skills came second. Leadership and change capability came first — cited by a third of respondents. Leaders who can translate strategy into new ways of working, and bring sceptical teams with them, are in shorter supply than data scientists.',
+          'This matters because leadership gaps compound technical ones. A data team without a leader who can connect its work to the business produces dashboards, not decisions.',
+        ],
+        chartIndex: 2,
+        pullQuote: {
+          text: 'We can hire data scientists. What we cannot hire fast enough are leaders who know what to ask them.',
+          author: 'Ratna Wijaya',
+          title: 'Chief Learning Officer, Nusantara Digital Bank',
+        },
+      },
+      {
+        heading: 'Investment is rising — and diverging',
+        paragraphs: [
+          'Reskilling investment per employee in our GCC sample overtook the global benchmark in 2022 and has continued to accelerate. National programmes and large employers alike have made capability a stated priority, and budgets have followed.',
+          'Spending alone, however, does not predict outcomes. The organisations in our sample with the highest returns spend more on fewer, deeper programmes that are tied to specific roles — and they measure results in business terms rather than course completions.',
+        ],
+        chartIndex: 1,
+      },
+      {
+        heading: 'Inside the organisations closing the gap',
+        paragraphs: [
+          'Three practices separate the fastest movers. First, they build a live picture of skills across the workforce, rather than relying on job titles. Second, they use that picture to move people internally before hiring externally. Third, they give a senior business leader — not only HR — accountability for capability outcomes.',
+          'The effect on time to fill critical roles is striking. Organisations combining internal mobility with skills data fill those roles in a little over five weeks on average, against more than three months for international hiring.',
+        ],
+        chartIndex: 3,
+        showCarousel: true,
+      },
+      {
+        heading: 'An agenda for the next eighteen months',
+        paragraphs: [
+          'For executive teams, the implication is that capability needs the same discipline as capital. That means a clear inventory of the skills the strategy requires, an owner for each critical gap, and a quarterly review of progress that sits alongside financial performance.',
+          'It also means accepting that the half-life of skills is shortening. The goal is not to close the gap once but to build an organisation that can keep closing it — one that learns as fast as its market changes.',
+        ],
+        pullQuote: {
+          text: 'The question is no longer whether you have the skills you need. It is whether you can build them faster than they expire.',
+          author: 'Sofia Marquez',
+          title: 'Labour Economist, Meridian Policy Institute',
+        },
+      },
+    ],
+  },
+  {
+    id: 'ai-copilots-frontline',
+    title: 'AI copilots and the new shape of the frontline workday',
+    subtitle:
+      'Generative assistants are reaching branch staff, technicians and call-centre agents. Early pilots show the biggest gains go to the least experienced workers.',
+    category: 'Workforce Intelligence',
+    series: 'Future of Work',
+    accessType: 'free',
+    heroType: 'image',
+    featuredImage: 'art:network',
+    author: AUTHORS.arif,
+    interviewedExperts: [EXPERTS.aditya],
+    publishedAt: '2026-10-27',
+    readTime: '7 min read',
+    keyTakeaways: [
+      'Frontline AI pilots in our sample cut time spent searching for information by roughly a third.',
+      'Productivity gains were largest for new joiners, narrowing the gap with experienced colleagues.',
+      'Adoption depended more on supervisor coaching than on the quality of the tool itself.',
+    ],
+    charts: [
+      {
+        type: 'bar',
+        title: 'Productivity uplift after six months of AI copilot use',
+        subtitle: 'Percentage change in tasks completed per shift, by tenure',
+        unit: '%',
+        valueLabel: 'Uplift',
+        data: [
+          { label: 'Under 6 months', value: 31 },
+          { label: '6–24 months', value: 19 },
+          { label: '2–5 years', value: 11 },
+          { label: 'Over 5 years', value: 6 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+    ],
+    contentSections: [
+      {
+        paragraphs: [
+          'The first wave of generative AI adoption was concentrated in knowledge work: marketing, software development, analysis. The second wave is reaching the frontline — the branch officer, the field technician, the warehouse supervisor and the contact-centre agent. These roles make up the majority of employment in both the GCC and Southeast Asia, and the stakes are correspondingly larger.',
+          'Pilots we reviewed across logistics, banking and utilities point to a consistent pattern: the assistant acts less like an automation engine and more like an always-available senior colleague.',
+        ],
+      },
+      {
+        heading: 'The great leveller',
+        paragraphs: [
+          'The most striking finding is who benefits. Workers in their first six months saw productivity gains several times larger than veterans. The copilot effectively packages the tacit knowledge of experienced staff and makes it available on demand.',
+        ],
+        chartIndex: 0,
+        pullQuote: {
+          text: 'Our newest dispatchers now perform like people with two years on the job. That changes how we think about hiring and onboarding.',
+          author: 'Aditya Rao',
+          title: 'VP, People Analytics, Straits Logistics Group',
+        },
+      },
+      {
+        heading: 'Supervisors make or break adoption',
+        paragraphs: [
+          'Usage rates varied widely between teams using the same tool. The difference was the supervisor: teams whose leaders modelled the tool, shared prompts and reviewed outputs together reached high adoption within weeks. Teams left to self-serve often stalled.',
+          'For executives, the lesson is that frontline AI is a leadership programme as much as a technology rollout.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'capability-academies-lessons',
+    title: 'What chief learning officers learned from three years of capability academies',
+    subtitle:
+      'Academies promised to turn learning into a strategic engine. Five CLOs share what worked, what did not, and what they would do differently.',
+    category: 'Practitioners Perspective',
+    accessType: 'free',
+    heroType: 'image',
+    featuredImage: 'art:columns',
+    author: AUTHORS.layla,
+    interviewedExperts: [EXPERTS.ratna, EXPERTS.kenji],
+    publishedAt: '2026-10-20',
+    readTime: '9 min read',
+    keyTakeaways: [
+      'Academies anchored to a business outcome outlived those anchored to a catalogue of courses.',
+      'Faculty drawn from inside the business raised credibility and application rates.',
+      'The hardest part was not design but sustaining sponsorship after the launch year.',
+    ],
+    carouselItems: [
+      {
+        imageUrl: 'art:prism',
+        caption: 'Cohort learning labs replaced lecture halls in most of the academies we visited.',
+        attribution: 'Birds Research Desk',
+      },
+      {
+        imageUrl: 'art:grid',
+        quote: 'The day we let line managers co-teach, attendance stopped being a problem.',
+        caption: 'Kenji Watanabe, Head of Leadership Development, Pacific Rim Manufacturing',
+      },
+      {
+        imageUrl: 'art:dunes',
+        caption: 'Capstone projects tied to live business problems became the academies’ calling card.',
+        attribution: 'Birds Research Desk',
+      },
+    ],
+    contentSections: [
+      {
+        paragraphs: [
+          'Three years ago, the capability academy became the signature move of ambitious learning functions. Rather than a catalogue of courses, an academy would build a specific capability — data literacy, customer centricity, operational excellence — at scale, with a clear link to strategy.',
+          'We asked five chief learning officers who launched academies in that period to look back honestly.',
+        ],
+      },
+      {
+        heading: 'Start with the business problem',
+        paragraphs: [
+          'Every CLO we spoke with agreed that the academies that survived were those launched to solve a named business problem. An academy built to support a digital banking launch had a clear purpose and a natural sponsor. One built to "improve leadership" drifted.',
+        ],
+        pullQuote: {
+          text: 'An academy without a business owner is just a nicer course catalogue.',
+          author: 'Ratna Wijaya',
+          title: 'Chief Learning Officer, Nusantara Digital Bank',
+        },
+      },
+      {
+        heading: 'Teach from the inside',
+        paragraphs: [
+          'Using internal practitioners as faculty, supported by external experts, consistently raised both credibility and application. Participants trusted colleagues who had faced the same constraints.',
+        ],
+        showCarousel: true,
+      },
+      {
+        heading: 'Sustaining momentum',
+        paragraphs: [
+          'The most common regret was underestimating year two. Launch energy fades, sponsors move on and budgets are re-examined. The academies that endured had built measurement in from day one, so they could show progress when it mattered.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'compassion-restructuring',
+    title: 'Compassion as an operating system: leading teams through restructuring',
+    subtitle:
+      'Restructuring erodes trust quickly. Leaders who pair candour with care recover engagement in months rather than years.',
+    category: 'Leading with Heart',
+    accessType: 'member',
+    heroType: 'image',
+    featuredImage: 'art:dunes',
+    author: AUTHORS.noor,
+    interviewedExperts: [EXPERTS.fatima, EXPERTS.hamad],
+    publishedAt: '2026-10-14',
+    readTime: '11 min read',
+    keyTakeaways: [
+      'Engagement typically drops sharply after a restructuring announcement; how leaders communicate determines the depth and length of the dip.',
+      'Teams led with high candour and high care recovered to baseline engagement in roughly two quarters.',
+      'Compassion is a set of observable behaviours that can be taught, not a personality trait.',
+    ],
+    charts: [
+      {
+        type: 'line',
+        title: 'Team engagement after a restructuring announcement',
+        subtitle: 'Engagement index, baseline = 100',
+        valueLabel: 'High candour, high care',
+        benchmarkLabel: 'Low candour or low care',
+        data: [
+          { label: 'Q0', value: 100, benchmark: 100 },
+          { label: 'Q1', value: 82, benchmark: 71 },
+          { label: 'Q2', value: 94, benchmark: 70 },
+          { label: 'Q3', value: 101, benchmark: 76 },
+          { label: 'Q4', value: 104, benchmark: 81 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+    ],
+    contentSections: [
+      {
+        paragraphs: [
+          'Few moments test a leader like a restructuring. Decisions are made under pressure, information is incomplete, and every message is read for what it does not say. In that environment, the instinct of many executives is to retreat into process.',
+          'Our research suggests the opposite instinct pays off. Leaders who combine radical candour about what is changing with visible care for the people affected protect both trust and performance.',
+        ],
+      },
+      {
+        heading: 'The engagement dip is inevitable; its depth is not',
+        paragraphs: [
+          'Every team in our sample experienced a fall in engagement after the announcement. But teams whose leaders scored high on both candour and care recovered to their baseline within about two quarters, while others remained well below it a year later.',
+        ],
+        chartIndex: 0,
+      },
+      {
+        heading: 'What compassionate leaders actually do',
+        paragraphs: [
+          'Compassion in this context is practical. It means telling people what you know and what you do not, as early as you can. It means holding conversations in person, giving people time to react, and following through on every commitment — however small.',
+          'It also means caring for those who stay. Survivors of restructuring often carry guilt and anxiety that, left unaddressed, shows up as attrition six months later.',
+        ],
+        pullQuote: {
+          text: 'People forgive hard decisions. They do not forgive being kept in the dark.',
+          author: 'Dr. Fatima Siddiqui',
+          title: 'Organisational Psychologist, Oasis Wellbeing Partners',
+        },
+      },
+      {
+        heading: 'Building the capability',
+        paragraphs: [
+          'The leaders who handled restructuring well were rarely naturals. Most had been prepared through scenario practice, peer coaching and clear guidance on the conversations they would need to hold. That preparation is a modest investment relative to the cost of lost trust.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'riyadh-to-jakarta',
+    title: 'From Riyadh to Jakarta: five L&D models worth borrowing',
+    subtitle:
+      'A photo essay on the learning systems that are quietly redefining workforce development across two of the world’s fastest-changing regions.',
+    category: 'L&D Around the World',
+    accessType: 'free',
+    heroType: 'image',
+    featuredImage: 'art:orbits',
+    author: AUTHORS.layla,
+    interviewedExperts: [EXPERTS.claire, EXPERTS.ratna],
+    publishedAt: '2026-10-08',
+    readTime: '8 min read',
+    keyTakeaways: [
+      'National skills strategies are shaping corporate learning priorities more directly than in the past.',
+      'Apprenticeship and work-integrated models are gaining ground over classroom programmes.',
+      'Mobile-first microlearning is the default in Southeast Asia, not an add-on.',
+    ],
+    charts: [
+      {
+        type: 'pie',
+        title: 'How learning hours are delivered in our regional sample',
+        subtitle: 'Share of total formal learning hours',
+        unit: '%',
+        data: [
+          { label: 'On-the-job & apprenticeship', value: 38 },
+          { label: 'Mobile microlearning', value: 27 },
+          { label: 'Cohort programmes', value: 21 },
+          { label: 'Classroom', value: 14 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+    ],
+    carouselItems: [
+      {
+        imageUrl: 'art:skyline',
+        caption: 'Riyadh: a national academy model links employer demand directly to accredited training.',
+        attribution: 'Model 1 of 5',
+      },
+      {
+        imageUrl: 'art:waves',
+        caption: 'Dubai: government and private employers co-design leadership programmes for the public sector.',
+        attribution: 'Model 2 of 5',
+      },
+      {
+        imageUrl: 'art:grid',
+        caption: 'Singapore: individual learning accounts put reskilling choices in employees’ hands.',
+        attribution: 'Model 3 of 5',
+      },
+      {
+        imageUrl: 'art:network',
+        caption: 'Jakarta: digital banks run mobile-first academies reaching thousands of staff in weeks.',
+        attribution: 'Model 4 of 5',
+      },
+      {
+        imageUrl: 'art:prism',
+        caption: 'Ho Chi Minh City: manufacturers pair apprenticeships with supervisor coaching on the line.',
+        attribution: 'Model 5 of 5',
+      },
+    ],
+    contentSections: [
+      {
+        paragraphs: [
+          'The most interesting innovations in workforce development are not always where commentators look. Across the Gulf and Southeast Asia, employers and governments are experimenting with models that combine national ambition, digital delivery and learning in the flow of work.',
+          'We travelled through five cities to document them.',
+        ],
+        showCarousel: true,
+      },
+      {
+        heading: 'Learning has moved closer to the work',
+        paragraphs: [
+          'Across our sample, the largest share of formal learning hours now takes place on the job or through apprenticeships, with mobile microlearning second. The classroom remains important for leadership development, but it is no longer the default.',
+        ],
+        chartIndex: 0,
+      },
+      {
+        heading: 'What travels well',
+        paragraphs: [
+          'Not every model transfers. National academies depend on policy support; mobile-first academies depend on a digitally fluent workforce. But two principles travel everywhere: design learning around real roles, and measure it by what people can do afterwards.',
+        ],
+        pullQuote: {
+          text: 'The best programmes we see are designed backwards — from the job people will do on Monday morning.',
+          author: 'Claire Dubois',
+          title: 'Partner, Executive Education, Lumen Business School',
+        },
+      },
+    ],
+  },
+  {
+    id: 'cognitive-load-transformation',
+    title: 'Cognitive load is the hidden tax on transformation',
+    subtitle:
+      'Most change programmes add initiatives without removing any. The result is an attention deficit that quietly undermines execution.',
+    category: 'Mind in Motion',
+    accessType: 'free',
+    heroType: 'video',
+    featuredImage: 'art:waves',
+    heroVideoUrl: VIDEO,
+    author: AUTHORS.mei,
+    interviewedExperts: [EXPERTS.fatima],
+    publishedAt: '2026-09-30',
+    readTime: '8 min read',
+    keyTakeaways: [
+      'Managers in our sample juggled an average of seven concurrent change initiatives.',
+      'Self-reported focus time fell sharply once more than four initiatives were active.',
+      'Explicitly retiring old priorities is as important as launching new ones.',
+    ],
+    charts: [
+      {
+        type: 'column',
+        title: 'Focused work time by number of concurrent change initiatives',
+        subtitle: 'Hours of uninterrupted focus per week, managers',
+        unit: ' h',
+        valueLabel: 'Focus hours',
+        data: [
+          { label: '1–2', value: 14.5 },
+          { label: '3–4', value: 11.2 },
+          { label: '5–6', value: 7.4 },
+          { label: '7–8', value: 5.1 },
+          { label: '9+', value: 3.3 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+    ],
+    contentSections: [
+      {
+        paragraphs: [
+          'Transformation programmes are usually judged on whether they deliver their intended changes. Rarely do they account for the mental bandwidth those changes consume. Yet attention is finite, and when it runs out, execution suffers in ways that rarely appear in a programme dashboard.',
+        ],
+      },
+      {
+        heading: 'The attention cliff',
+        paragraphs: [
+          'Our survey of managers found a sharp decline in focused work once more than four initiatives were running concurrently. Beyond that point, days fragment into meetings, updates and context switches.',
+        ],
+        chartIndex: 0,
+        pullQuote: {
+          text: 'Every new initiative feels small on its own. Together they are a second full-time job.',
+          author: 'Dr. Fatima Siddiqui',
+          title: 'Organisational Psychologist, Oasis Wellbeing Partners',
+        },
+      },
+      {
+        heading: 'Designing for the mind',
+        paragraphs: [
+          'Leaders can reduce the tax. Sequence initiatives instead of stacking them. Retire old priorities publicly when new ones begin. Protect blocks of focus time, and measure the cognitive load of a programme alongside its milestones.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'learning-roi-board',
+    title: 'Measuring learning ROI the board will actually believe',
+    subtitle:
+      'Boards are asking harder questions about people investments. Here is a measurement approach that links learning to the metrics directors care about.',
+    category: 'Impact Generation',
+    accessType: 'member',
+    heroType: 'image',
+    featuredImage: 'art:grid',
+    author: AUTHORS.daniel,
+    interviewedExperts: [EXPERTS.omar, EXPERTS.aditya],
+    publishedAt: '2026-09-22',
+    readTime: '12 min read',
+    keyTakeaways: [
+      'Completion rates and satisfaction scores carry little weight with boards; business-outcome metrics do.',
+      'A small number of well-designed control-group comparisons is more persuasive than a large dashboard.',
+      'Linking capability metrics to ESG reporting is creating a new audience for learning data.',
+    ],
+    charts: [
+      {
+        type: 'bar',
+        title: 'Which learning metrics boards find credible',
+        subtitle: 'Share of directors rating each metric “highly credible”',
+        unit: '%',
+        valueLabel: 'Highly credible',
+        data: [
+          { label: 'Revenue or margin impact', value: 71 },
+          { label: 'Productivity per employee', value: 64 },
+          { label: 'Internal fill rate, critical roles', value: 58 },
+          { label: 'Retention of high performers', value: 52 },
+          { label: 'Course completion', value: 9 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+      {
+        type: 'line',
+        title: 'Sales productivity: programme cohort vs control group',
+        subtitle: 'Revenue per rep, indexed to month 0 = 100',
+        valueLabel: 'Programme cohort',
+        benchmarkLabel: 'Control group',
+        data: [
+          { label: 'M0', value: 100, benchmark: 100 },
+          { label: 'M3', value: 104, benchmark: 101 },
+          { label: 'M6', value: 111, benchmark: 102 },
+          { label: 'M9', value: 116, benchmark: 104 },
+          { label: 'M12', value: 121, benchmark: 105 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+    ],
+    contentSections: [
+      {
+        paragraphs: [
+          'Learning functions have never had more data, yet many still struggle to answer the board’s simplest question: what did we get for the money? The problem is rarely a lack of measurement. It is measuring the wrong things.',
+        ],
+      },
+      {
+        heading: 'Speak the board’s language',
+        paragraphs: [
+          'Directors we surveyed placed very little weight on completion rates. Metrics tied to revenue, productivity and the ability to fill critical roles internally were far more persuasive.',
+        ],
+        chartIndex: 0,
+      },
+      {
+        heading: 'Fewer, better comparisons',
+        paragraphs: [
+          'The most credible evidence comes from simple comparisons: a cohort that went through a programme against a similar group that did not. One well-run comparison over twelve months will do more for a learning budget than a hundred dashboard tiles.',
+        ],
+        chartIndex: 1,
+        pullQuote: {
+          text: 'When we showed the board a control group, the conversation moved from cost to investment in a single meeting.',
+          author: 'Aditya Rao',
+          title: 'VP, People Analytics, Straits Logistics Group',
+        },
+      },
+      {
+        heading: 'The ESG connection',
+        paragraphs: [
+          'Human-capital disclosures are becoming part of sustainability reporting. That gives learning leaders a new audience — and a new reason to measure rigorously.',
+        ],
+        pullQuote: {
+          text: 'Capability is now a governance topic. Investors want to know whether the workforce can deliver the strategy.',
+          author: 'Omar Khalil',
+          title: 'Group Head of ESG & Sustainability, Arabian Coast Utilities',
+        },
+      },
+    ],
+  },
+  {
+    id: 'competency-unlock-playbook',
+    title: 'The competency unlock playbook: twelve capabilities for the 2030 executive',
+    subtitle:
+      'A practical framework — with an action table — for turning a leadership competency model into behaviour that shows up every week.',
+    category: 'Competency Unlock',
+    accessType: 'member',
+    heroType: 'image',
+    featuredImage: 'art:prism',
+    author: AUTHORS.noor,
+    interviewedExperts: [EXPERTS.claire, EXPERTS.kenji],
+    publishedAt: '2026-09-15',
+    readTime: '13 min read',
+    keyTakeaways: [
+      'Most competency models describe what good looks like but not how to practise it.',
+      'Twelve capabilities cluster into four domains: sense, decide, mobilise and renew.',
+      'Each capability should map to a weekly practice, a stretch assignment and a measure.',
+    ],
+    charts: [
+      {
+        type: 'column',
+        title: 'Executive self-assessment vs 360° rating, by domain',
+        subtitle: 'Average score out of 5',
+        valueLabel: 'Self-assessment',
+        benchmarkLabel: '360° rating',
+        data: [
+          { label: 'Sense', value: 4.1, benchmark: 3.4 },
+          { label: 'Decide', value: 4.3, benchmark: 3.7 },
+          { label: 'Mobilise', value: 3.9, benchmark: 3.1 },
+          { label: 'Renew', value: 3.6, benchmark: 2.9 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+    ],
+    contentSections: [
+      {
+        paragraphs: [
+          'Most large organisations have a leadership competency model. Few can say it changes how leaders behave on a Tuesday afternoon. The gap is not in the model but in translation: competencies are described as outcomes, not as practices.',
+        ],
+      },
+      {
+        heading: 'Four domains, twelve capabilities',
+        paragraphs: [
+          'Our framework groups twelve capabilities into four domains. Executives consistently rate themselves higher than their colleagues do, with the largest gaps in mobilising others and renewing themselves.',
+        ],
+        chartIndex: 0,
+      },
+      {
+        heading: 'The action table',
+        paragraphs: [
+          'For each capability, we recommend a weekly practice, a stretch assignment and a simple measure. A selection is shown below.',
+        ],
+        actionTable: {
+          caption: 'Competency unlock action table (selection)',
+          columns: ['Capability', 'Weekly practice', 'Stretch assignment', 'Measure'],
+          rows: [
+            ['Sense: read weak signals', 'One customer or frontline conversation', 'Lead a market-scan sprint', 'Insights acted on per quarter'],
+            ['Decide: decide under ambiguity', 'Write a one-page decision memo', 'Own a cross-unit trade-off', 'Decision cycle time'],
+            ['Mobilise: build coalitions', 'Check in with one peer outside your unit', 'Sponsor a cross-functional team', 'Peer 360° score'],
+            ['Mobilise: coach for growth', 'Thirty-minute coaching session', 'Mentor a high-potential leader', 'Team internal-move rate'],
+            ['Renew: learn in public', 'Share one lesson from a failure', 'Take on an unfamiliar role for 90 days', 'Learning goals met'],
+          ],
+        },
+        pullQuote: {
+          text: 'A competency becomes real when it has a calendar slot.',
+          author: 'Kenji Watanabe',
+          title: 'Head of Leadership Development, Pacific Rim Manufacturing',
+        },
+      },
+      {
+        heading: 'Making it stick',
+        paragraphs: [
+          'The organisations that got results reviewed progress on these practices in regular performance conversations, not in a separate development process. Capability became part of how work was managed rather than an annual exercise.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'leadership-pilot-90-days',
+    title: 'Field notes: running a leadership pilot in ninety days',
+    subtitle:
+      'A step-by-step account of how one manufacturer designed, ran and evaluated a leadership pilot for plant managers in three months.',
+    category: 'Practitioners Perspective',
+    accessType: 'free',
+    heroType: 'image',
+    featuredImage: 'art:contours',
+    author: AUTHORS.mei,
+    interviewedExperts: [EXPERTS.kenji],
+    publishedAt: '2026-09-08',
+    readTime: '6 min read',
+    keyTakeaways: [
+      'A narrow scope — one capability, one population — made a ninety-day pilot possible.',
+      'Baseline measures captured in week one made the final evaluation credible.',
+      'Participants’ managers were briefed before the pilot began, not after.',
+    ],
+    contentSections: [
+      {
+        paragraphs: [
+          'Pilots are often where good leadership programmes go to die: too small to matter, too long to sustain attention. This one was different. In ninety days, a regional manufacturer designed, delivered and evaluated a programme for thirty plant managers.',
+        ],
+      },
+      {
+        heading: 'Weeks 1–3: narrow the problem',
+        paragraphs: [
+          'The team chose a single capability — coaching frontline supervisors — and a single population. They captured baseline measures of supervisor turnover and safety observations before anything else happened.',
+        ],
+      },
+      {
+        heading: 'Weeks 4–10: learn by doing',
+        paragraphs: [
+          'Plant managers met in small peer groups every two weeks, practised coaching conversations on real cases and committed to one change before the next session.',
+        ],
+        pullQuote: {
+          text: 'We spent less time in the classroom and more time on the shop floor. That was the point.',
+          author: 'Kenji Watanabe',
+          title: 'Head of Leadership Development, Pacific Rim Manufacturing',
+        },
+      },
+      {
+        heading: 'Weeks 11–13: evaluate honestly',
+        paragraphs: [
+          'The evaluation compared pilot plants with similar plants that had not yet joined. The results were strong enough to justify scale-up — and honest enough to show which elements needed redesign.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'decision-fatigue-c-suite',
+    title: 'Decision fatigue in the C-suite, and how the best leaders manage it',
+    subtitle:
+      'Senior executives make hundreds of decisions a week. New research on attention suggests how to protect the ones that matter most.',
+    category: 'Mind in Motion',
+    accessType: 'member',
+    heroType: 'image',
+    featuredImage: 'art:orbits',
+    author: AUTHORS.mei,
+    interviewedExperts: [EXPERTS.fatima, EXPERTS.claire],
+    publishedAt: '2026-08-28',
+    readTime: '10 min read',
+    keyTakeaways: [
+      'Decision quality in our sample declined measurably late in long meeting days.',
+      'Leaders who pre-committed to decision rules delegated more and reversed fewer decisions.',
+      'Scheduling the most consequential decisions early in the day is a simple, effective habit.',
+    ],
+    charts: [
+      {
+        type: 'bar',
+        title: 'Where executive decision time goes',
+        subtitle: 'Share of weekly decision time, by decision type',
+        unit: '%',
+        valueLabel: 'Share of time',
+        data: [
+          { label: 'Operational approvals', value: 41 },
+          { label: 'People decisions', value: 23 },
+          { label: 'Resource allocation', value: 19 },
+          { label: 'Strategic choices', value: 17 },
+        ],
+        source: ILLUSTRATIVE,
+      },
+    ],
+    contentSections: [
+      {
+        paragraphs: [
+          'The modern executive diary is a sequence of decisions, large and small, from approvals and escalations to strategy and people. The cumulative load is easy to underestimate.',
+        ],
+      },
+      {
+        heading: 'Small decisions crowd out big ones',
+        paragraphs: [
+          'Operational approvals consumed the largest share of executives’ decision time in our sample; strategic choices the smallest. Many of those approvals could be delegated with clear rules.',
+        ],
+        chartIndex: 0,
+      },
+      {
+        heading: 'Habits that protect judgement',
+        paragraphs: [
+          'The leaders who managed fatigue best shared three habits: they pre-committed to decision rules, delegated reversible decisions, and placed their most consequential choices early in the day.',
+        ],
+        pullQuote: {
+          text: 'Judgement is a resource. The best executives spend it deliberately.',
+          author: 'Claire Dubois',
+          title: 'Partner, Executive Education, Lumen Business School',
+        },
+      },
+    ],
+  },
+]
+
+export const articleById = (id: string) => ARTICLES.find((a) => a.id === id)
+export const featuredArticle = () => ARTICLES.find((a) => a.featured) ?? ARTICLES[0]

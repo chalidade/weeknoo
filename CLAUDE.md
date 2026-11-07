@@ -384,6 +384,32 @@ in step with the generator, including its local-WordPress test recipe.
   sites — `ask`, `jaim` — will build, but you get their initial render with no
   behaviour; ship those as a site or an APK instead.
 
+### Hand-built WordPress packages (editable content)
+
+When a site's WordPress version needs real, adjustable content — posts,
+categories, members, Elementor widgets — it ships its own package instead of
+the snapshot: `sites/<name>/wordpress/theme/<slug>/` and optionally
+`sites/<name>/wordpress/plugin/<slug>/`. `build-wp.sh` detects the folder,
+runs `php -l` on every file and zips them as-is (`<name>-wp-theme.zip`,
+`<plugin-slug>.zip`; both git-ignored). `sites/birds/wordpress/` is the
+reference: a classic PHP theme for layout + Customizer, and the **Birds
+Elements** plugin holding all components (one PHP renderer per component in
+`includes/render.php` / `charts.php`, reused by templates, shortcodes and the
+12 Elementor widgets), contributor CPT, article meta, member gating and a demo
+importer fed by `wordpress/tools/export-demo.mjs` from the React data. Its
+guide is `sites/birds/wordpress/README.md` (Indonesian).
+
+Two things that bite when editing the Birds gating:
+
+- **Elementor evaluates `should_render` after rendering an element's children**
+  (post-order), so the Member Gate's ancestors are precomputed from the layout
+  data and let through explicitly.
+- **Elementor's element cache stores one rendering for every visitor.** Member
+  articles mark every element dynamic (`elementor/element/is_dynamic_content`)
+  so the cache only keeps placeholders; user-dependent widgets override
+  `is_dynamic_content()`. Without this, the first visitor's rendering — full
+  or gated — is served to everyone.
+
 ## Per-site commands (run inside `sites/<name>/`)
 
 ```bash
