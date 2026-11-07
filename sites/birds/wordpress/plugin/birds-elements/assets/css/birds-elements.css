@@ -231,6 +231,8 @@
 /* -------------------------------------------------------------- marquee */
 .birds-marquee { position: relative; display: flex; flex-direction: column; min-height: 92vh; overflow: hidden; background: var(--birds-navy); color: #fff; }
 .birds-marquee .birds-hero-media__scrim { background: linear-gradient(to right, rgba(0,15,52,.95), rgba(0,15,52,.7) 45%, rgba(0,15,52,.2)), linear-gradient(to top, var(--birds-navy), transparent 40%, rgba(0,15,52,.5)); }
+/* On narrow screens the copy spans the full width, so dim the film behind it. */
+@media (max-width: 767px) { .birds-marquee .birds-hero-media__scrim { background: rgba(0,15,52,.72); } }
 .birds-marquee__inner { position: relative; z-index: 1; display: flex; flex: 1; flex-direction: column; justify-content: center; width: 100%; padding-top: 8rem; padding-bottom: 3rem; }
 .birds-marquee__copy { max-width: 48rem; }
 .birds-marquee__eyebrow { margin: 0; font-size: .75rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--birds-sky); }

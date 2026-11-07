@@ -20,6 +20,8 @@ export function MarqueeHero() {
         {video && <video className="absolute inset-0 h-full w-full object-cover object-[77%_50%]" src={video} autoPlay muted loop playsInline aria-hidden />}
       </div>
       <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/70 to-navy/20" />
+      {/* On narrow screens the copy spans the full width, so dim the film behind it. */}
+      <div className="absolute inset-0 bg-navy/65 md:hidden" />
       <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-navy/50" />
 
       <div className="relative mx-auto flex w-full max-w-[1320px] flex-1 flex-col justify-center px-5 pt-32 pb-12 lg:px-10">

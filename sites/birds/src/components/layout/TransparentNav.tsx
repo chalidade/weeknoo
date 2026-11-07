@@ -55,6 +55,9 @@ export function TransparentNav({ route, overlay }: { route: Route; overlay: bool
         'fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow] duration-300 print:hidden',
         onDark ? 'border-b border-white/15 bg-transparent' : 'border-b border-border bg-background/95 backdrop-blur-md',
         !overlay && !scrolled && 'border-transparent bg-background/0 backdrop-blur-0',
+        // backdrop-filter makes the header the containing block of the fixed
+        // drawer (clipping it to 68px), so drop it while the drawer is open.
+        drawer && 'border-border bg-background backdrop-blur-none',
       )}
     >
       <div className="mx-auto flex h-[4.25rem] max-w-[1320px] items-stretch justify-between gap-6 px-5 lg:px-10">
