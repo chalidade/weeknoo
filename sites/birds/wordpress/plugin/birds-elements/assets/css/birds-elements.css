@@ -216,7 +216,7 @@
 /* ------------------------------------------------------------ hero media */
 .birds-hero-media { position: absolute; inset: 0; overflow: hidden; background: var(--birds-navy); }
 .birds-hero-media > .birds-media__img, .birds-hero-media > .birds-media__fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: birds-settle 1.6s var(--birds-ease) both; }
-.birds-hero-media__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; mix-blend-mode: screen; }
+.birds-hero-media__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 77% 50%; /* films keep their subject right of centre */ }
 .birds-hero-media__scrim { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,15,52,.7), rgba(0,15,52,.1) 50%, rgba(0,15,52,.4)); pointer-events: none; }
 .birds-hero-media__controls { position: absolute; right: var(--birds-gutter); bottom: 1.5rem; z-index: 2; display: flex; gap: .5rem; }
 .birds-hero-media__controls button { display: flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border: 1px solid rgba(255,255,255,.4); border-radius: 50%; background: rgba(0,15,52,.4); color: #fff; cursor: pointer; backdrop-filter: blur(6px); transition: background .2s, border-color .2s; }

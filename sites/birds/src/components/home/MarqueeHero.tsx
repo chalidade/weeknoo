@@ -17,7 +17,7 @@ export function MarqueeHero() {
     <section className="relative flex min-h-[92vh] flex-col overflow-hidden bg-navy text-white">
       <div className="absolute inset-0">
         <Media src={lead.featuredImage} />
-        {video && <video className="absolute inset-0 h-full w-full object-cover mix-blend-screen" src={video} autoPlay muted loop playsInline aria-hidden />}
+        {video && <video className="absolute inset-0 h-full w-full object-cover object-[77%_50%]" src={video} autoPlay muted loop playsInline aria-hidden />}
       </div>
       <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/70 to-navy/20" />
       <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-navy/50" />

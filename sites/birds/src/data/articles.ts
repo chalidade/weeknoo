@@ -8,6 +8,8 @@ import { AUTHORS, EXPERTS } from './contributors'
 
 const ILLUSTRATIVE = 'Birds Research Desk analysis. Illustrative data for demonstration.'
 const VIDEO = 'media/ambient-briefing.mp4'
+// Brand film rendered from video/brand-film.html (node video/render.mjs).
+const FILM = 'media/birds-film.mp4'
 
 export const ARTICLES: Article[] = [
   {
@@ -21,7 +23,7 @@ export const ARTICLES: Article[] = [
     accessType: 'member',
     heroType: 'video',
     featuredImage: 'art:skyline',
-    heroVideoUrl: VIDEO,
+    heroVideoUrl: FILM,
     author: AUTHORS.arif,
     interviewedExperts: [EXPERTS.hamad, EXPERTS.ratna, EXPERTS.sofia],
     publishedAt: '2026-11-03',

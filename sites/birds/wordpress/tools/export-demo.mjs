@@ -1,7 +1,7 @@
 // Exports the React site's sample content for the WordPress demo importer:
 //   plugin/birds-elements/demo/articles.json  — series, contributors, articles
 //   plugin/birds-elements/demo/media/*.jpg    — the editorial artwork presets
-//   plugin/birds-elements/demo/media/ambient-briefing.mp4
+//   plugin/birds-elements/demo/media/*.mp4      — hero videos used by the articles
 //
 // Run from sites/birds:  node wordpress/tools/export-demo.mjs
 // Needs the site's node_modules and the pre-installed Playwright Chromium.
@@ -44,7 +44,7 @@ try {
   const articles = ARTICLES.map((a) => ({
     ...a,
     featuredImage: art(a.featuredImage),
-    heroVideoUrl: a.heroVideoUrl ? 'ambient-briefing.mp4' : undefined,
+    heroVideoUrl: a.heroVideoUrl ? a.heroVideoUrl.split('/').pop() : undefined,
     author: keyOf(a.author),
     interviewedExperts: a.interviewedExperts.map(keyOf),
     carouselItems: a.carouselItems?.map((c) => ({ ...c, imageUrl: art(c.imageUrl) })),
@@ -81,8 +81,10 @@ try {
   await browser.close()
   console.log(`media: ${ARTWORK_PRESETS.length} artwork JPGs`)
 
-  copyFileSync(join(site, 'public/media/ambient-briefing.mp4'), join(out, 'media/ambient-briefing.mp4'))
-  console.log('media: ambient-briefing.mp4')
+  for (const video of new Set(articles.map((a) => a.heroVideoUrl).filter(Boolean))) {
+    copyFileSync(join(site, 'public/media', video), join(out, 'media', video))
+    console.log(`media: ${video}`)
+  }
 } finally {
   await vite.close()
 }

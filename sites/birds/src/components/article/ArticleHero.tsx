@@ -58,7 +58,7 @@ function HeroVideo({ src, poster }: { src: string; poster: string }) {
       <div className="absolute inset-0">
         <Media src={poster} />
       </div>
-      <video ref={ref} className="absolute inset-0 h-full w-full object-cover mix-blend-screen" src={src} autoPlay={!reduced} muted loop playsInline preload="metadata" aria-label="Ambient background video" />
+      <video ref={ref} className="absolute inset-0 h-full w-full object-cover object-[77%_50%]" src={src} autoPlay={!reduced} muted loop playsInline preload="metadata" aria-label="Ambient background video" />
       <div className="absolute right-5 bottom-5 z-10 flex gap-2 lg:right-10 lg:bottom-8">
         <button onClick={togglePlay} className={btn} aria-label={playing ? 'Pause video' : 'Play video'}>
           {playing ? <Pause className="size-4" fill="currentColor" /> : <Play className="size-4 translate-x-px" fill="currentColor" />}

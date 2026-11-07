@@ -48,3 +48,7 @@ sites/*/.wp-build/
 sites/*/wp-theme/
 *-wp-theme.zip
 sites/*/*.zip
+
+# Brand-film render scratch (sites/<name>/video/render.mjs)
+sites/*/video/.stills/
+sites/*/video/.frames/

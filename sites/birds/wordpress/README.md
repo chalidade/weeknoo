@@ -64,6 +64,13 @@ pengembangan dari GitHub) di PHP 8.3.
 
 ### Hero video
 
+Briefing unggulan memakai **brand film Birds** (`media/birds-film.mp4`, 24 detik,
+1080p, ±2,8 MB, loop mulus, musik ambient). Film ini dirender dari
+`sites/birds/video/brand-film.html` — ubah teks/angka di sana lalu jalankan
+`node video/render.mjs` (butuh Playwright/Chromium + ffmpeg), kemudian
+`node wordpress/tools/export-demo.mjs` agar demo WordPress ikut terbarui.
+Isinya sengaja diletakkan di sisi kanan supaya judul hero di kiri tetap terbaca.
+
 Upload `.mp4` ke Media Library, salin URL-nya ke *Hero presentation → Looping
 muted video* di article settings. Video diputar tanpa suara di atas featured
 image dengan tombol play/pause dan mute.
