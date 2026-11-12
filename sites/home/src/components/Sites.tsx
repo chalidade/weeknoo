@@ -51,6 +51,15 @@ const SITES = [
     tag: 'Editorial',
     hue: 220,
   },
+  {
+    name: 'puas-startup',
+    title: 'PUAS — Startup Program Saudi',
+    description:
+      'Landing page kompetisi ide & startup PUAS: bawa startup Indonesia jadi perusahaan resmi di Saudi Arabia plus Iqama 2 orang. Countdown deadline, template proposal 6 poin, daftar via email atau WhatsApp.',
+    url: 'https://chalidade.github.io/weeknoo/puas-startup/',
+    tag: 'Program',
+    hue: 75,
+  },
 ]
 
 const fadeUp = {

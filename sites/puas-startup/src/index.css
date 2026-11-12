@@ -1,0 +1,141 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* PUAS palette — taken from the logo: deep emerald disc + warm gold gradient.
+   The site renders dark-only (class="dark" on <html>); :root mirrors it so a
+   build without the class still looks right. */
+:root,
+.dark {
+  --radius: 1rem;
+  --background: #04191a;
+  --foreground: #f4efe4;
+  --card: #0a2b29;
+  --card-foreground: #f4efe4;
+  --popover: #0a2b29;
+  --popover-foreground: #f4efe4;
+  --primary: #f5c26b;
+  --primary-foreground: #08231f;
+  --secondary: #0f3a36;
+  --secondary-foreground: #f4efe4;
+  --muted: #0d332f;
+  --muted-foreground: #a9bdb6;
+  --accent: #fbb44a;
+  --accent-foreground: #08231f;
+  --destructive: #e5484d;
+  --border: rgb(245 194 107 / 0.14);
+  --input: rgb(245 194 107 / 0.2);
+  --ring: #f5c26b;
+
+  --emerald: #0b3d36;
+  --gold-1: #fbb44a;
+  --gold-2: #f6d58e;
+  --gold-3: #d98a2b;
+}
+
+@theme inline {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-emerald: var(--emerald);
+  --color-gold-1: var(--gold-1);
+  --color-gold-2: var(--gold-2);
+  --color-gold-3: var(--gold-3);
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --animate-spin-slow: spin 40s linear infinite;
+  --animate-spin-slower: spin 70s linear infinite reverse;
+  --animate-marquee: marquee 40s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  ::selection {
+    background: var(--gold-1);
+    color: var(--primary-foreground);
+  }
+}
+
+@utility text-gold {
+  background: linear-gradient(100deg, var(--gold-1) 0%, var(--gold-2) 45%, var(--gold-3) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-gold {
+  background: linear-gradient(110deg, var(--gold-1) 0%, var(--gold-2) 50%, var(--gold-3) 100%);
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(245 194 107 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(245 194 107 / 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@utility glass {
+  background: linear-gradient(160deg, rgb(15 58 54 / 0.72), rgb(6 30 28 / 0.55));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+}
+
+/* Gradient hairline border that glows gold at the top-left corner. */
+@utility ring-gold {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(140deg, rgb(251 180 74 / 0.7), rgb(245 194 107 / 0.08) 40%, rgb(217 138 43 / 0.45));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
