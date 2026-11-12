@@ -1,0 +1,64 @@
+# PUAS Startup — Apache / cPanel / LiteSpeed (Hostinger, Niagahoster, dll.)
+Options -Indexes
+ServerSignature Off
+AddDefaultCharset utf-8
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Paksa HTTPS (matikan 2 baris ini kalau hosting belum punya SSL)
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Sajikan versi pre-compressed (.br / .gz) bila browser mendukung
+  RewriteCond %{HTTP:Accept-Encoding} br
+  RewriteCond %{REQUEST_FILENAME}.br -f
+  RewriteRule ^(.+\.(?:js|css|html|svg))$ $1.br [L]
+  RewriteCond %{HTTP:Accept-Encoding} gzip
+  RewriteCond %{REQUEST_FILENAME}.gz -f
+  RewriteRule ^(.+\.(?:js|css|html|svg))$ $1.gz [L]
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType image/webp .webp
+</IfModule>
+<FilesMatch "\.js\.br$">   ForceType text/javascript
+  <IfModule mod_headers.c>Header set Content-Encoding br</IfModule></FilesMatch>
+<FilesMatch "\.css\.br$">  ForceType text/css
+  <IfModule mod_headers.c>Header set Content-Encoding br</IfModule></FilesMatch>
+<FilesMatch "\.html\.br$"> ForceType text/html
+  <IfModule mod_headers.c>Header set Content-Encoding br</IfModule></FilesMatch>
+<FilesMatch "\.js\.gz$">   ForceType text/javascript
+  <IfModule mod_headers.c>Header set Content-Encoding gzip</IfModule></FilesMatch>
+<FilesMatch "\.css\.gz$">  ForceType text/css
+  <IfModule mod_headers.c>Header set Content-Encoding gzip</IfModule></FilesMatch>
+<FilesMatch "\.html\.gz$"> ForceType text/html
+  <IfModule mod_headers.c>Header set Content-Encoding gzip</IfModule></FilesMatch>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(br|gz)$">Header append Vary Accept-Encoding</FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header unset X-Powered-By
+
+  # Cache: aset ber-hash disimpan 1 tahun, HTML selalu dicek ulang
+  <FilesMatch "^assets/|\.(woff2?|webp|jpg|png)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html(\.gz|\.br)?$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# Blokir file tersembunyi / sensitif
+<FilesMatch "^\.|\.(md|txt|conf|example|sh|json)$">
+  Require all denied
+</FilesMatch>

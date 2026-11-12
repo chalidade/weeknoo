@@ -1,4 +1,4 @@
-import { motion, type Variants } from 'motion/react'
+import { m, type Variants } from 'motion/react'
 import { Cpu, Globe2, Sprout } from 'lucide-react'
 
 const fadeUp: Variants = {
@@ -15,7 +15,7 @@ const WHO = [
 export function Eligibility() {
   return (
     <section id="peserta" className="relative scroll-mt-24 py-20 sm:py-28">
-      <motion.div
+      <m.div
         className="mx-auto max-w-6xl px-5"
         initial="hidden"
         whileInView="show"
@@ -24,21 +24,21 @@ export function Eligibility() {
       >
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <motion.p variants={fadeUp} className="font-mono text-xs tracking-[0.25em] text-primary uppercase">
+            <m.p variants={fadeUp} className="font-mono text-xs tracking-[0.25em] text-primary uppercase">
               Terbuka untuk
-            </motion.p>
-            <motion.h2 variants={fadeUp} className="font-display mt-3 max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl">
+            </m.p>
+            <m.h2 variants={fadeUp} className="font-display mt-3 max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl">
               Siapa yang <span className="text-gold">bisa ikut?</span>
-            </motion.h2>
+            </m.h2>
           </div>
-          <motion.p variants={fadeUp} className="max-w-sm text-muted-foreground">
+          <m.p variants={fadeUp} className="max-w-sm text-muted-foreground">
             Founder Indonesia dengan ide atau bisnis yang punya peluang di Saudi Arabia & kawasan GCC.
-          </motion.p>
+          </m.p>
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
           {WHO.map((w) => (
-            <motion.article
+            <m.article
               key={w.title}
               variants={fadeUp}
               whileHover={{ y: -4 }}
@@ -49,10 +49,10 @@ export function Eligibility() {
               </span>
               <h3 className="font-display mt-6 text-xl font-semibold">{w.title}</h3>
               <p className="mt-2 leading-relaxed text-muted-foreground">{w.body}</p>
-            </motion.article>
+            </m.article>
           ))}
         </div>
-      </motion.div>
+      </m.div>
     </section>
   )
 }

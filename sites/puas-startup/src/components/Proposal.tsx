@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion, type Variants } from 'motion/react'
+import { m, type Variants } from 'motion/react'
 import { Check, Copy, HandCoins, Lightbulb, Rocket, Send, ShieldCheck, Target, TrendingUp } from 'lucide-react'
 import { EMAIL, PROPOSAL_TEMPLATE, mailtoUrl } from '@/lib/contact'
 
@@ -33,7 +33,7 @@ export function Proposal() {
   return (
     <section id="proposal" className="relative scroll-mt-24 py-20 sm:py-28">
       <div className="absolute top-20 left-0 -z-10 h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(closest-side,rgb(20_120_105/0.35),transparent)] blur-3xl" />
-      <motion.div
+      <m.div
         className="mx-auto max-w-6xl px-5"
         initial="hidden"
         whileInView="show"
@@ -42,20 +42,20 @@ export function Proposal() {
       >
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_0.9fr]">
           <div>
-            <motion.p variants={fadeUp} className="font-mono text-xs tracking-[0.25em] text-primary uppercase">
+            <m.p variants={fadeUp} className="font-mono text-xs tracking-[0.25em] text-primary uppercase">
               Cara mendaftar
-            </motion.p>
-            <motion.h2 variants={fadeUp} className="font-display mt-3 text-3xl font-bold tracking-tight sm:text-5xl">
+            </m.p>
+            <m.h2 variants={fadeUp} className="font-display mt-3 text-3xl font-bold tracking-tight sm:text-5xl">
               Format bebas. <span className="text-gold">Singkat, tapi menjawab 6 hal ini.</span>
-            </motion.h2>
-            <motion.p variants={fadeUp} className="mt-4 max-w-xl text-muted-foreground">
+            </m.h2>
+            <m.p variants={fadeUp} className="mt-4 max-w-xl text-muted-foreground">
               Boleh pitch deck, dokumen, atau langsung di badan email — yang penting dalam waktu singkat reviewer
               bisa memahami keenam poin berikut.
-            </motion.p>
+            </m.p>
 
             <ol className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {POINTS.map((p, i) => (
-                <motion.li
+                <m.li
                   key={p.q}
                   variants={fadeUp}
                   className="glass group relative overflow-hidden rounded-2xl p-5 transition-colors hover:border-primary/40"
@@ -70,13 +70,13 @@ export function Proposal() {
                     <h3 className="font-semibold leading-snug">{p.q}</h3>
                   </div>
                   <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{p.hint}</p>
-                </motion.li>
+                </m.li>
               ))}
             </ol>
           </div>
 
           {/* Email composer preview */}
-          <motion.div variants={fadeUp} className="lg:sticky lg:top-28 lg:self-start">
+          <m.div variants={fadeUp} className="lg:sticky lg:top-28 lg:self-start">
             <div className="glass ring-gold overflow-hidden rounded-3xl shadow-2xl shadow-black/40">
               <div className="flex items-center gap-2 border-b border-border px-5 py-3">
                 <span className="size-3 rounded-full bg-[#ff5f57]" />
@@ -117,9 +117,9 @@ export function Proposal() {
             <p className="mt-4 text-center text-xs text-muted-foreground">
               Tombol “Buka di email” membuka aplikasi email Anda dengan template sudah terisi.
             </p>
-          </motion.div>
+          </m.div>
         </div>
-      </motion.div>
+      </m.div>
     </section>
   )
 }

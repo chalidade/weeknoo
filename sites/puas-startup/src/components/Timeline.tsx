@@ -1,4 +1,5 @@
-import { motion, type Variants } from 'motion/react'
+import { useEffect, useState } from 'react'
+import { m, type Variants } from 'motion/react'
 import { CalendarClock, Megaphone } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -24,35 +25,38 @@ const WAVES = [
   },
 ]
 
-function status(opens: Date, closes: Date) {
-  const now = Date.now()
+function status(now: number | null, opens: Date, closes: Date) {
+  if (now === null) return { label: '', live: false }
   if (now < opens.getTime()) return { label: 'Segera dibuka', live: false }
   if (now <= closes.getTime()) return { label: 'Sedang dibuka', live: true }
   return { label: 'Ditutup', live: false }
 }
 
 export function Timeline() {
+  // Status depends on today's date, so it is filled in after mount (prerender-safe).
+  const [now, setNow] = useState<number | null>(null)
+  useEffect(() => setNow(Date.now()), [])
   return (
     <section id="jadwal" className="relative scroll-mt-24 py-20 sm:py-28">
-      <motion.div
+      <m.div
         className="mx-auto max-w-6xl px-5"
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: '-80px' }}
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12 } } }}
       >
-        <motion.p variants={fadeUp} className="font-mono text-xs tracking-[0.25em] text-primary uppercase">
+        <m.p variants={fadeUp} className="font-mono text-xs tracking-[0.25em] text-primary uppercase">
           Jadwal
-        </motion.p>
-        <motion.h2 variants={fadeUp} className="font-display mt-3 text-3xl font-bold tracking-tight sm:text-5xl">
+        </m.p>
+        <m.h2 variants={fadeUp} className="font-display mt-3 text-3xl font-bold tracking-tight sm:text-5xl">
           Dua gelombang, <span className="text-gold">satu kesempatan emas.</span>
-        </motion.h2>
+        </m.h2>
 
         <div className="relative mt-14 grid grid-cols-1 gap-5 md:grid-cols-2">
           {WAVES.map((w) => {
-            const s = status(w.opens, w.closes)
+            const s = status(now, w.opens, w.closes)
             return (
-              <motion.article
+              <m.article
                 key={w.name}
                 variants={fadeUp}
                 className={cn('glass relative min-w-0 rounded-3xl p-5 sm:p-7', s.live && 'ring-gold shadow-2xl shadow-gold-1/10')}
@@ -60,6 +64,7 @@ export function Timeline() {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h3 className="font-display text-xl font-bold whitespace-nowrap sm:text-2xl">{w.name}</h3>
                   <span
+                    hidden={!s.label}
                     className={cn(
                       'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap',
                       s.live ? 'bg-gold text-primary-foreground' : 'border border-border text-muted-foreground',
@@ -81,11 +86,11 @@ export function Timeline() {
                     <p className="mt-1 font-semibold">{w.announce}</p>
                   </div>
                 </div>
-              </motion.article>
+              </m.article>
             )
           })}
         </div>
-      </motion.div>
+      </m.div>
     </section>
   )
 }

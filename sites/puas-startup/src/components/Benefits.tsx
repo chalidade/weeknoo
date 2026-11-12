@@ -1,4 +1,4 @@
-import { motion, type Variants } from 'motion/react'
+import { m, type Variants } from 'motion/react'
 import { Building2, IdCard, Network, Scale } from 'lucide-react'
 
 const fadeUp: Variants = {
@@ -50,23 +50,23 @@ export function Benefits() {
         </div>
       </div>
 
-      <motion.div
+      <m.div
         className="mx-auto max-w-6xl px-5"
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: '-80px' }}
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
       >
-        <motion.p variants={fadeUp} className="font-mono text-xs tracking-[0.25em] text-primary uppercase">
+        <m.p variants={fadeUp} className="font-mono text-xs tracking-[0.25em] text-primary uppercase">
           Yang Anda dapatkan
-        </motion.p>
-        <motion.h2 variants={fadeUp} className="font-display mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl">
+        </m.p>
+        <m.h2 variants={fadeUp} className="font-display mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl">
           Dari ide di Indonesia, menjadi <span className="text-gold">perusahaan di Saudi.</span>
-        </motion.h2>
+        </m.h2>
 
         <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
           {BENEFITS.map((b, i) => (
-            <motion.article
+            <m.article
               key={b.title}
               variants={fadeUp}
               whileHover={{ y: -4 }}
@@ -81,10 +81,10 @@ export function Benefits() {
               </div>
               <h3 className="font-display mt-8 text-xl font-semibold">{b.title}</h3>
               <p className="mt-2 max-w-md leading-relaxed text-muted-foreground">{b.body}</p>
-            </motion.article>
+            </m.article>
           ))}
         </div>
-      </motion.div>
+      </m.div>
     </section>
   )
 }

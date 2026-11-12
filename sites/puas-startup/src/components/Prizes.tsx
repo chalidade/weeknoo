@@ -1,4 +1,4 @@
-import { motion, type Variants } from 'motion/react'
+import { m, type Variants } from 'motion/react'
 import { Crown, Star, Trophy } from 'lucide-react'
 
 const fadeUp: Variants = {
@@ -26,7 +26,7 @@ const TIERS = [
 export function Prizes() {
   return (
     <section id="hadiah" className="relative scroll-mt-24 py-20 sm:py-28">
-      <motion.div
+      <m.div
         className="mx-auto max-w-6xl px-5"
         initial="hidden"
         whileInView="show"
@@ -38,7 +38,7 @@ export function Prizes() {
           <div className="absolute -top-32 -left-20 -z-10 size-96 rounded-full bg-[radial-gradient(closest-side,rgb(251_180_74/0.22),transparent)] blur-2xl" />
 
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <motion.div variants={fadeUp}>
+            <m.div variants={fadeUp}>
               <p className="font-mono text-xs tracking-[0.25em] text-primary uppercase">Program Kompetisi Ide & Startup</p>
               <div className="mt-5 flex items-end gap-4">
                 <Trophy className="size-16 text-gold-1 drop-shadow-[0_8px_30px_rgb(251_180_74/0.5)] sm:size-20" strokeWidth={1.5} />
@@ -52,11 +52,11 @@ export function Prizes() {
                 Termasuk pendampingan pendirian perusahaan dan proses izin tinggal (Iqama) untuk 2 orang — Founder &
                 Co-founder/Investor.
               </p>
-            </motion.div>
+            </m.div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {TIERS.map((t) => (
-                <motion.article
+                <m.article
                   key={t.rank}
                   variants={fadeUp}
                   whileHover={{ y: -6 }}
@@ -79,12 +79,12 @@ export function Prizes() {
                   <p className={`mt-4 text-sm leading-relaxed ${t.featured ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
                     {t.note}
                   </p>
-                </motion.article>
+                </m.article>
               ))}
             </div>
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </section>
   )
 }

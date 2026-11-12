@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { ArrowRight, Mail } from 'lucide-react'
 import { EMAIL, WA_DISPLAY, mailtoUrl, waUrl } from '@/lib/contact'
 import { WhatsAppIcon } from '@/components/icons'
@@ -8,7 +8,7 @@ export function Cta() {
   return (
     <section id="daftar" className="relative scroll-mt-24 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
@@ -19,7 +19,7 @@ export function Cta() {
           <div className="absolute -bottom-40 left-1/2 -z-10 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(251_180_74/0.4),transparent)] blur-2xl" />
           <Skyline className="absolute inset-x-0 bottom-0 -z-10 h-32 opacity-80 sm:h-44" />
           <img
-            src={`${import.meta.env.BASE_URL}puas-mark.png`}
+            src={`${import.meta.env.BASE_URL}puas-mark.webp`}
             alt=""
             className="mx-auto size-16 drop-shadow-[0_10px_30px_rgb(0_0_0/0.5)]"
           />
@@ -53,7 +53,7 @@ export function Cta() {
           <p className="mx-auto mt-6 max-w-md text-sm text-muted-foreground">
             Sudah menghubungi via WhatsApp? <strong className="text-foreground">Jangan lupa tetap kirim proposal ke email kami juga.</strong>
           </p>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   )

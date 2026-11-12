@@ -1,18 +1,10 @@
-import { motion, type Variants } from 'motion/react'
+import { m } from 'motion/react'
 import { ArrowRight, Building2, IdCard, Network, Scale, Sparkles } from 'lucide-react'
 import { DEADLINE, mailtoUrl, waUrl } from '@/lib/contact'
 import { useCountdown } from '@/lib/useCountdown'
 import { WhatsAppIcon } from '@/components/icons'
 import { Skyline } from '@/components/Skyline'
 
-const container: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
-}
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 24, filter: 'blur(8px)' },
-  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
-}
 
 const ORBIT = [
   { icon: Building2, label: 'Perusahaan resmi', pos: 'left-0 top-[12%]' },
@@ -24,12 +16,12 @@ const ORBIT = [
 function Countdown() {
   const t = useCountdown(DEADLINE)
   const cells = [
-    { v: t.days, l: 'Hari' },
-    { v: t.hours, l: 'Jam' },
-    { v: t.minutes, l: 'Menit' },
-    { v: t.seconds, l: 'Detik' },
+    { v: t?.days, l: 'Hari' },
+    { v: t?.hours, l: 'Jam' },
+    { v: t?.minutes, l: 'Menit' },
+    { v: t?.seconds, l: 'Detik' },
   ]
-  if (t.done)
+  if (t?.done)
     return (
       <p className="font-mono text-sm text-primary">
         Gelombang 1 sudah ditutup — pendaftaran Gelombang 2 dibuka Jan–Feb 2027.
@@ -39,7 +31,7 @@ function Countdown() {
     <div className="grid max-w-sm grid-cols-4 gap-2" role="timer" aria-label="Sisa waktu pendaftaran Gelombang 1">
       {cells.map((c) => (
         <div key={c.l} className="glass ring-gold min-w-0 rounded-2xl px-1 py-2 text-center">
-          <div className="font-display text-2xl font-bold tabular-nums">{String(c.v).padStart(2, '0')}</div>
+          <div className="font-display text-2xl font-bold tabular-nums">{c.v === undefined ? '--' : String(c.v).padStart(2, '0')}</div>
           <div className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">{c.l}</div>
         </div>
       ))}
@@ -61,35 +53,31 @@ export function Hero() {
       </div>
 
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-14 px-5 lg:grid-cols-[1.15fr_0.85fr]">
-        <motion.div variants={container} initial="hidden" animate="show" className="min-w-0">
-          <motion.a
-            variants={fadeUp}
-            href="#jadwal"
+        <div className="hero-rise min-w-0">
+          <a href="#jadwal"
             className="glass inline-flex max-w-full items-center gap-2 rounded-full py-1.5 pr-3 pl-1.5 text-xs whitespace-nowrap sm:text-sm"
           >
             <span className="bg-gold rounded-full px-2.5 py-0.5 font-semibold text-primary-foreground">Gelombang 1</span>
             <span className="text-muted-foreground">Deadline<span className="hidden sm:inline"> proposal</span></span>
             <span className="font-semibold text-foreground">25 Nov 2026</span>
             <ArrowRight className="size-3.5 text-primary" />
-          </motion.a>
+          </a>
 
-          <motion.h1
-            variants={fadeUp}
-            className="font-display mt-6 text-[2.4rem] leading-[1.05] text-balance font-bold tracking-tight sm:text-6xl lg:text-[4.2rem]"
+          <h1 className="font-display mt-6 text-[2.4rem] leading-[1.05] text-balance font-bold tracking-tight sm:text-6xl lg:text-[4.2rem]"
           >
             Punya ide startup?
             <br />
             <span className="text-gold">Bawa ke Saudi Arabia.</span>
-          </motion.h1>
+          </h1>
 
-          <motion.p variants={fadeUp} className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Program kurasi & pendampingan PUAS untuk mengubah ide bisnis dan startup Indonesia menjadi{' '}
             <strong className="font-semibold text-foreground">perusahaan resmi di Saudi Arabia</strong> — sekaligus
             mendapatkan izin tinggal (Iqama) jalur startup untuk{' '}
             <strong className="font-semibold text-foreground">2 orang</strong> (Founder & Co-founder/Investor).
-          </motion.p>
+          </p>
 
-          <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href={mailtoUrl()}
               className="group bg-gold inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold whitespace-nowrap text-primary-foreground shadow-xl shadow-gold-1/25 transition-transform hover:scale-[1.03]"
@@ -106,9 +94,9 @@ export function Hero() {
               <WhatsAppIcon className="size-5 shrink-0 text-[#25D366]" />
               Fast Track via WhatsApp
             </a>
-          </motion.div>
+          </div>
 
-          <motion.div variants={fadeUp} className="mt-10">
+          <div className="mt-10">
             <p className="mb-3 flex items-center gap-2 font-mono text-xs tracking-widest text-muted-foreground uppercase">
               <span className="relative flex size-2">
                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
@@ -117,11 +105,11 @@ export function Hero() {
               Pendaftaran Gelombang 1 ditutup dalam
             </p>
             <Countdown />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Orbital visual */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
@@ -134,8 +122,8 @@ export function Hero() {
           </div>
           <div className="absolute inset-[26%] rounded-full bg-[radial-gradient(closest-side,rgb(251_180_74/0.35),transparent)] blur-xl" />
           <div className="absolute inset-[26%] flex items-center justify-center">
-            <motion.img
-              src={`${import.meta.env.BASE_URL}puas-mark.png`}
+            <m.img
+              src={`${import.meta.env.BASE_URL}puas-mark.webp`}
               alt=""
               className="size-full object-contain drop-shadow-[0_20px_50px_rgb(0_0_0/0.6)]"
               animate={{ y: [0, -10, 0] }}
@@ -143,7 +131,7 @@ export function Hero() {
             />
           </div>
           {ORBIT.map((o, i) => (
-            <motion.div
+            <m.div
               key={o.label}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -154,12 +142,12 @@ export function Hero() {
                 <o.icon className="size-3.5 sm:size-4" />
               </span>
               {o.label}
-            </motion.div>
+            </m.div>
           ))}
           <div className="glass absolute top-[-2%] right-[22%] flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[10px] tracking-widest text-primary uppercase">
             <Sparkles className="size-3" /> ID → SA
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   )

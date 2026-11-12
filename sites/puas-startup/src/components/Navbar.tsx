@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, m } from 'motion/react'
 import { Menu, Send, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { mailtoUrl } from '@/lib/contact'
@@ -32,7 +32,7 @@ export function Navbar() {
         )}
       >
         <a href="#top" className="flex items-center gap-2.5" aria-label="PUAS — kembali ke atas">
-          <img src={`${import.meta.env.BASE_URL}puas-mark.png`} alt="" className="size-9" />
+          <img src={`${import.meta.env.BASE_URL}puas-mark.webp`} alt="" className="size-9" />
           <span className="font-display text-lg font-bold tracking-wide">PUAS</span>
           <span className="hidden rounded-full border border-border px-2 py-0.5 font-mono text-[10px] tracking-widest text-primary uppercase sm:inline">
             Startup
@@ -73,7 +73,7 @@ export function Navbar() {
 
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
@@ -95,7 +95,7 @@ export function Navbar() {
             >
               <Send className="size-4" /> Kirim Proposal
             </a>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </header>

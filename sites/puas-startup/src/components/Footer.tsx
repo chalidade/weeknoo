@@ -6,7 +6,7 @@ export function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
           <div className="flex items-center gap-2.5">
-            <img src={`${import.meta.env.BASE_URL}puas-mark.png`} alt="" className="size-10" />
+            <img src={`${import.meta.env.BASE_URL}puas-mark.webp`} alt="" className="size-10" />
             <span className="font-display text-xl font-bold tracking-wide">PUAS</span>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -41,7 +41,7 @@ export function Footer() {
         </div>
       </div>
       <p className="mx-auto mt-12 max-w-6xl px-5 text-xs text-muted-foreground">
-        © {new Date().getFullYear()} PUAS. Indonesia 🇮🇩 → Saudi Arabia 🇸🇦
+        © 2026 PUAS. Indonesia 🇮🇩 → Saudi Arabia 🇸🇦
       </p>
     </footer>
   )

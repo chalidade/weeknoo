@@ -1,3 +1,4 @@
+import { LazyMotion, domAnimation } from 'motion/react'
 import { Navbar } from '@/components/Navbar'
 import { Hero } from '@/components/Hero'
 import { Benefits } from '@/components/Benefits'
@@ -13,6 +14,7 @@ import { StickyContact } from '@/components/StickyContact'
 
 export default function App() {
   return (
+    <LazyMotion features={domAnimation} strict>
     <main className="min-h-screen overflow-x-clip">
       <Navbar />
       <Hero />
@@ -27,5 +29,6 @@ export default function App() {
       <Footer />
       <StickyContact />
     </main>
+    </LazyMotion>
   )
 }
