@@ -36,7 +36,7 @@ export function Eligibility() {
           </motion.p>
         </div>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
           {WHO.map((w) => (
             <motion.article
               key={w.title}

@@ -38,7 +38,7 @@ export function Faq() {
   const [open, setOpen] = useState<number | null>(0)
   return (
     <section id="faq" className="relative scroll-mt-24 py-20 sm:py-28">
-      <div className="mx-auto grid max-w-6xl gap-12 px-5 lg:grid-cols-[0.8fr_1.2fr]">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-5 lg:grid-cols-[0.8fr_1.2fr]">
         <div>
           <p className="font-mono text-xs tracking-[0.25em] text-primary uppercase">FAQ</p>
           <h2 className="font-display mt-3 text-3xl font-bold tracking-tight sm:text-5xl">

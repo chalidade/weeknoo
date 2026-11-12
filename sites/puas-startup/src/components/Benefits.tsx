@@ -64,13 +64,13 @@ export function Benefits() {
           Dari ide di Indonesia, menjadi <span className="text-gold">perusahaan di Saudi.</span>
         </motion.h2>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
           {BENEFITS.map((b, i) => (
             <motion.article
               key={b.title}
               variants={fadeUp}
               whileHover={{ y: -4 }}
-              className={`glass ring-gold group relative overflow-hidden rounded-3xl p-7 ${b.span}`}
+              className={`glass ring-gold group relative overflow-hidden rounded-3xl p-6 sm:p-7 ${b.span}`}
             >
               <div className="pointer-events-none absolute -top-24 -right-24 size-56 rounded-full bg-[radial-gradient(closest-side,rgb(251_180_74/0.18),transparent)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               <div className="flex items-start justify-between">

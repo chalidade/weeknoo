@@ -37,7 +37,7 @@ export function StickyContact() {
               aria-label="Hubungi via WhatsApp"
               className="flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-5 py-3 text-sm font-semibold text-[#062b1a]"
             >
-              <WhatsAppIcon className="size-5" /> WA
+              <WhatsAppIcon className="size-5 shrink-0" /> WA
             </a>
           </div>
           <a

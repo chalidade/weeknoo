@@ -40,7 +40,7 @@ export function Proposal() {
         viewport={{ once: true, margin: '-80px' }}
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
       >
-        <div className="grid gap-12 lg:grid-cols-[1fr_0.9fr]">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_0.9fr]">
           <div>
             <motion.p variants={fadeUp} className="font-mono text-xs tracking-[0.25em] text-primary uppercase">
               Cara mendaftar
@@ -53,7 +53,7 @@ export function Proposal() {
               bisa memahami keenam poin berikut.
             </motion.p>
 
-            <ol className="mt-10 grid gap-3 sm:grid-cols-2">
+            <ol className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {POINTS.map((p, i) => (
                 <motion.li
                   key={p.q}
@@ -97,7 +97,7 @@ export function Proposal() {
               <pre className="max-h-72 overflow-auto border-t border-border px-5 py-4 font-mono text-[12.5px] leading-relaxed whitespace-pre-wrap text-muted-foreground">
                 {PROPOSAL_TEMPLATE}
               </pre>
-              <div className="grid gap-2 border-t border-border p-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-2 border-t border-border p-4 sm:grid-cols-2">
                 <button
                   type="button"
                   onClick={copy}

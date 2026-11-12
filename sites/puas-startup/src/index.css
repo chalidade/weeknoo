@@ -69,6 +69,15 @@
   --animate-marquee: marquee 40s linear infinite;
 }
 
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.95; }
+}
+
+.skyline-twinkle {
+  animation: twinkle 3.5s ease-in-out infinite;
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }

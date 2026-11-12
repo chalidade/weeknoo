@@ -48,20 +48,20 @@ export function Timeline() {
           Dua gelombang, <span className="text-gold">satu kesempatan emas.</span>
         </motion.h2>
 
-        <div className="relative mt-14 grid gap-5 md:grid-cols-2">
+        <div className="relative mt-14 grid grid-cols-1 gap-5 md:grid-cols-2">
           {WAVES.map((w) => {
             const s = status(w.opens, w.closes)
             return (
               <motion.article
                 key={w.name}
                 variants={fadeUp}
-                className={cn('glass relative rounded-3xl p-7', s.live && 'ring-gold shadow-2xl shadow-gold-1/10')}
+                className={cn('glass relative min-w-0 rounded-3xl p-5 sm:p-7', s.live && 'ring-gold shadow-2xl shadow-gold-1/10')}
               >
-                <div className="flex items-center justify-between">
-                  <h3 className="font-display text-2xl font-bold">{w.name}</h3>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="font-display text-xl font-bold whitespace-nowrap sm:text-2xl">{w.name}</h3>
                   <span
                     className={cn(
-                      'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold',
+                      'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap',
                       s.live ? 'bg-gold text-primary-foreground' : 'border border-border text-muted-foreground',
                     )}
                   >
@@ -69,7 +69,7 @@ export function Timeline() {
                     {s.label}
                   </span>
                 </div>
-                <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div className="rounded-2xl border border-border bg-background/50 p-4">
                     <CalendarClock className="size-5 text-primary" />
                     <p className="mt-3 text-xs tracking-wide text-muted-foreground uppercase">Pendaftaran</p>

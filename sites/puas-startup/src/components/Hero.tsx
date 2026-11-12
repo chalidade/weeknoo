@@ -3,6 +3,7 @@ import { ArrowRight, Building2, IdCard, Network, Scale, Sparkles } from 'lucide-
 import { DEADLINE, mailtoUrl, waUrl } from '@/lib/contact'
 import { useCountdown } from '@/lib/useCountdown'
 import { WhatsAppIcon } from '@/components/icons'
+import { Skyline } from '@/components/Skyline'
 
 const container: Variants = {
   hidden: {},
@@ -14,10 +15,10 @@ const fadeUp: Variants = {
 }
 
 const ORBIT = [
-  { icon: Building2, label: 'Perusahaan resmi', pos: 'left-[2%] top-[14%]' },
-  { icon: IdCard, label: 'Iqama 2 orang', pos: 'right-[0%] top-[26%]' },
-  { icon: Scale, label: 'Legal & lisensi', pos: 'left-[0%] bottom-[22%]' },
-  { icon: Network, label: 'Partner lokal', pos: 'right-[6%] bottom-[8%]' },
+  { icon: Building2, label: 'Perusahaan resmi', pos: 'left-0 top-[12%]' },
+  { icon: IdCard, label: 'Iqama 2 orang', pos: 'right-0 top-[28%]' },
+  { icon: Scale, label: 'Legal & lisensi', pos: 'left-0 bottom-[24%]' },
+  { icon: Network, label: 'Partner lokal', pos: 'right-0 bottom-[8%]' },
 ]
 
 function Countdown() {
@@ -35,11 +36,11 @@ function Countdown() {
       </p>
     )
   return (
-    <div className="flex items-center gap-2" role="timer" aria-label="Sisa waktu pendaftaran Gelombang 1">
+    <div className="grid max-w-sm grid-cols-4 gap-2" role="timer" aria-label="Sisa waktu pendaftaran Gelombang 1">
       {cells.map((c) => (
-        <div key={c.l} className="glass ring-gold w-[4.25rem] rounded-2xl px-2 py-2 text-center">
+        <div key={c.l} className="glass ring-gold min-w-0 rounded-2xl px-1 py-2 text-center">
           <div className="font-display text-2xl font-bold tabular-nums">{String(c.v).padStart(2, '0')}</div>
-          <div className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">{c.l}</div>
+          <div className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">{c.l}</div>
         </div>
       ))}
     </div>
@@ -48,28 +49,33 @@ function Countdown() {
 
 export function Hero() {
   return (
-    <section id="top" className="relative isolate overflow-hidden pt-32 pb-20 sm:pt-40 lg:pb-28">
+    <section id="top" className="relative isolate overflow-hidden pt-32 pb-40 sm:pt-40 sm:pb-52 lg:pb-60">
       {/* backdrop */}
       <div className="bg-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,#000_30%,transparent_75%)]" />
       <div className="absolute -top-40 left-1/2 -z-10 h-[38rem] w-[60rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(251_180_74/0.22),transparent)] blur-2xl" />
       <div className="absolute top-1/3 -right-40 -z-10 h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(closest-side,rgb(20_120_105/0.45),transparent)] blur-3xl" />
 
-      <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 lg:grid-cols-[1.15fr_0.85fr]">
-        <motion.div variants={container} initial="hidden" animate="show">
+      <div className="absolute inset-x-0 bottom-0 -z-10">
+        <Skyline className="h-44 sm:h-56 lg:h-64" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent" />
+      </div>
+
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-14 px-5 lg:grid-cols-[1.15fr_0.85fr]">
+        <motion.div variants={container} initial="hidden" animate="show" className="min-w-0">
           <motion.a
             variants={fadeUp}
             href="#jadwal"
-            className="glass inline-flex items-center gap-2 rounded-full py-1.5 pr-3 pl-1.5 text-xs sm:text-sm"
+            className="glass inline-flex max-w-full items-center gap-2 rounded-full py-1.5 pr-3 pl-1.5 text-xs whitespace-nowrap sm:text-sm"
           >
             <span className="bg-gold rounded-full px-2.5 py-0.5 font-semibold text-primary-foreground">Gelombang 1</span>
-            <span className="text-muted-foreground">Deadline proposal</span>
+            <span className="text-muted-foreground">Deadline<span className="hidden sm:inline"> proposal</span></span>
             <span className="font-semibold text-foreground">25 Nov 2026</span>
             <ArrowRight className="size-3.5 text-primary" />
           </motion.a>
 
           <motion.h1
             variants={fadeUp}
-            className="font-display mt-6 text-[2.6rem] leading-[1.05] font-bold tracking-tight sm:text-6xl lg:text-[4.2rem]"
+            className="font-display mt-6 text-[2.4rem] leading-[1.05] text-balance font-bold tracking-tight sm:text-6xl lg:text-[4.2rem]"
           >
             Punya ide startup?
             <br />
@@ -86,7 +92,7 @@ export function Hero() {
           <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href={mailtoUrl()}
-              className="group bg-gold inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold text-primary-foreground shadow-xl shadow-gold-1/25 transition-transform hover:scale-[1.03]"
+              className="group bg-gold inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold whitespace-nowrap text-primary-foreground shadow-xl shadow-gold-1/25 transition-transform hover:scale-[1.03]"
             >
               Daftar via Email
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
@@ -95,9 +101,9 @@ export function Hero() {
               href={waUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="glass inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold transition-colors hover:border-primary/50"
+              className="glass inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold whitespace-nowrap transition-colors hover:border-primary/50"
             >
-              <WhatsAppIcon className="size-5 text-[#25D366]" />
+              <WhatsAppIcon className="size-5 shrink-0 text-[#25D366]" />
               Fast Track via WhatsApp
             </a>
           </motion.div>
@@ -119,7 +125,7 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-          className="relative mx-auto aspect-square w-full max-w-[22rem] sm:max-w-[26rem]"
+          className="relative mx-auto aspect-square w-full max-w-[20rem] sm:max-w-[26rem]"
           aria-hidden="true"
         >
           <div className="absolute inset-0 animate-spin-slow rounded-full border border-dashed border-primary/25" />
@@ -142,10 +148,10 @@ export function Hero() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 + i * 0.12 }}
-              className={`glass ring-gold absolute ${o.pos} flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-medium shadow-xl shadow-black/30 sm:text-sm`}
+              className={`glass ring-gold absolute ${o.pos} flex items-center gap-1.5 rounded-xl px-2 py-1.5 text-[11px] font-medium whitespace-nowrap shadow-xl shadow-black/30 sm:gap-2 sm:rounded-2xl sm:px-3 sm:py-2 sm:text-sm`}
             >
-              <span className="bg-gold flex size-7 items-center justify-center rounded-lg text-primary-foreground">
-                <o.icon className="size-4" />
+              <span className="bg-gold flex size-6 shrink-0 items-center justify-center rounded-lg text-primary-foreground sm:size-7">
+                <o.icon className="size-3.5 sm:size-4" />
               </span>
               {o.label}
             </motion.div>

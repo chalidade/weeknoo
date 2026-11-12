@@ -33,11 +33,11 @@ export function Prizes() {
         viewport={{ once: true, margin: '-80px' }}
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
       >
-        <div className="glass ring-gold relative overflow-hidden rounded-[2rem] p-6 sm:p-10 lg:p-14">
+        <div className="glass ring-gold relative overflow-hidden rounded-[2rem] p-5 sm:p-10 lg:p-14">
           <div className="bg-grid absolute inset-0 -z-10 opacity-60 [mask-image:radial-gradient(ellipse_at_top_left,#000,transparent_70%)]" />
           <div className="absolute -top-32 -left-20 -z-10 size-96 rounded-full bg-[radial-gradient(closest-side,rgb(251_180_74/0.22),transparent)] blur-2xl" />
 
-          <div className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.8fr_1.2fr]">
             <motion.div variants={fadeUp}>
               <p className="font-mono text-xs tracking-[0.25em] text-primary uppercase">Program Kompetisi Ide & Startup</p>
               <div className="mt-5 flex items-end gap-4">
@@ -54,7 +54,7 @@ export function Prizes() {
               </p>
             </motion.div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {TIERS.map((t) => (
                 <motion.article
                   key={t.rank}
