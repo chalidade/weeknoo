@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 # Build a self-contained, upload-ready zip of this site (relative base, so it
 # works in any folder), with pre-compressed assets and server configs.
-#   bash scripts/make-zip.sh            -> ./puas-startup.zip
+#   bash scripts/make-zip.sh                              -> ./puas-startup.zip
+#   SITE_URL=https://domain-lain/ bash scripts/make-zip.sh   for another domain
 set -euo pipefail
 cd "$(dirname "$0")/.."
 OUT="$(pwd)/puas-startup.zip"
 STAGE="$(mktemp -d)/puas-startup"
+# Link previews (og:image) need absolute URLs: the domain this zip is served from.
+SITE_URL="${SITE_URL:-https://startup.puas.academy/}"
 
 npx tsc -b
 npx vite build --base=./ --outDir "$STAGE" --emptyOutDir --logLevel warn
 cp deploy/.htaccess deploy/_headers deploy/vercel.json deploy/nginx.conf.example deploy/BACA-SAYA.md "$STAGE/"
+sed -i "s#https://chalidade.github.io/weeknoo/puas-startup/#${SITE_URL%/}/#g" "$STAGE/index.html"
 
 node -e '
 const fs=require("fs"),path=require("path"),zlib=require("zlib");

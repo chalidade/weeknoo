@@ -1,96 +1,84 @@
-import { useEffect, useState } from 'react'
-import { m, type Variants } from 'motion/react'
-import { CalendarClock, Megaphone } from 'lucide-react'
+import { CalendarDays, FileText, Megaphone } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
-}
+import { DEADLINE, WAVE2_CLOSES, WAVE2_OPENS, phaseAt, timeLeft, type Phase } from '@/lib/waves'
+import { useNow } from '@/lib/useNow'
 
 const WAVES = [
   {
     name: 'Gelombang 1',
-    register: 'Hingga 25 Nov 2026',
-    announce: 'Desember 2026',
-    opens: new Date('2026-01-01T00:00:00+03:00'),
-    closes: new Date('2026-11-25T23:59:59+03:00'),
+    registerLabel: 'Pendaftaran hingga',
+    register: '25 Nov 2026',
+    announce: 'Des 2026',
+    status: (p: Phase, now: number) =>
+      p === 'wave1' ? { text: `Dibuka, tutup ${timeLeft(now, DEADLINE)}`, live: true } : { text: 'Sudah ditutup', live: false },
   },
   {
     name: 'Gelombang 2',
-    register: 'Januari – Februari 2027',
-    announce: 'Maret 2027',
-    opens: new Date('2027-01-01T00:00:00+03:00'),
-    closes: new Date('2027-02-28T23:59:59+03:00'),
+    registerLabel: 'Pendaftaran',
+    register: 'Jan – Feb 2027',
+    announce: 'Mar 2027',
+    status: (p: Phase, now: number) =>
+      p === 'wave2'
+        ? { text: `Dibuka, tutup ${timeLeft(now, WAVE2_CLOSES)}`, live: true }
+        : p === 'closed'
+          ? { text: 'Sudah ditutup', live: false }
+          : p === 'between'
+            ? { text: `Dibuka ${timeLeft(now, WAVE2_OPENS)}`, live: false }
+            : { text: 'Belum dibuka', live: false },
   },
 ]
 
-function status(now: number | null, opens: Date, closes: Date) {
-  if (now === null) return { label: '', live: false }
-  if (now < opens.getTime()) return { label: 'Segera dibuka', live: false }
-  if (now <= closes.getTime()) return { label: 'Sedang dibuka', live: true }
-  return { label: 'Ditutup', live: false }
-}
-
 export function Timeline() {
-  // Status depends on today's date, so it is filled in after mount (prerender-safe).
-  const [now, setNow] = useState<number | null>(null)
-  useEffect(() => setNow(Date.now()), [])
-  return (
-    <section id="jadwal" className="relative scroll-mt-24 py-20 sm:py-28">
-      <m.div
-        className="mx-auto max-w-6xl px-5"
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: '-80px' }}
-        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12 } } }}
-      >
-        <m.p variants={fadeUp} className="font-mono text-xs tracking-[0.25em] text-primary uppercase">
-          Jadwal
-        </m.p>
-        <m.h2 variants={fadeUp} className="font-display mt-3 text-3xl font-bold tracking-tight sm:text-5xl">
-          Dua gelombang, <span className="text-gold">satu kesempatan emas.</span>
-        </m.h2>
+  const now = useNow()
 
-        <div className="relative mt-14 grid grid-cols-1 gap-5 md:grid-cols-2">
-          {WAVES.map((w) => {
-            const s = status(now, w.opens, w.closes)
-            return (
-              <m.article
-                key={w.name}
-                variants={fadeUp}
-                className={cn('glass relative min-w-0 rounded-3xl p-5 sm:p-7', s.live && 'ring-gold shadow-2xl shadow-gold-1/10')}
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h3 className="font-display text-xl font-bold whitespace-nowrap sm:text-2xl">{w.name}</h3>
+  return (
+    <section id="jadwal" className="@container wrap scroll-mt-20">
+      <h2 className="h-group group-head">Dua gelombang pendaftaran</h2>
+      <div className="bento">
+        {WAVES.map((w) => {
+          // Filled in after mount: it depends on today's date.
+          const status = now === null ? null : w.status(phaseAt(now), now)
+          return (
+            <article key={w.name} className="tile tile-white col-span-2 lg:col-span-6">
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2.5">
+                <h3 className="flex items-center gap-3 text-[1.5rem] leading-none font-extrabold tracking-[-0.03em]">
+                  <span className="chip bg-emerald text-white">
+                    <CalendarDays className="size-6" strokeWidth={1.9} aria-hidden="true" />
+                  </span>
+                  {w.name}
+                </h3>
+                {status && (
                   <span
-                    hidden={!s.label}
                     className={cn(
-                      'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap',
-                      s.live ? 'bg-gold text-primary-foreground' : 'border border-border text-muted-foreground',
+                      'rounded-full px-3 py-1.5 text-sm font-bold',
+                      status.live ? 'bg-amber text-ink' : 'bg-mist text-muted-foreground',
                     )}
                   >
-                    {s.live && <span className="size-1.5 animate-pulse rounded-full bg-primary-foreground" />}
-                    {s.label}
+                    {status.text}
                   </span>
+                )}
+              </div>
+
+              <dl className="mt-5 grid grid-cols-1 gap-2.5 @min-[21rem]:grid-cols-2">
+                <div className="rounded-2xl bg-mist p-3.5 sm:p-4">
+                  <dt className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <FileText className="size-4 shrink-0" aria-hidden="true" />
+                    {w.registerLabel}
+                  </dt>
+                  <dd className="mt-2 text-[1.05rem] leading-tight font-extrabold tracking-[-0.02em] sm:text-[1.2rem]">{w.register}</dd>
                 </div>
-                <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-border bg-background/50 p-4">
-                    <CalendarClock className="size-5 text-primary" />
-                    <p className="mt-3 text-xs tracking-wide text-muted-foreground uppercase">Pendaftaran</p>
-                    <p className="mt-1 font-semibold">{w.register}</p>
-                  </div>
-                  <div className="rounded-2xl border border-border bg-background/50 p-4">
-                    <Megaphone className="size-5 text-primary" />
-                    <p className="mt-3 text-xs tracking-wide text-muted-foreground uppercase">Pengumuman pemenang</p>
-                    <p className="mt-1 font-semibold">{w.announce}</p>
-                  </div>
+                <div className="rounded-2xl bg-mist p-3.5 sm:p-4">
+                  <dt className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Megaphone className="size-4 shrink-0" aria-hidden="true" />
+                    Pengumuman pemenang
+                  </dt>
+                  <dd className="mt-2 text-[1.05rem] leading-tight font-extrabold tracking-[-0.02em] sm:text-[1.2rem]">{w.announce}</dd>
                 </div>
-              </m.article>
-            )
-          })}
-        </div>
-      </m.div>
+              </dl>
+            </article>
+          )
+        })}
+      </div>
     </section>
   )
 }

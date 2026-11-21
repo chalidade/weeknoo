@@ -9,7 +9,12 @@ import tailwindcss from '@tailwindcss/vite'
  * After the client build, render <App /> to HTML (src/entry-server.tsx) and
  * inject it into dist/index.html, so the page paints before any JS runs.
  * main.tsx then hydrates it. Works with any --base (CI, zip, local).
+ *
+ * A server build cannot use a relative base (Vite falls back to "/"), which
+ * would leave the prerendered logo pointing at the domain root. So for
+ * --base=./ the render runs under a placeholder base that is swapped back.
  */
+const BASE_MARK = '/__puas_base__/'
 function prerender(): Plugin {
   let cfg: ResolvedConfig
   return {
@@ -23,18 +28,20 @@ function prerender(): Plugin {
       const outDir = path.resolve(cfg.root, cfg.build.outDir)
       // Inside node_modules so the SSR bundle resolves react/motion like the app does.
       const ssrOut = path.join(cfg.root, 'node_modules', '.puas-ssr')
+      const relative = cfg.base === './' || cfg.base === ''
       process.env.PUAS_PRERENDER_CHILD = '1'
       try {
         await build({
           root: cfg.root,
-          base: cfg.base,
+          base: relative ? BASE_MARK : cfg.base,
           logLevel: 'warn',
           build: { ssr: 'src/entry-server.tsx', outDir: ssrOut, emptyOutDir: true },
         })
         const { render } = await import(pathToFileURL(path.join(ssrOut, 'entry-server.js')).href)
         const file = path.join(outDir, 'index.html')
         const html = await readFile(file, 'utf8')
-        await writeFile(file, html.replace('<div id="root"></div>', `<div id="root">${render()}</div>`))
+        const markup: string = relative ? render().replaceAll(BASE_MARK, './') : render()
+        await writeFile(file, html.replace('<div id="root"></div>', () => `<div id="root">${markup}</div>`))
       } finally {
         delete process.env.PUAS_PRERENDER_CHILD
         await rm(ssrOut, { recursive: true, force: true })
@@ -54,5 +61,8 @@ export default defineConfig({
   build: {
     // Never inline assets as data: URIs, so a strict CSP (font-src/img-src 'self') holds.
     assetsInlineLimit: 0,
+    // The single-file export (scripts/make-html.sh) has nowhere to load a
+    // second chunk from, so everything goes into one bundle.
+    ...(process.env.PUAS_SINGLE ? { rolldownOptions: { output: { codeSplitting: false } } } : {}),
   },
 })

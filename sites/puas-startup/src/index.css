@@ -3,41 +3,42 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* PUAS palette — taken from the logo: deep emerald disc + warm gold gradient.
-   The site renders dark-only (class="dark" on <html>); :root mirrors it so a
-   build without the class still looks right. */
-:root,
-.dark {
+/* PUAS palette — sampled from the logo and flattened: the wordmark's emerald
+   for ink and colour tiles, the brightest stop of the gold as one flat amber.
+   The page is a bento: rounded tiles of different sizes on a mist ground. */
+:root {
   --radius: 1rem;
-  --background: #04191a;
-  --foreground: #f4efe4;
-  --card: #0a2b29;
-  --card-foreground: #f4efe4;
-  --popover: #0a2b29;
-  --popover-foreground: #f4efe4;
-  --primary: #f5c26b;
-  --primary-foreground: #08231f;
-  --secondary: #0f3a36;
-  --secondary-foreground: #f4efe4;
-  --muted: #0d332f;
-  --muted-foreground: #a9bdb6;
-  --accent: #fbb44a;
-  --accent-foreground: #08231f;
-  --destructive: #e5484d;
-  --border: rgb(245 194 107 / 0.14);
-  --input: rgb(245 194 107 / 0.2);
-  --ring: #f5c26b;
 
-  --emerald: #0b3d36;
-  --gold-1: #fbb44a;
-  --gold-2: #f6d58e;
-  --gold-3: #d98a2b;
+  --ink: #06302b;
+  --emerald: #0d443e;
+  --pine: #17655a;
+  --amber: #fbb54b;
+  --sand: #fff0d2;
+  --mist: #e7eee9;
+
+  --background: var(--mist);
+  --foreground: var(--ink);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+  --primary: var(--emerald);
+  --primary-foreground: #ffffff;
+  --secondary: var(--mist);
+  --secondary-foreground: var(--ink);
+  --muted: var(--mist);
+  --muted-foreground: #47605a;
+  --accent: var(--amber);
+  --accent-foreground: var(--ink);
+  --destructive: #b3261e;
+  --border: rgb(6 48 43 / 0.14);
+  --input: rgb(6 48 43 / 0.3);
+  --ring: var(--emerald);
 }
 
 @theme inline {
-  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Sora Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Onest Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Onest Variable", ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -56,108 +57,210 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-ink: var(--ink);
   --color-emerald: var(--emerald);
-  --color-gold-1: var(--gold-1);
-  --color-gold-2: var(--gold-2);
-  --color-gold-3: var(--gold-3);
-  --radius-sm: calc(var(--radius) - 8px);
-  --radius-md: calc(var(--radius) - 4px);
+  --color-pine: var(--pine);
+  --color-amber: var(--amber);
+  --color-sand: var(--sand);
+  --color-mist: var(--mist);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --animate-spin-slow: spin 40s linear infinite;
-  --animate-spin-slower: spin 70s linear infinite reverse;
-  --animate-marquee: marquee 40s linear infinite;
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.95; }
-}
-
-.skyline-twinkle {
-  animation: twinkle 3.5s ease-in-out infinite;
-}
-
-/* Hero entrance in CSS so it runs on the prerendered HTML before JS loads. */
-@keyframes rise {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: none; }
-}
-.hero-rise > * {
-  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.hero-rise > :nth-child(2) { animation-delay: 0.06s; }
-.hero-rise > :nth-child(3) { animation-delay: 0.12s; }
-.hero-rise > :nth-child(4) { animation-delay: 0.18s; }
-.hero-rise > :nth-child(5) { animation-delay: 0.24s; }
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  --radius-xl: calc(var(--radius) + 6px);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
   ::selection {
-    background: var(--gold-1);
-    color: var(--primary-foreground);
+    background: var(--amber);
+    color: var(--ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+  }
+  summary {
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
   }
 }
 
-@utility text-gold {
-  background: linear-gradient(100deg, var(--gold-1) 0%, var(--gold-2) 45%, var(--gold-3) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-@utility bg-gold {
-  background: linear-gradient(110deg, var(--gold-1) 0%, var(--gold-2) 50%, var(--gold-3) 100%);
-}
-
-@utility bg-grid {
-  background-image:
-    linear-gradient(to right, rgb(245 194 107 / 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(245 194 107 / 0.06) 1px, transparent 1px);
-  background-size: 56px 56px;
-}
-
-@utility glass {
-  background: linear-gradient(160deg, rgb(15 58 54 / 0.72), rgb(6 30 28 / 0.55));
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--border);
-}
-
-/* Gradient hairline border that glows gold at the top-left corner. */
-@utility ring-gold {
-  position: relative;
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(140deg, rgb(251 180 74 / 0.7), rgb(245 194 107 / 0.08) 40%, rgb(217 138 43 / 0.45));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+@layer components {
+  .wrap {
+    @apply mx-auto w-full max-w-[82.5rem] px-2.5 sm:px-5;
   }
+
+  /* The grid every section shares: two columns on a phone, twelve on desktop. */
+  .bento {
+    @apply grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-12;
+  }
+  .tile {
+    @apply relative min-w-0 overflow-hidden rounded-[1.625rem] p-[1.125rem] sm:p-7 lg:rounded-[2rem];
+  }
+  /* A half-width tile on phones. When the row is too narrow for two (a small
+     screen, or enlarged text), it takes the full row instead of squeezing.
+     Needs an ancestor marked as a container; lg spans come from utilities. */
+  .half {
+    grid-column: span 2;
+  }
+  @container (min-width: 21rem) {
+    .half {
+      grid-column: span 1;
+    }
+  }
+  .tile-white {
+    @apply bg-white;
+  }
+  .tile-emerald {
+    @apply bg-emerald text-white;
+  }
+  .tile-ink {
+    @apply bg-ink text-white;
+  }
+  .tile-amber {
+    @apply bg-amber text-ink;
+  }
+  .tile-emerald :focus-visible,
+  .tile-ink :focus-visible {
+    outline-color: var(--amber);
+  }
+  /* Tiles inside a dark tile are light again: bring the ink outline back. */
+  .tile-emerald .tile-white :focus-visible,
+  .tile-ink .tile-white :focus-visible {
+    outline-color: var(--ink);
+  }
+
+  /* Heading above a group of tiles. */
+  .group-head {
+    @apply px-2 sm:px-3;
+    margin-top: clamp(2.5rem, 6.5vw, 4.5rem);
+    margin-bottom: clamp(0.9rem, 2.2vw, 1.5rem);
+  }
+
+  .h-hero {
+    @apply font-extrabold text-balance;
+    font-size: clamp(2.15rem, 9.2vw, 4.1rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+  .h-group {
+    @apply font-extrabold text-balance;
+    font-size: clamp(1.7rem, 5.8vw, 2.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+  }
+  .h-tile {
+    @apply font-bold;
+    overflow-wrap: anywhere;
+    font-size: clamp(1.1rem, 3.5vw, 1.35rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  .num {
+    @apply font-extrabold;
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+  }
+
+  /* Rounded square that carries a tile's icon. */
+  .chip {
+    @apply flex size-11 shrink-0 items-center justify-center rounded-2xl;
+  }
+
+  .btn {
+    @apply inline-flex h-[3.375rem] items-center justify-center gap-2.5 rounded-full px-6 text-base font-bold whitespace-nowrap select-none;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn-sm {
+    @apply h-[2.625rem] px-[1.125rem] text-[0.9375rem];
+  }
+  .btn-amber {
+    @apply bg-amber text-ink hover:bg-[#ffc56b];
+  }
+  .btn-ink {
+    @apply bg-ink text-white hover:bg-emerald;
+  }
+  .btn-white {
+    @apply bg-white text-ink hover:bg-sand;
+  }
+  .btn-line {
+    @apply border-[1.5px] border-ink text-ink hover:bg-ink hover:text-white;
+  }
+  .btn-wa {
+    @apply bg-[#25d366] text-ink hover:bg-[#4ee287];
+  }
+
+  .field {
+    @apply w-full rounded-2xl border-[1.5px] border-input bg-white px-4 py-3 text-base text-foreground;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--emerald);
+    box-shadow: 0 0 0 4px rgb(13 68 62 / 0.14);
+  }
+
+  /* Indonesia's flag beside the word, as on the poster. */
+  .flag-id {
+    display: inline-block;
+    width: 0.92em;
+    height: 0.62em;
+    margin-left: 0.08em;
+    border-radius: 0.1em;
+    background: linear-gradient(#d7141a 50%, #ffffff 50%);
+    box-shadow: 0 0 0 1.5px rgb(6 48 43 / 0.22);
+    vertical-align: 0.02em;
+  }
+}
+
+/* The one moment of motion on load: the sun comes up behind the skyline. */
+@keyframes sunrise {
+  from { transform: translateY(45%); }
+  to { transform: none; }
+}
+.scene-sun {
+  transform-box: fill-box;
+  animation: sunrise 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+.scene-twinkle {
+  animation: twinkle 3.6s ease-in-out infinite;
+}
+
+/* FAQ disclosure: the plus turns into a cross when its item is open. */
+.faq-plus {
+  transition: transform 0.2s;
+}
+details[open] > summary .faq-plus {
+  transform: rotate(45deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

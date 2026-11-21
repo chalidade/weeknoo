@@ -1,56 +1,69 @@
 import { useEffect, useState } from 'react'
-import { AnimatePresence, m } from 'motion/react'
-import { Send } from 'lucide-react'
-import { mailtoUrl, waUrl } from '@/lib/contact'
+import { cn } from '@/lib/utils'
+import { waUrl } from '@/lib/contact'
 import { WhatsAppIcon } from '@/components/icons'
 
-/** Floating WhatsApp bubble on desktop; a two-button action bar on mobile. */
+/**
+ * Phone-only action bar. It appears after the hero and steps aside while the
+ * proposal composer or the closing email tile is on screen, so it never
+ * covers the buttons a founder is about to press.
+ */
 export function StickyContact() {
-  const [show, setShow] = useState(false)
+  const [past, setPast] = useState(false)
+  const [busy, setBusy] = useState(false)
+
   useEffect(() => {
-    const onScroll = () => setShow(window.scrollY > 600)
+    const onScroll = () => setPast(window.scrollY > 640)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+
+    const seen = new Set<Element>()
+    const io =
+      typeof IntersectionObserver === 'undefined'
+        ? null
+        : new IntersectionObserver((entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) seen.add(e.target)
+              else seen.delete(e.target)
+            }
+            setBusy(seen.size > 0)
+          })
+    for (const id of ['proposal', 'daftar']) {
+      const el = document.getElementById(id)
+      if (el) io?.observe(el)
+    }
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      io?.disconnect()
+    }
   }, [])
 
+  const show = past && !busy
+
   return (
-    <AnimatePresence>
-      {show && (
-        <m.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 40 }}
-          className="fixed inset-x-0 bottom-0 z-40 md:inset-x-auto md:right-6 md:bottom-6"
-        >
-          <div className="glass flex gap-2 rounded-t-3xl p-3 md:hidden">
-            <a
-              href={mailtoUrl()}
-              className="bg-gold flex flex-1 items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold text-primary-foreground"
-            >
-              <Send className="size-4" /> Kirim Proposal
-            </a>
-            <a
-              href={waUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Hubungi via WhatsApp"
-              className="flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-5 py-3 text-sm font-semibold text-[#062b1a]"
-            >
-              <WhatsAppIcon className="size-5 shrink-0" /> WA
-            </a>
-          </div>
-          <a
-            href={waUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Fast Track via WhatsApp"
-            className="group hidden items-center gap-2 rounded-full bg-[#25D366] py-3 pr-5 pl-3 font-semibold text-[#062b1a] shadow-2xl shadow-black/40 transition-transform hover:scale-105 md:flex"
-          >
-            <WhatsAppIcon className="size-7" /> Fast Track
-          </a>
-        </m.div>
+    <div
+      className={cn(
+        'fixed inset-x-0 bottom-0 z-40 p-2.5 transition-[transform,visibility] duration-300 md:hidden',
+        show ? 'visible translate-y-0' : 'invisible translate-y-full',
       )}
-    </AnimatePresence>
+      aria-hidden={!show}
+    >
+      <div className="flex gap-2 rounded-full bg-white p-1.5 shadow-[0_8px_30px_rgb(6_48_43/0.22)]">
+        <a href="#proposal" tabIndex={show ? 0 : -1} className="btn btn-amber h-12 flex-1">
+          Kirim proposal
+        </a>
+        <a
+          href={waUrl()}
+          target="_blank"
+          rel="noopener noreferrer"
+          tabIndex={show ? 0 : -1}
+          aria-label="Fast track lewat WhatsApp"
+          className="btn btn-wa h-12 px-5"
+        >
+          <WhatsAppIcon className="size-5 shrink-0" />
+          <span className="hidden min-[26rem]:inline">WhatsApp</span>
+        </a>
+      </div>
+    </div>
   )
 }

@@ -1,48 +1,58 @@
 import { EMAIL, WA_DISPLAY, mailtoUrl, waUrl } from '@/lib/contact'
 
+const LINKS = [
+  { href: '#program', label: 'Program' },
+  { href: '#hadiah', label: 'Hadiah' },
+  { href: '#jadwal', label: 'Jadwal' },
+  { href: '#proposal', label: 'Proposal' },
+  { href: '#faq', label: 'FAQ' },
+]
+
 export function Footer() {
   return (
-    <footer className="border-t border-border pt-14 pb-28 md:pb-14">
-      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 md:flex-row md:items-start md:justify-between">
+    <footer className="wrap pt-10 pb-28 md:pb-10">
+      <div className="flex flex-col gap-8 px-2 sm:px-3 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
-          <div className="flex items-center gap-2.5">
-            <img src={`${import.meta.env.BASE_URL}puas-mark.webp`} alt="" className="size-10" />
-            <span className="font-display text-xl font-bold tracking-wide">PUAS</span>
-          </div>
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            Program kurasi & pendampingan untuk membawa ide dan startup Indonesia menjadi perusahaan resmi di Saudi
-            Arabia.
+          <img
+            src={`${import.meta.env.BASE_URL}puas-logo.webp`}
+            alt="PUAS"
+            width={257}
+            height={88}
+            loading="lazy"
+            className="h-10 w-auto"
+          />
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            Program kurasi &amp; pendampingan untuk mengubah ide bisnis dan startup Indonesia menjadi perusahaan
+            resmi di Saudi Arabia.
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-10 text-sm sm:grid-cols-3">
-          <div>
-            <p className="font-semibold">Program</p>
-            <ul className="mt-3 space-y-2 text-muted-foreground">
-              <li><a className="hover:text-primary" href="#program">Manfaat</a></li>
-              <li><a className="hover:text-primary" href="#proposal">Isi proposal</a></li>
-              <li><a className="hover:text-primary" href="#hadiah">Hadiah</a></li>
-              <li><a className="hover:text-primary" href="#jadwal">Jadwal</a></li>
-            </ul>
-          </div>
-          <div>
-            <p className="font-semibold">Kontak</p>
-            <ul className="mt-3 space-y-2 text-muted-foreground">
-              <li><a className="hover:text-primary" href={mailtoUrl()}>{EMAIL}</a></li>
-              <li><a className="hover:text-primary" href={waUrl()} target="_blank" rel="noopener noreferrer">{WA_DISPLAY}</a></li>
-            </ul>
-          </div>
-          <div>
-            <p className="font-semibold">Deadline</p>
-            <ul className="mt-3 space-y-2 text-muted-foreground">
-              <li>Gelombang 1: 25 Nov 2026</li>
-              <li>Gelombang 2: Jan – Feb 2027</li>
-            </ul>
-          </div>
-        </div>
+
+        <nav aria-label="Bagian halaman">
+          <ul className="flex flex-wrap gap-x-6 gap-y-2 font-medium md:flex-col">
+            {LINKS.map((l) => (
+              <li key={l.href}>
+                <a className="underline-offset-4 hover:underline" href={l.href}>
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <ul className="space-y-2 font-medium">
+          <li>
+            <a className="underline-offset-4 hover:underline" href={mailtoUrl()}>
+              {EMAIL}
+            </a>
+          </li>
+          <li>
+            <a className="underline-offset-4 hover:underline" href={waUrl()} target="_blank" rel="noopener noreferrer">
+              WhatsApp {WA_DISPLAY}
+            </a>
+          </li>
+        </ul>
       </div>
-      <p className="mx-auto mt-12 max-w-6xl px-5 text-xs text-muted-foreground">
-        © 2026 PUAS. Indonesia 🇮🇩 → Saudi Arabia 🇸🇦
-      </p>
+      <p className="mt-10 px-2 text-sm text-muted-foreground sm:px-3">© 2026 PUAS</p>
     </footer>
   )
 }

@@ -27,8 +27,10 @@ perlu Node.js, database, atau PHP di server — cukup upload.
 - HSTS (paksa HTTPS), X-Content-Type-Options, Referrer-Policy,
   Permissions-Policy (kamera/mikrofon/lokasi dimatikan), COOP.
 - Directory listing dimatikan; file tersembunyi & dokumen config diblokir.
-- Tidak ada form, cookie, tracking, atau pengumpulan data — pendaftaran lewat
-  email (`mailto:`) dan WhatsApp (`wa.me`), link eksternal pakai
+- Tidak ada cookie, tracking, atau pengiriman data ke server. Form "Tulis
+  proposalmu di sini" hanya menyusun teks: jawabannya tersimpan sebagai draf di
+  perangkat pengunjung, lalu dikirim lewat aplikasi email mereka sendiri
+  (`mailto:`) atau WhatsApp (`wa.me`). Link eksternal pakai
   `rel="noopener noreferrer"`.
 
 **Kecepatan**
@@ -39,12 +41,21 @@ perlu Node.js, database, atau PHP di server — cukup upload.
 - Nama file aset ber-hash → di-cache browser 1 tahun; `index.html` selalu
   dicek ulang sehingga update langsung terlihat.
 
-## Sebelum go-live
+## Domain dan gambar preview link
 
-Gambar preview link (WhatsApp/LinkedIn/X) di `index.html` masih mengarah ke
-`https://chalidade.github.io/weeknoo/puas-startup/og.jpg`. Jika dipasang di
-domain sendiri, ganti dua baris `og:image` dan `twitter:image` ke
-`https://DOMAIN-ANDA/og.jpg`.
+Gambar preview link (WhatsApp/LinkedIn/X) di `index.html` sudah mengarah ke
+`https://startup.puas.academy/og.jpg`. Kalau dipasang di domain lain, ganti
+tiga baris `og:url`, `og:image`, dan `twitter:image` ke domain tersebut.
+
+## Hitung mundur
+
+Hitung mundur berjalan otomatis mengikuti tanggal:
+- sampai 25 Nov 2026 pukul 23:59 waktu Riyadh: "Gelombang 1 tutup dalam";
+- setelah itu sampai 31 Des 2026: "Gelombang 2 dibuka dalam";
+- 1 Jan sampai 28 Feb 2027: "Gelombang 2 tutup dalam";
+- setelah itu: "Pendaftaran sudah ditutup".
+
+Poster hanya menyebut "Jan – Feb 2027" untuk Gelombang 2, jadi tanggal 1 Jan
+dan 28 Feb adalah asumsi. Tanggal pastinya diubah di `src/lib/waves.ts`.
 
 Kontak di halaman: startup@puas.sa · WhatsApp +966 59 142 5388.
-Deadline Gelombang 1: 25 Nov 2026, 23:59 waktu Riyadh.

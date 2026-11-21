@@ -1,90 +1,52 @@
-import { m, type Variants } from 'motion/react'
 import { Crown, Star, Trophy } from 'lucide-react'
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
-}
-
-const TIERS = [
-  {
-    icon: Crown,
-    rank: 'Peringkat 1 – 3',
-    price: 'Free of Cost',
-    note: 'Pendirian perusahaan + proses Iqama 2 orang tanpa biaya.',
-    featured: true,
-  },
-  {
-    icon: Star,
-    rank: 'Peringkat 4 – 5',
-    price: 'SAR 20,000',
-    note: 'Paket pendirian perusahaan + proses Iqama 2 orang, cukup SAR 20,000 saja.',
-    featured: false,
-  },
-]
 
 export function Prizes() {
   return (
-    <section id="hadiah" className="relative scroll-mt-24 py-20 sm:py-28">
-      <m.div
-        className="mx-auto max-w-6xl px-5"
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: '-80px' }}
-        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
-      >
-        <div className="glass ring-gold relative overflow-hidden rounded-[2rem] p-5 sm:p-10 lg:p-14">
-          <div className="bg-grid absolute inset-0 -z-10 opacity-60 [mask-image:radial-gradient(ellipse_at_top_left,#000,transparent_70%)]" />
-          <div className="absolute -top-32 -left-20 -z-10 size-96 rounded-full bg-[radial-gradient(closest-side,rgb(251_180_74/0.22),transparent)] blur-2xl" />
-
-          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <m.div variants={fadeUp}>
-              <p className="font-mono text-xs tracking-[0.25em] text-primary uppercase">Program Kompetisi Ide & Startup</p>
-              <div className="mt-5 flex items-end gap-4">
-                <Trophy className="size-16 text-gold-1 drop-shadow-[0_8px_30px_rgb(251_180_74/0.5)] sm:size-20" strokeWidth={1.5} />
-                <span className="font-display text-gold text-8xl leading-none font-extrabold sm:text-9xl">10</span>
-              </div>
-              <h2 className="font-display mt-3 text-3xl font-bold sm:text-4xl">Pemenang</h2>
-              <p className="mt-2 inline-flex rounded-full border border-border px-3 py-1 text-sm text-muted-foreground">
-                Dibagi dalam 2 gelombang
-              </p>
-              <p className="mt-6 max-w-sm leading-relaxed text-muted-foreground">
-                Termasuk pendampingan pendirian perusahaan dan proses izin tinggal (Iqama) untuk 2 orang — Founder &
-                Co-founder/Investor.
-              </p>
-            </m.div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {TIERS.map((t) => (
-                <m.article
-                  key={t.rank}
-                  variants={fadeUp}
-                  whileHover={{ y: -6 }}
-                  className={
-                    t.featured
-                      ? 'bg-gold relative overflow-hidden rounded-3xl p-7 text-primary-foreground shadow-2xl shadow-gold-1/25'
-                      : 'relative overflow-hidden rounded-3xl border border-border bg-background/60 p-7'
-                  }
-                >
-                  {t.featured && (
-                    <span className="absolute top-5 right-5 rounded-full bg-primary-foreground px-2.5 py-1 font-mono text-[10px] tracking-widest text-primary uppercase">
-                      Terbaik
-                    </span>
-                  )}
-                  <t.icon className={t.featured ? 'size-8' : 'size-8 text-primary'} />
-                  <p className={`mt-8 text-sm font-medium ${t.featured ? 'text-primary-foreground/75' : 'text-muted-foreground'}`}>
-                    {t.rank}
-                  </p>
-                  <p className="font-display mt-1 text-3xl font-bold tracking-tight">{t.price}</p>
-                  <p className={`mt-4 text-sm leading-relaxed ${t.featured ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
-                    {t.note}
-                  </p>
-                </m.article>
-              ))}
-            </div>
+    <section id="hadiah" className="@container wrap scroll-mt-20">
+      <h2 className="h-group group-head">Program Kompetisi Ide &amp; Startup</h2>
+      <div className="bento">
+        <div className="tile tile-amber col-span-2 flex min-h-[12.5rem] flex-col justify-end lg:col-span-4 lg:min-h-[19rem]">
+          <Trophy
+            className="absolute top-5 right-5 size-14 sm:top-7 sm:right-7 lg:size-16"
+            strokeWidth={1.6}
+            aria-hidden="true"
+          />
+          <div className="num text-[6.5rem] lg:text-[9rem]">10</div>
+          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
+            <span className="text-[1.6rem] leading-none font-extrabold tracking-[-0.03em]">Pemenang</span>
+            <span className="rounded-full bg-ink px-3 py-1 text-sm font-semibold text-amber">2 gelombang</span>
           </div>
         </div>
-      </m.div>
+
+        <div className="tile tile-emerald half flex min-h-[11rem] flex-col justify-between gap-6 lg:col-span-4">
+          <span className="chip bg-amber text-ink">
+            <Crown className="size-6" strokeWidth={1.9} aria-hidden="true" />
+          </span>
+          <div>
+            <p className="font-semibold text-white/85">Peringkat 1 – 3</p>
+            <p className="mt-1 text-[clamp(1.55rem,6.6vw,3rem)] leading-[1.02] font-extrabold tracking-[-0.04em] text-amber">
+              Free of cost
+            </p>
+          </div>
+        </div>
+
+        <div className="tile tile-white half flex min-h-[11rem] flex-col justify-between gap-6 lg:col-span-4">
+          <span className="chip bg-mist text-emerald">
+            <Star className="size-6" strokeWidth={1.9} aria-hidden="true" />
+          </span>
+          <div>
+            <p className="font-semibold text-muted-foreground">Peringkat 4 – 5</p>
+            <p className="mt-1 text-[clamp(1.55rem,6.6vw,3rem)] leading-[1.02] font-extrabold tracking-[-0.04em]">
+              <span className="whitespace-nowrap">SAR 20,000</span> only
+            </p>
+          </div>
+        </div>
+
+        <p className="tile tile-white col-span-2 py-5 leading-relaxed font-medium lg:col-span-12 lg:px-9 lg:text-lg">
+          Termasuk pendampingan pendirian perusahaan dan proses izin tinggal (Iqama) untuk 2 orang (Founder &amp;
+          Co-founder / Investor).
+        </p>
+      </div>
     </section>
   )
 }

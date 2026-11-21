@@ -1,58 +1,59 @@
-import { m, type Variants } from 'motion/react'
-import { Cpu, Globe2, Sprout } from 'lucide-react'
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
-}
+import { Check, Megaphone } from 'lucide-react'
+import { WA_DISPLAY, waUrl } from '@/lib/contact'
+import { WhatsAppIcon } from '@/components/icons'
 
 const WHO = [
-  { icon: Sprout, title: 'Ide bisnis baru (startup)', body: 'Masih tahap ide atau MVP? Boleh. Tunjukkan masalah yang jelas dan solusi yang meyakinkan.' },
-  { icon: Globe2, title: 'Ekspansi bisnis Indonesia ke Saudi', body: 'Bisnis yang sudah berjalan di Indonesia dan siap membuka pasar di Saudi Arabia.' },
-  { icon: Cpu, title: 'Solusi teknologi, layanan & model bisnis', body: 'Inovasi yang relevan untuk kebutuhan pasar Saudi dan negara-negara GCC.' },
+  'Ide bisnis baru (startup)',
+  'Ekspansi bisnis Indonesia ke Saudi',
+  'Solusi teknologi, layanan, atau model bisnis untuk pasar Saudi & GCC',
 ]
 
 export function Eligibility() {
   return (
-    <section id="peserta" className="relative scroll-mt-24 py-20 sm:py-28">
-      <m.div
-        className="mx-auto max-w-6xl px-5"
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: '-80px' }}
-        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
-      >
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <m.p variants={fadeUp} className="font-mono text-xs tracking-[0.25em] text-primary uppercase">
-              Terbuka untuk
-            </m.p>
-            <m.h2 variants={fadeUp} className="font-display mt-3 max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl">
-              Siapa yang <span className="text-gold">bisa ikut?</span>
-            </m.h2>
-          </div>
-          <m.p variants={fadeUp} className="max-w-sm text-muted-foreground">
-            Founder Indonesia dengan ide atau bisnis yang punya peluang di Saudi Arabia & kawasan GCC.
-          </m.p>
+    <section id="peserta" className="wrap mt-2.5 scroll-mt-20 sm:mt-4">
+      <div className="bento">
+        <div className="tile tile-white col-span-2 lg:col-span-7">
+          <h2 className="flex items-center gap-3 text-[1.5rem] leading-none font-extrabold tracking-[-0.03em]">
+            <span className="chip bg-amber text-ink">
+              <Megaphone className="size-6" strokeWidth={1.9} aria-hidden="true" />
+            </span>
+            Terbuka untuk (startup):
+          </h2>
+          <ul className="mt-5 grid gap-2.5">
+            {WHO.map((w) => (
+              <li key={w} className="flex items-start gap-3 rounded-2xl bg-mist p-4 leading-snug font-semibold">
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-emerald text-white">
+                  <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
+                </span>
+                {w}
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {WHO.map((w) => (
-            <m.article
-              key={w.title}
-              variants={fadeUp}
-              whileHover={{ y: -4 }}
-              className="glass group rounded-3xl p-7 transition-colors hover:border-primary/40"
+        <div className="tile tile-ink col-span-2 flex flex-col justify-between gap-8 lg:col-span-5">
+          <div>
+            <p className="font-semibold text-amber">Mau jalur cepat?</p>
+            <h2 className="mt-1 text-[clamp(2rem,8.4vw,3.1rem)] leading-none font-extrabold tracking-[-0.045em]">
+              Fast track? Call us!
+            </h2>
+          </div>
+          <div>
+            <a
+              href={waUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-[clamp(1.6rem,7.2vw,2.4rem)] leading-none font-extrabold tracking-[-0.03em] whitespace-nowrap underline-offset-4 hover:underline"
             >
-              <span className="flex size-14 items-center justify-center rounded-2xl border border-primary/30 bg-primary/10 text-primary transition-colors group-hover:bg-gold group-hover:text-primary-foreground">
-                <w.icon className="size-7" />
-              </span>
-              <h3 className="font-display mt-6 text-xl font-semibold">{w.title}</h3>
-              <p className="mt-2 leading-relaxed text-muted-foreground">{w.body}</p>
-            </m.article>
-          ))}
+              {WA_DISPLAY}
+            </a>
+            <a href={waUrl()} target="_blank" rel="noopener noreferrer" className="btn btn-wa mt-5 w-full sm:w-auto">
+              <WhatsAppIcon className="size-5 shrink-0" />
+              Chat lewat WhatsApp
+            </a>
+          </div>
         </div>
-      </m.div>
+      </div>
     </section>
   )
 }

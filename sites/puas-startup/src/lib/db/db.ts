@@ -9,19 +9,27 @@
 // .where()); fields that are only stored, not queried, are not listed.
 import Dexie, { type EntityTable } from "dexie"
 
-export interface Item {
-  id: number
-  title: string
+/** The pitch a founder is writing, kept so a reload does not lose it. */
+export interface PitchDraft {
+  /** Always "pitch" — one draft per device. */
+  id: string
+  startup: string
+  founders: string
+  wa: string
+  answers: string[]
+  step: number
   /** Date.now() timestamp */
-  createdAt: number
+  updatedAt: number
 }
 
 const db = new Dexie("puas-startup") as Dexie & {
-  items: EntityTable<Item, "id">
+  drafts: EntityTable<PitchDraft, "id">
 }
 
-db.version(1).stores({
-  items: "++id, title, createdAt",
+// v1 held the template's example `items` table; v2 replaces it with drafts.
+db.version(2).stores({
+  items: null,
+  drafts: "id",
 })
 
 export { db }
